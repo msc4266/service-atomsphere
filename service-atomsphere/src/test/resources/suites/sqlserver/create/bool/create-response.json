@@ -1,0 +1,34 @@
+{
+  "culture": null,
+  "objectData": [{
+    "internalId": null,
+    "externalId": "eyJpZCI6IjEifQ==",
+    "developerName": "country",
+    "typeElementId": null,
+    "order": 0,
+    "properties": [{
+      "typeElementPropertyId": null,
+      "developerName": "id",
+      "contentType": "ContentNumber",
+      "contentValue": "1",
+      "contentFormat": null,
+      "objectData": []
+    }, {
+      "typeElementPropertyId": null,
+      "developerName": "name",
+      "contentType": "ContentString",
+      "contentValue": "Uruguay",
+      "contentFormat": null,
+      "objectData": []
+    }, {
+      "typeElementPropertyId": null,
+      "developerName": "big",
+      "contentType": "ContentBoolean",
+      "contentValue": "true",
+      "contentFormat": null,
+      "objectData": []
+    }],
+    "isSelected": false
+  }],
+  "hasMoreResults": false
+}

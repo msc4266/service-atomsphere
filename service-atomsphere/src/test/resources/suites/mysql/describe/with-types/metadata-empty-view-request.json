@@ -1,0 +1,105 @@
+{
+  "configurationValues": [
+    {
+      "contentType": null,
+      "contentValue": "True",
+      "developerName": "No SSL",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{password}}",
+      "developerName": "Password",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": null,
+      "developerName": "Server Public Certificate",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{databaseType}}",
+      "developerName": "Database Type",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{schema}}",
+      "developerName": "Database Schema",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{databaseName}}",
+      "developerName": "Database Name",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{port}}",
+      "developerName": "Port",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{host}}",
+      "developerName": "Host",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    },
+    {
+      "contentType": null,
+      "contentValue": "{{userName}}",
+      "developerName": "Username",
+      "objectData": null,
+      "typeElementDeveloperName": null,
+      "typeElementId": null,
+      "typeElementPropertyDeveloperName": null,
+      "typeElementPropertyId": null,
+      "valueElementId": null
+    }
+  ],
+  "culture": null,
+  "uri": "http://{{host}}:{{port}}/api/sql/2"
+}

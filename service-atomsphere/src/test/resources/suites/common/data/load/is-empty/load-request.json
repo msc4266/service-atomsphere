@@ -1,0 +1,187 @@
+{
+  "stateId": null,
+  "token": null,
+  "typeElementBindingId": null,
+  "authorization": {
+    "users": null,
+    "groups": null,
+    "runningAuthenticationId": null,
+    "globalAuthenticationType": "PUBLIC"
+  },
+  "configurationValues": [
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Password",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{password}}",
+      "contentType": "ContentPassword",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Type",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{databaseType}}",
+      "contentType": "ContentString",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Name",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{databaseName}}",
+      "contentType": "ContentString",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Port",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{port}}",
+      "contentType": "ContentNumber",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Host",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{host}}",
+      "contentType": "ContentString",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Schema",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{schema}}",
+      "contentType": "ContentString",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Username",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{userName}}",
+      "contentType": "ContentString",
+      "objectData": []
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "No SSL",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "true",
+      "contentType": null,
+      "objectData": []
+    }
+  ],
+  "command": null,
+  "culture": {
+    "id": null,
+    "developerName": null,
+    "developerSummary": null,
+    "brand": null,
+    "language": "EN",
+    "country": "USA",
+    "variant": null
+  },
+  "listFilter": {
+    "id": null,
+    "filterByProvidedObjects": false,
+    "orderByPropertyDeveloperName": "id",
+    "orderByDirectionType": "",
+    "orderBy": null,
+    "limit": 0,
+    "offset": 0,
+    "search": null,
+    "searchCriteria": null,
+    "comparisonType": "OR",
+    "where": [
+      {
+        "columnName": "description",
+        "criteriaType": "IS_EMPTY",
+        "value": "true",
+        "contentValue": "true",
+        "objectData": []
+      }
+    ],
+    "listFilters": null
+  },
+  "objectDataType": {
+    "typeElementId": "737809a7-5825-4b04-8d38-b271963732e5",
+    "developerName": "country",
+    "properties": [
+      {
+        "developerName": "name",
+        "list": null
+      },
+      {
+        "developerName": "description",
+        "list": null
+      },
+      {
+        "developerName": "id",
+        "list": null
+      }
+    ]
+  },
+  "objectData": [
+    {
+      "internalId": "680b37be-3cf1-4bed-bf46-69bf8acd2b3c",
+      "externalId": "eyJpZCI6IjEifQ==",
+      "developerName": "country",
+      "typeElementId": "737809a7-5825-4b04-8d38-b271963732e5",
+      "order": 0,
+      "properties": [
+        {
+          "typeElementPropertyId": "1e40c529-9279-4a0f-b519-0b5223d139f8",
+          "developerName": "name",
+          "contentValue": "",
+          "contentType": "ContentString",
+          "contentFormat": "",
+          "objectData": []
+        },
+        {
+          "typeElementPropertyId": "cfa7fc9b-6d3c-4dba-9a8d-e5f44b7178cc",
+          "developerName": "description",
+          "contentValue": "",
+          "contentType": "ContentString",
+          "contentFormat": "",
+          "objectData": []
+        },
+        {
+          "typeElementPropertyId": "3edb9e80-7c52-4051-b993-74b338fb1b8f",
+          "developerName": "id",
+          "contentValue": "",
+          "contentType": "ContentNumber",
+          "contentFormat": "",
+          "objectData": []
+        }
+      ],
+      "isSelected": false
+    }
+  ]
+}

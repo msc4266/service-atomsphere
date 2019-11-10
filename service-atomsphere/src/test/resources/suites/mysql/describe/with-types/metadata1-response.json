@@ -1,0 +1,142 @@
+{
+  "culture": null,
+  "uri": null,
+  "configurationValues": [
+    {
+      "developerName": "Password",
+      "contentValue": null,
+      "contentType": "ContentPassword",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Database Type",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Database Schema",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Database Name",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Port",
+      "contentValue": null,
+      "contentType": "ContentNumber",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Host",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Username",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    }, {
+      "developerName": "No SSL",
+      "contentValue": null,
+      "contentType": "ContentBoolean",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    }, {
+      "developerName": "Server Public Certificate",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": false
+    }
+  ],
+  "providesAutoBinding": false,
+  "providesDatabase": true,
+  "providesFiles": false,
+  "providesIdentity": false,
+  "providesListening": false,
+  "providesLogic": false,
+  "providesNotifications": false,
+  "providesSmartSave": false,
+  "providesSocial": false,
+  "providesSharing": false,
+  "providesViews": false,
+  "providesVoting": false,
+  "actions": [],
+  "install": {
+    "typeElements": [
+      {
+        "elementType": "TYPE",
+        "developerName": "country",
+        "developerSummary": null,
+        "id": null,
+        "serviceElementId": null,
+        "properties": [
+          {
+            "id": null,
+            "developerName": "id",
+            "contentFormat": null,
+            "contentType": "ContentNumber",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          },
+          {
+            "id": null,
+            "developerName": "big",
+            "contentFormat": null,
+            "contentType": "ContentBoolean",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          }
+        ],
+        "bindings": [
+          {
+            "id": null,
+            "developerName": "country",
+            "developerSummary": "The binding for country2",
+            "databaseTableName": "country2",
+            "serviceElementId": null,
+            "propertyBindings": [
+              {
+                "databaseFieldName": "id",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "id",
+                "databaseContentType": "INTEGER"
+              },
+              {
+                "databaseFieldName": "big",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "big",
+                "databaseContentType": "BIT"
+              }
+            ]
+          }
+        ],
+        "updateByName": false
+      }
+    ]
+  }
+}

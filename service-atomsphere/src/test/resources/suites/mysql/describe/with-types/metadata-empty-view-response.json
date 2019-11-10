@@ -1,0 +1,193 @@
+{
+  "culture": null,
+  "uri": null,
+  "configurationValues": [
+    {
+      "developerName": "No SSL",
+      "contentValue": null,
+      "contentType": "ContentBoolean",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Password",
+      "contentValue": null,
+      "contentType": "ContentPassword",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Server Public Certificate",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": false
+    },
+    {
+      "developerName": "Database Type",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Database Schema",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Database Name",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Port",
+      "contentValue": null,
+      "contentType": "ContentNumber",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Host",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    },
+    {
+      "developerName": "Username",
+      "contentValue": null,
+      "contentType": "ContentString",
+      "typeElementDeveloperName": null,
+      "ordinal": 0,
+      "required": true
+    }
+  ],
+  "providesAutoBinding": false,
+  "providesDatabase": true,
+  "providesFiles": false,
+  "providesIdentity": false,
+  "providesListening": false,
+  "providesLogic": false,
+  "providesNotifications": false,
+  "providesSmartSave": false,
+  "providesSocial": false,
+  "providesSharing": false,
+  "providesViews": false,
+  "providesVoting": false,
+  "actions": [],
+  "install": {
+    "typeElements": [
+      {
+        "elementType": "TYPE",
+        "developerName": "notemptytable",
+        "developerSummary": null,
+        "id": null,
+        "serviceElementId": null,
+        "properties": [
+          {
+            "id": null,
+            "developerName": "data",
+            "contentFormat": null,
+            "contentType": "ContentString",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          },
+          {
+            "id": null,
+            "developerName": "id",
+            "contentFormat": null,
+            "contentType": "ContentNumber",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          }
+        ],
+        "bindings": [
+          {
+            "id": null,
+            "developerName": "notemptytable",
+            "developerSummary": "The binding for notemptytable",
+            "databaseTableName": "notemptytable",
+            "serviceElementId": null,
+            "propertyBindings": [
+              {
+                "databaseFieldName": "data",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "data",
+                "databaseContentType": "LONGVARCHAR"
+              },
+              {
+                "databaseFieldName": "id",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "id",
+                "databaseContentType": "INTEGER"
+              }
+            ]
+          }
+        ],
+        "updateByName": false
+      },
+      {
+        "elementType": "TYPE",
+        "developerName": "notemptyview",
+        "developerSummary": null,
+        "id": null,
+        "serviceElementId": null,
+        "properties": [
+          {
+            "id": null,
+            "developerName": "data",
+            "contentFormat": null,
+            "contentType": "ContentString",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          },
+          {
+            "id": null,
+            "developerName": "id",
+            "contentFormat": null,
+            "contentType": "ContentNumber",
+            "typeElementId": null,
+            "typeElementDeveloperName": null
+          }
+        ],
+        "bindings": [
+          {
+            "id": null,
+            "developerName": "notemptyview",
+            "developerSummary": "The binding for notemptyview",
+            "databaseTableName": "notemptyview",
+            "serviceElementId": null,
+            "propertyBindings": [
+              {
+                "databaseFieldName": "data",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "data",
+                "databaseContentType": "LONGVARCHAR"
+              },
+              {
+                "databaseFieldName": "id",
+                "typeElementPropertyId": null,
+                "typeElementPropertyDeveloperName": "id",
+                "databaseContentType": "INTEGER"
+              }
+            ]
+          }
+        ],
+        "updateByName": false
+      }
+    ]
+  }
+}

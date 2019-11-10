@@ -1,0 +1,24 @@
+sqlserver_port = 1433
+sqlserver_databaseType = sqlserver
+sqlserver_databaseName = service-sql
+sqlserver_schema = servicesql
+sqlserver_host = localhost
+sqlserver_userName = root
+sqlserver_password = pass
+
+mysql_port = 3306
+mysql_databaseType = mysql
+mysql_databaseName = service-sql
+mysql_schema = service-sql
+mysql_host = localhost
+mysql_userName = root
+mysql_password = pass
+
+postgresql_port = 5432
+postgresql_databaseType = postgresql
+postgresql_databaseName = service-sql
+postgresql_schema = servicesql
+postgresql_host = localhost
+postgresql_userName = root
+postgresql_password = pass
+

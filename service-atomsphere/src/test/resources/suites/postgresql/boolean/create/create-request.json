@@ -1,0 +1,179 @@
+{
+  "stateId": null,
+  "token": null,
+  "typeElementBindingId": null,
+  "authorization": {
+    "users": null,
+    "groups": null,
+    "runningAuthenticationId": null,
+    "globalAuthenticationType": "PUBLIC"
+  },
+  "configurationValues": [
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Password",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{password}}",
+      "contentType": "ContentPassword",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Type",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{databaseType}}",
+      "contentType": "ContentString",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Schema",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{schema}}",
+      "contentType": "ContentString",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Database Name",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{databaseName}}",
+      "contentType": "ContentString",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Port",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{port}}",
+      "contentType": "ContentNumber",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Host",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{host}}",
+      "contentType": "ContentString",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "Username",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "{{userName}}",
+      "contentType": "ContentString",
+      "objectData": null
+    },
+    {
+      "valueElementId": null,
+      "typeElementId": null,
+      "typeElementPropertyId": null,
+      "developerName": "No SSL",
+      "typeElementDeveloperName": null,
+      "typeElementPropertyDeveloperName": null,
+      "contentValue": "true",
+      "contentType": null,
+      "objectData": null
+    }
+  ],
+  "command": null,
+  "culture": {
+    "id": null,
+    "developerName": null,
+    "developerSummary": null,
+    "brand": null,
+    "language": "EN",
+    "country": "USA",
+    "variant": null
+  },
+  "listFilter": {
+    "id": null,
+    "filterByProvidedObjects": false,
+    "orderByPropertyDeveloperName": null,
+    "orderByDirectionType": null,
+    "orderBy": null,
+    "limit": 0,
+    "offset": 0,
+    "search": null,
+    "searchCriteria": null,
+    "comparisonType": null,
+    "where": null,
+    "listFilters": null
+  },
+  "objectDataType": {
+    "typeElementId": "dc0dcf14-1bf6-4faf-b5ee-0d2aa58cd02e",
+    "developerName": "country",
+    "properties": [
+      {
+        "developerName": "id",
+        "list": null
+      },
+      {
+        "developerName": "name",
+        "list": null
+      },
+      {
+        "developerName": "big",
+        "list": null
+      }
+    ]
+  },
+  "objectData": [
+    {
+      "internalId": "31a48875-bc12-4a59-8fc5-16c37a801ad3",
+      "externalId": null,
+      "developerName": "country",
+      "typeElementId": "dc0dcf14-1bf6-4faf-b5ee-0d2aa58cd02e",
+      "order": 0,
+      "properties": [
+        {
+          "typeElementPropertyId": "1bc6feeb-ce7c-4753-b96e-7c0e8b7b5223",
+          "developerName": "id",
+          "contentValue": "1",
+          "contentType": "ContentNumber",
+          "contentFormat": "",
+          "objectData": null
+        },
+        {
+          "typeElementPropertyId": "248bdbf5-762c-4156-a16e-848f31d21cba",
+          "developerName": "name",
+          "contentValue": "Uruguay",
+          "contentType": "ContentString",
+          "contentFormat": "",
+          "objectData": null
+        },
+        {
+          "typeElementPropertyId": "3d215940-b93f-47c3-946c-61cfb0081e59",
+          "developerName": "big",
+          "contentValue": "true",
+          "contentType": "ContentBoolean",
+          "contentFormat": "",
+          "objectData": null
+        }
+      ],
+      "isSelected": false
+    }
+  ]
+}

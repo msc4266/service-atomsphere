@@ -1,0 +1,34 @@
+{
+  "culture": null,
+  "objectData": [{
+    "internalId": null,
+    "externalId": "eyJUaGUgSWQiOiIxIn0=",
+    "developerName": "country",
+    "typeElementId": null,
+    "order": 0,
+    "properties": [{
+      "typeElementPropertyId": null,
+      "developerName": "The Id",
+      "contentType": "ContentNumber",
+      "contentValue": "1",
+      "contentFormat": null,
+      "objectData": []
+    }, {
+      "typeElementPropertyId": null,
+      "developerName": "The Name",
+      "contentType": "ContentString",
+      "contentValue": "England",
+      "contentFormat": null,
+      "objectData": []
+    }, {
+      "typeElementPropertyId": null,
+      "developerName": "The Description",
+      "contentType": "ContentString",
+      "contentValue": "It is a beautiful country",
+      "contentFormat": null,
+      "objectData": []
+    }],
+    "isSelected": false
+  }],
+  "hasMoreResults": false
+}
