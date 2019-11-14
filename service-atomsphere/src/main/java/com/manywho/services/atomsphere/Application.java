@@ -9,7 +9,7 @@ import javax.ws.rs.ApplicationPath;
 public class Application extends Servlet3Server  {
 
     public Application() {
-        this.addModule(new ApplicationSqlModule());
+        this.addModule(new ApplicationAtomsphereModule());
         this.setApplication(Application.class);
         this.start();
     }
@@ -17,8 +17,8 @@ public class Application extends Servlet3Server  {
     public static void main(String[] args) throws Exception {
         EmbeddedServer server = new UndertowServer();
 
-        server.addModule(new ApplicationSqlModule());
+        server.addModule(new ApplicationAtomsphereModule());
         server.setApplication(Application.class);
-        server.start("/api/sql/2");
+        server.start("/api/atomsphere/2");
     }
 }

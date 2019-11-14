@@ -1,4 +1,4 @@
-package com.manywho.services.sql;
+package com.manywho.services.atomsphere;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.manywho.sdk.services.jaxrs.resolvers.ObjectMapperContextResolver;
 import org.jboss.resteasy.core.Dispatcher;
