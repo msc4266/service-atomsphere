@@ -1,8 +1,6 @@
-package com.manywho.services.atomsphere.services;
+package com.manywho.services.atomsphere;
 
 import com.google.common.base.Strings;
-import com.manywho.services.sql.exceptions.DataBaseTypeNotSupported;
-import com.manywho.services.sql.utilities.ContentTypeUtil;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.ISODateTimeFormat;
@@ -26,19 +24,19 @@ public class QueryParameterService {
      * @throws DataBaseTypeNotSupported
      */
     public Query addParameterValueToTheQuery(String paramName, String parameterValue, String databaseType, Query query)
-            throws DataBaseTypeNotSupported, ParseException {
+            throws ParseException {
 
         // there are some interesting types that jdbc detect as others, in those cases we use the code to detect the type
         // depending of the database type, these cases out of the jdbc standard are handled at the following switch
-        switch(databaseType) {
-            case ContentTypeUtil.SQL_SERVER_dATETIMEOFFSET_TEXT:
-                DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
-                return query.addParameter(paramName,  parser.parseDateTime(parameterValue));
-            case ContentTypeUtil.POSTGRESQL_UUID_TEXT:
-                return query.addParameter(paramName, UUID.fromString(parameterValue));
-            default:
-                break;
-        }
+//        switch(databaseType) {
+//            case ContentTypeUtil.SQL_SERVER_dATETIMEOFFSET_TEXT:
+//                DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
+//                return query.addParameter(paramName,  parser.parseDateTime(parameterValue));
+//            case ContentTypeUtil.POSTGRESQL_UUID_TEXT:
+//                return query.addParameter(paramName, UUID.fromString(parameterValue));
+//            default:
+//                break;
+//        }
 
         // cases for jdbc standard types
         JDBCType type = JDBCType.valueOf(databaseType);
@@ -85,7 +83,7 @@ public class QueryParameterService {
                 DateTime dateTime = new DateTime( parameterValue) ;
                 return query.addParameter(paramName, dateTime);
             case TIME:
-                throw new DataBaseTypeNotSupported("TIME");
+ //               throw new DataBaseTypeNotSupported("TIME");
 
             case TIMESTAMP:
                 DateTimeFormatter parser = ISODateTimeFormat.dateTimeParser();
@@ -96,31 +94,31 @@ public class QueryParameterService {
                 }
 
             case BINARY:
-                throw new DataBaseTypeNotSupported("BINARY");
+//                throw new DataBaseTypeNotSupported("BINARY");
 
             case VARBINARY:
-                throw new DataBaseTypeNotSupported("VARBINARY");
+//                throw new DataBaseTypeNotSupported("VARBINARY");
 
             case LONGVARBINARY:
-                throw new DataBaseTypeNotSupported("LONGVARBINARY");
+  //              throw new DataBaseTypeNotSupported("LONGVARBINARY");
 
             case NULL:
-                throw new DataBaseTypeNotSupported("NULL");
+    //            throw new DataBaseTypeNotSupported("NULL");
 
             case OTHER:
-                throw new DataBaseTypeNotSupported("OTHER");
+      //          throw new DataBaseTypeNotSupported("OTHER");
 
             case JAVA_OBJECT:
-                throw new DataBaseTypeNotSupported("JAVA_OBJECT");
+        //        throw new DataBaseTypeNotSupported("JAVA_OBJECT");
 
             case DISTINCT:
-                throw new DataBaseTypeNotSupported("DISTINCT");
+//                throw new DataBaseTypeNotSupported("DISTINCT");
 
             case STRUCT:
-                throw new DataBaseTypeNotSupported("STRUCT");
+  //              throw new DataBaseTypeNotSupported("STRUCT");
 
             case ARRAY:
-                throw new DataBaseTypeNotSupported("ARRAY");
+    //            throw new DataBaseTypeNotSupported("ARRAY");
 
             case BLOB:
                 return query.addParameter(paramName, parameterValue);
@@ -129,16 +127,16 @@ public class QueryParameterService {
                 return query.addParameter(paramName, parameterValue);
 
             case REF:
-                throw new DataBaseTypeNotSupported("REF");
+      //          throw new DataBaseTypeNotSupported("REF");
 
             case DATALINK:
-                throw new DataBaseTypeNotSupported("DATALINK");
+        //        throw new DataBaseTypeNotSupported("DATALINK");
 
             case BOOLEAN:
                 return query.addParameter(paramName, Boolean.valueOf(parameterValue));
 
             case ROWID:
-                throw new DataBaseTypeNotSupported("ROWID");
+ //               throw new DataBaseTypeNotSupported("ROWID");
 
             case NCHAR:
                 return query.addParameter(paramName, parameterValue);
@@ -150,23 +148,24 @@ public class QueryParameterService {
                 return query.addParameter(paramName, parameterValue);
 
             case NCLOB:
-                throw new DataBaseTypeNotSupported("NCLOB");
+   //             throw new DataBaseTypeNotSupported("NCLOB");
 
             case SQLXML:
-                throw new DataBaseTypeNotSupported("SQLXML");
+          //      throw new DataBaseTypeNotSupported("SQLXML");
 
             case REF_CURSOR:
-                throw new DataBaseTypeNotSupported("REF_CURSOR");
+          //      throw new DataBaseTypeNotSupported("REF_CURSOR");
 
             case TIME_WITH_TIMEZONE:
-                throw new DataBaseTypeNotSupported("TIME_WITH_TIMEZONE");
+          //      throw new DataBaseTypeNotSupported("TIME_WITH_TIMEZONE");
 
             case TIMESTAMP_WITH_TIMEZONE:
-                throw new DataBaseTypeNotSupported("TIMESTAMP_WITH_TIMEZONE");
+          //      throw new DataBaseTypeNotSupported("TIMESTAMP_WITH_TIMEZONE");
 
             default:
-                throw new DataBaseTypeNotSupported(String.valueOf(type));
+         //       throw new DataBaseTypeNotSupported(String.valueOf(type));
         }
+        return null;
     }
 
     private Integer getInteger(String value) {

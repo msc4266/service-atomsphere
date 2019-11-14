@@ -1,0 +1,654 @@
+{
+	"whitelist": [
+		{
+			"name": "Account",
+			"primaryKey": "accountId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AccountGroup",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AccountGroupAccount",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AccountGroupUserRole",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Account SSOConfig",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AccountUserFederation",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AccountUserRole",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "APIUsageCount",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AS2ConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Atom",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomConnectionFieldExtensionSummary",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomConnectorVersions",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomCounters",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomExtensions",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomMapExtension",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomMapExtensionsSummary",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Atom Security Policies object",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AtomStartupProperties",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AuditLog",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Cloud",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ComponentAtomAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ComponentEnvironmentAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "CustomTrackedField",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "DeployedExpiredCertificate",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "DeployedPackage",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Deployment (Legacy deployment)",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "DocumentCountAccount",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "DocumentCountAccountGroup",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EDICustomConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EDIFACTConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Environment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentAtomAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentConnectionFieldExtensionSummary",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentExtensions",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentMapExtension",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentMapExtensionsSummary",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "EnvironmentRole",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Event",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ExecutionCountAccount",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ExecutionCountAccountGroup",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ExecutionRecord",
+			"primaryKey": "executionId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ExecutionSummaryRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "HL7ConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "InstallerToken",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "IntegrationPack",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "IntegrationPackAtomAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "IntegrationPackEnvironmentAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "IntegrationPackInstance",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ListenerStatus",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "PackagedComponent",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "PersistedProcessProperties",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Process",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ProcessAtomAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ProcessEnvironmentAttachment",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ProcessSchedules",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ProcessScheduleStatus",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "Role",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "RosettaNetConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "SharedServerInformation",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ThroughputAccount",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ThroughputAccountGroup",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "TradacomsConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "TradingPartner",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "TradingPartnerProcessingGroup",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "X12ConnectorRecord",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		}
+	]
+}
