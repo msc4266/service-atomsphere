@@ -5,75 +5,75 @@
 			"primaryKey": "accountId",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountGroup",
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountGroupAccount",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountGroupUserRole",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
-			"name": "Account SSOConfig",
+			"name": "AccountSSOConfig",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountUserFederation",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountUserRole",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
-			"name": "APIUsageCount",
-			"primaryKey": "id",
-			"supportsGet": true,
+			"name": "ApiUsageCount",
+			"primaryKey": "",
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -83,7 +83,7 @@
 		{
 			"name": "AS2ConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -95,15 +95,15 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AtomConnectionFieldExtensionSummary",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -114,7 +114,7 @@
 			"name": "AtomConnectorVersions",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
 			"supportsUpdate": false,
 			"supportsExecute": false,
@@ -124,9 +124,9 @@
 			"name": "AtomCounters",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
@@ -136,7 +136,7 @@
 			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
@@ -144,16 +144,16 @@
 			"name": "AtomMapExtension",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
-			"supportsExecute": false,
+			"supportsUpdate": true,
+			"supportsExecute": true,
 			"supportsDelete": false
 		},
 		{
 			"name": "AtomMapExtensionsSummary",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -161,12 +161,12 @@
 			"supportsDelete": false
 		},
 		{
-			"name": "Atom Security Policies object",
+			"name": "AtomSecurityPolicies",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
@@ -174,7 +174,7 @@
 			"name": "AtomStartupProperties",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
 			"supportsUpdate": false,
 			"supportsExecute": false,
@@ -183,7 +183,7 @@
 		{
 			"name": "AuditLog",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -203,27 +203,27 @@
 		{
 			"name": "ComponentAtomAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "ComponentEnvironmentAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "CustomTrackedField",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -233,7 +233,7 @@
 		{
 			"name": "DeployedExpiredCertificate",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -245,17 +245,17 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
-			"name": "Deployment (Legacy deployment)",
+			"name": "Deployment",
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
 			"supportsDelete": false
@@ -263,7 +263,7 @@
 		{
 			"name": "DocumentCountAccount",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -273,7 +273,7 @@
 		{
 			"name": "DocumentCountAccountGroup",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -281,9 +281,9 @@
 			"supportsDelete": false
 		},
 		{
-			"name": "EDICustomConnectorRecord",
+			"name": "EdiCustomConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -293,7 +293,7 @@
 		{
 			"name": "EDIFACTConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -305,25 +305,25 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "EnvironmentAtomAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "EnvironmentConnectionFieldExtensionSummary",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -336,7 +336,7 @@
 			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
@@ -347,17 +347,17 @@
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
-			"supportsExecute": false,
+			"supportsExecute": true,
 			"supportsDelete": false
 		},
 		{
 			"name": "EnvironmentMapExtensionsSummary",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
-			"supportsExecute": false,
+			"supportsUpdate": true,
+			"supportsExecute": true,
 			"supportsDelete": false
 		},
 		{
@@ -365,15 +365,15 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "Event",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -383,7 +383,7 @@
 		{
 			"name": "ExecutionCountAccount",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -393,7 +393,7 @@
 		{
 			"name": "ExecutionCountAccountGroup",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -403,7 +403,7 @@
 		{
 			"name": "ExecutionRecord",
 			"primaryKey": "executionId",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -413,7 +413,7 @@
 		{
 			"name": "ExecutionSummaryRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -423,7 +423,7 @@
 		{
 			"name": "HL7ConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -433,9 +433,9 @@
 		{
 			"name": "InstallerToken",
 			"primaryKey": "id",
-			"supportsGet": true,
-			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsGet": false,
+			"supportsQuery": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
 			"supportsDelete": false
@@ -453,32 +453,32 @@
 		{
 			"name": "IntegrationPackAtomAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "IntegrationPackEnvironmentAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "IntegrationPackInstance",
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "ListenerStatus",
@@ -495,7 +495,7 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
 			"supportsDelete": false
@@ -504,9 +504,9 @@
 			"name": "PersistedProcessProperties",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
@@ -523,57 +523,57 @@
 		{
 			"name": "ProcessAtomAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "ProcessEnvironmentAttachment",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "ProcessSchedules",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "ProcessScheduleStatus",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
-			"supportsCreate": false,
+			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "Role",
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "RosettaNetConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -584,16 +584,16 @@
 			"name": "SharedServerInformation",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
 		{
 			"name": "ThroughputAccount",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -603,7 +603,7 @@
 		{
 			"name": "ThroughputAccountGroup",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -613,7 +613,7 @@
 		{
 			"name": "TradacomsConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
@@ -625,25 +625,35 @@
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
+		},
+		{
+			"name": "TradingPartnerComponent",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": false,
+			"supportsDelete": true
 		},
 		{
 			"name": "TradingPartnerProcessingGroup",
 			"primaryKey": "id",
 			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": false,
-			"supportsUpdate": false,
+			"supportsCreate": true,
+			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "X12ConnectorRecord",
 			"primaryKey": "id",
-			"supportsGet": true,
+			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,

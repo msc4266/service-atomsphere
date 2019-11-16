@@ -30,6 +30,20 @@ public class ServiceMetadata {
 	Logger logger;
 //    private static final Logger LOGGER = LoggerFactory.getLogger(Database.class);
 	
+//TODO EXECUTE
+//cancel execution
+//	LISTENER_ACTION">changeListenerStatus
+//	DEPLOY_COMPONENT">deployComponent
+//	DEPLOY_PROCESS">deployProcess
+//	//download as2 artifacts log
+//	DOWNLOAD_ATOM_LOG">AtomLog
+//	DOWNLOAD_PROCESS_LOG">ProcessLog
+//	EXECUTE_PROCESS">executeProcess
+//	GET_ASSIGNABLE_ROLES">getAssignableRoles
+//	//PROVISION PARTNER CUSTOMER ACCOUNT
+//	ATOMMAPEXTENSION">AtomMapExtension
+//	ENVIRONMENTMAPEXTENSON">EnvironmentMapExtension
+
 	public ServiceMetadata () throws SAXException, IOException, ParserConfigurationException
 	{
 		DocumentBuilderFactory factory =
@@ -92,16 +106,22 @@ public class ServiceMetadata {
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");
 			
-			TypeElement typeElement = new TypeElement();
-			typeElement.setDeveloperName(name);
-			populatePropertiesForEntity(typeElement);
+			TypeElement typeElement = this.getTypeElement(name);
 
            	if (typeElement.getProperties().size()>0)
            		typeElements.add(typeElement);
            	else
-           		logger.info("Type has no properties and is excluded: " + typeElement.getDeveloperName());
+           		logger.warning("Type has no properties and is excluded: " + typeElement.getDeveloperName());
  		}    
 		return typeElements;
+	}
+	
+	public TypeElement getTypeElement(String typeName) throws SAXException, IOException, ParserConfigurationException
+	{
+		TypeElement typeElement = new TypeElement();
+		typeElement.setDeveloperName(typeName);
+		populatePropertiesForEntity(typeElement);
+		return typeElement;
 	}
 	
     private void populatePropertiesForEntity(TypeElement typeElement) throws SAXException, IOException, ParserConfigurationException {
@@ -114,6 +134,7 @@ public class ServiceMetadata {
 
         //Find type element for Entity
         NodeList items = xsdTopElement.getElementsByTagName("xs:complexType");
+        boolean entityFound=false;
     	if (items != null) {
            	for (int x=0; x<items.getLength(); x++)
         	{
@@ -124,6 +145,7 @@ public class ServiceMetadata {
            			String typeName = type.getNodeValue();
            			if (typeName !=null && typeName.contentEquals(typeElement.getDeveloperName()))
            			{
+           				entityFound=true;
            				Element complexTypeElement = (Element) item;
            				NodeList elements = complexTypeElement.getElementsByTagName("xs:element");
            				
@@ -150,6 +172,8 @@ public class ServiceMetadata {
            		}
         	}
     	}
+    	if (entityFound==false)
+    		System.out.println("***Warning entity not found:" + typeElement.getDeveloperName());
     }
     
 	void addPropertyAndBinding(String typeName, Node xsdElement, TypeElement typeElement, List<TypeElementPropertyBinding> typeElementPropertyBindings)
@@ -167,7 +191,7 @@ public class ServiceMetadata {
 				TypeElementPropertyBinding typeElementPropertyBinding = new TypeElementPropertyBinding(developerName, developerName, xsdType);
 				typeElementPropertyBindings.add(typeElementPropertyBinding);
 			} else {
-				logger.info(String.format("Unsupported Type: " + typeName+"."+developerName + " " + xsdType));
+				logger.warning(String.format("Unsupported Type: " + typeName+"."+developerName + " " + xsdType));
 			}
 	}
 
