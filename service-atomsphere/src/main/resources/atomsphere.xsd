@@ -2877,7 +2877,7 @@
           <xs:element name="inboundDocumentCount" type="xs:int"/>
           <xs:element name="inboundErrorDocumentCount" type="xs:int"/>
           <xs:element name="outboundDocumentCount" type="xs:int"/>
-          <xs:element name="executionDuration" type="xs:long"/>
+          <xs:element name="executionDuration" type="xs:long"/> <!--TODO long came back as ["LONG",###] -->
           <xs:element name="message" type="xs:string"/>
           <xs:element name="parentExecutionId" type="xs:string"/>
           <xs:element name="topLevelExecutionId" type="xs:string"/>

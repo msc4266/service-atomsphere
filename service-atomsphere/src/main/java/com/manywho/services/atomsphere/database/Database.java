@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere;
+package com.manywho.services.atomsphere.database;
 
 import com.google.common.collect.Lists;
 import com.manywho.sdk.api.run.elements.type.ListFilter;
@@ -7,37 +7,33 @@ import com.manywho.sdk.api.run.elements.type.ObjectDataType;
 import com.manywho.sdk.api.run.elements.type.Property;
 import com.manywho.sdk.services.database.RawDatabase;
 import com.manywho.services.atomsphere.ServiceConfiguration;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.xml.sax.SAXException;
-
 import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Base64;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Database implements RawDatabase<ServiceConfiguration> {
     private ServiceMetadata serviceMetadata;
-    private Logger logger;
 
-//    private static final Logger LOGGER = LoggerFactory.getLogger(Database.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Database.class);
 
 
     @Inject
     public Database() throws SAXException, IOException, ParserConfigurationException {
         serviceMetadata = new ServiceMetadata();
-        logger = Logger.getLogger(this.getClass().getName());
     }
 
     @Override
@@ -45,12 +41,8 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	if (!this.serviceMetadata.supportsCreate(object.getDeveloperName()))
             throw new RuntimeException("Create not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
-    	try {
-			JSONObject response = this.executeAPI(configuration, object.getDeveloperName(), "POST", "", body);
-			return jsonToMObject(response, object.getDeveloperName());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+ 		JSONObject response = executeAPI(configuration, object.getDeveloperName(), "POST", null, body);
+		return jsonToMObject(response, object.getDeveloperName());
     }
 
     @Override
@@ -62,11 +54,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     public void delete(ServiceConfiguration configuration, MObject object) {
     	if (!this.serviceMetadata.supportsDelete(object.getDeveloperName()))
             throw new RuntimeException("Delete not supported for " + object.getDeveloperName());
-    	try {
-			this.executeAPI(configuration, object.getDeveloperName(), "DELETE", object.getExternalId(), null);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		executeAPI(configuration, object.getDeveloperName(), "DELETE", object.getExternalId(), null);
     }
 
     @Override
@@ -79,12 +67,8 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	//https://api.boomi.com/api/rest/v1/boomi_davehock-T9DOG4/Process/095b2e9f-71ab-43aa-ae4b-9d521b61e0f4
     	if (!this.serviceMetadata.supportsGet(objectDataType.getDeveloperName()))
             throw new RuntimeException("Get not supported for " + objectDataType.getDeveloperName());
-    	try {
-			JSONObject response = this.executeAPI(configuration, objectDataType.getDeveloperName(), "GET", id, null);
-			return jsonToMObject(response, objectDataType.getDeveloperName());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		JSONObject response = executeAPI(configuration, objectDataType.getDeveloperName(), "GET", id, null);
+		return jsonToMObject(response, objectDataType.getDeveloperName());
     }
 
     @Override
@@ -93,19 +77,15 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	//TODO how can we maintain the queryToken for QueryMore to go beyond 100 items in first page?
     	if (!this.serviceMetadata.supportsQuery(objectDataType.getDeveloperName()))
             throw new RuntimeException("Query not supported for " + objectDataType.getDeveloperName());
-    	try {
-    		List<MObject> mObjects = Lists.newArrayList();
-			JSONObject response = this.executeAPI(configuration, objectDataType.getDeveloperName(), "POST", "query", null);
-			JSONArray results = response.getJSONArray("result");
-			for (int index=filter.getOffset(); index<filter.getOffset()+filter.getLimit() && index<results.length(); index++)
-			{				
-				JSONObject jObj = (JSONObject) results.get(index);
-				mObjects.add(jsonToMObject(jObj, objectDataType.getDeveloperName()));
-			}
-			return mObjects;
-		} catch (IOException e) {
-			throw new RuntimeException(e);
+		List<MObject> mObjects = Lists.newArrayList();
+		JSONObject response = executeAPI(configuration, objectDataType.getDeveloperName(), "POST", "query", null);
+		JSONArray results = response.getJSONArray("result");
+		for (int index=filter.getOffset(); index<filter.getOffset()+filter.getLimit() && index<results.length(); index++)
+		{				
+			JSONObject jObj = (JSONObject) results.get(index);
+			mObjects.add(jsonToMObject(jObj, objectDataType.getDeveloperName()));
 		}
+		return mObjects;
     }
 
     @Override
@@ -113,12 +93,8 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	if (!this.serviceMetadata.supportsUpdate(object.getDeveloperName()))
             throw new RuntimeException("Update not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
-    	try {
-			JSONObject response = this.executeAPI(configuration, object.getDeveloperName(), "POST", object.getExternalId(), body);
-			return jsonToMObject(response, object.getDeveloperName());
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
+		JSONObject response = executeAPI(configuration, object.getDeveloperName(), "POST", object.getExternalId(), body);
+		return jsonToMObject(response, object.getDeveloperName());
     }
 
     @Override
@@ -156,7 +132,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
        	for (String key:body.keySet())
        	{
     		//TODO Datatypes 
-           	Object field = body.get(key);
            	Property property=null;
            	
            	//TODO field.toString
@@ -164,7 +139,16 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            	
            	//TODO we can do a TypeElement typeElement = getTypeElement(entityName) but that requires a hit on xsd 
            	property = new Property();
-          	property.setContentValue(body.get(key).toString());
+           	String value = body.get(key).toString();
+           	//TODO Hack to fix long types returned as ["long",####]
+           	if (value.startsWith("[\"Long"))
+           	{
+           		String split[] = value.split(",");
+           		if (split.length==2)
+           			value = split[1].replace("]", "");
+           	}
+           		
+          	property.setContentValue(value);
  //              	property.setContentType(ContentType.String);
 //               	property.setContentType(contentType);
            	property.setDeveloperName(key);
@@ -173,48 +157,57 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	return mObject;
     }
     
-	public JSONObject executeAPI(ServiceConfiguration configuration, String entityName, String method, String resource, JSONObject payload) throws IOException
+	public static JSONObject executeAPI(ServiceConfiguration configuration, String entityName, String method, String resource, JSONObject payload) 
 	{
-		String operation = "query";
-		URL url = new URL(String.format("https://api.boomi.com/api/rest/v1/%s/%s/%s", configuration.getAccount(), entityName, resource));
-		logger.info(url.toString());
-        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-        conn.setRequestMethod(method);
-        conn.setDoOutput(true);
-        conn.setDoInput(true);
-        conn.setRequestProperty("Content-Type", "application/json");
-        conn.setRequestProperty("Accept", "application/json");
-    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
-    	String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-    	conn.setRequestProperty ("Authorization", basicAuth);
-        String str = "".toString();
-        byte[] input = str.getBytes();
- 		conn.setRequestProperty("Content-Length", ""+input.length);
- 
-        OutputStream os = conn.getOutputStream();
-        os.write(input, 0, input.length);  
-        
+		if (resource!=null)
+			resource="/"+resource;
         StringBuffer response= new StringBuffer();
-		try {
+        HttpURLConnection conn=null;
+		
+        try {
+    		URL url = new URL(String.format("https://api.boomi.com/api/rest/v1/%s/%s%s", configuration.getAccount(), entityName, resource));
+    		LOGGER.info(url.toString());
+            conn = (HttpURLConnection) url.openConnection();
+			conn.setRequestMethod(method);
+	        conn.setDoOutput(true);
+	        conn.setDoInput(true);
+	        conn.setRequestProperty("Content-Type", "application/json");
+	        conn.setRequestProperty("Accept", "application/json");
+	    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
+	    	String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+	    	conn.setRequestProperty ("Authorization", basicAuth);
+	        String str = "".toString();
+	        byte[] input = str.getBytes();
+	 		conn.setRequestProperty("Content-Length", ""+input.length);
+	 
+	        OutputStream os = conn.getOutputStream();
+	        os.write(input, 0, input.length);  
+	        
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream())) ;
 			String responseLine = null;
 			while ((responseLine = br.readLine()) != null) {
 			    response.append(responseLine.trim());
 			}
-//	    System.out.println(response.toString());
+		} catch (ProtocolException e1) {
+			throw new RuntimeException(e1);
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			conn.getResponseCode();
-			conn.getResponseMessage();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream())) ;
-			String responseLine = null;
-			while ((responseLine = br.readLine()) != null) {
-			    response.append(responseLine.trim());
+			try {
+				if (conn!=null)
+				{
+					response.append("Error code: " + conn.getResponseCode());
+					response.append(" " + conn.getResponseMessage() + " ");
+					BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream())) ;
+					String responseLine = null;
+					while ((responseLine = br.readLine()) != null) {
+					    response.append(responseLine.trim());
+					}
+					throw new RuntimeException(response.toString());
+				} else throw new RuntimeException(e);
+			} catch (IOException e1) {
+				throw new RuntimeException(e1);
 			}
-			throw new IOException(response.toString());
 		}
-	    logger.info(response.toString());
+	    LOGGER.info(response.toString());
 		return new JSONObject(response.toString());
 	}
 

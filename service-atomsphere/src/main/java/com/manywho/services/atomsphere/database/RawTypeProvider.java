@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere;
+package com.manywho.services.atomsphere.database;
 
 import com.manywho.sdk.api.describe.DescribeServiceRequest;
 import com.manywho.sdk.api.draw.elements.type.TypeElement;

@@ -12,6 +12,7 @@ import org.xml.sax.SAXException;
 
 import com.manywho.sdk.api.draw.elements.type.TypeElement;
 import com.manywho.sdk.api.draw.elements.type.TypeElementProperty;
+import com.manywho.services.atomsphere.database.ServiceMetadata;
 
 public class ServiceMetadataTest {
 
@@ -29,4 +30,7 @@ public class ServiceMetadataTest {
 		}
 		assertTrue(typeElements.size()>0);
 	}
+	
+	//TODO test all CRUD driven by whitelist.json
+	//TODO test each action
 }

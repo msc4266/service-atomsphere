@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere;
+package com.manywho.services.atomsphere.database;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,19 +30,6 @@ public class ServiceMetadata {
 	Logger logger;
 //    private static final Logger LOGGER = LoggerFactory.getLogger(Database.class);
 	
-//TODO EXECUTE
-//cancel execution
-//	LISTENER_ACTION">changeListenerStatus
-//	DEPLOY_COMPONENT">deployComponent
-//	DEPLOY_PROCESS">deployProcess
-//	//download as2 artifacts log
-//	DOWNLOAD_ATOM_LOG">AtomLog
-//	DOWNLOAD_PROCESS_LOG">ProcessLog
-//	EXECUTE_PROCESS">executeProcess
-//	GET_ASSIGNABLE_ROLES">getAssignableRoles
-//	//PROVISION PARTNER CUSTOMER ACCOUNT
-//	ATOMMAPEXTENSION">AtomMapExtension
-//	ENVIRONMENTMAPEXTENSON">EnvironmentMapExtension
 
 	public ServiceMetadata () throws SAXException, IOException, ParserConfigurationException
 	{

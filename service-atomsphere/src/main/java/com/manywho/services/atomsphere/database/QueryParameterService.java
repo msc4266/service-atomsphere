@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere;
+package com.manywho.services.atomsphere.database;
 
 import com.google.common.base.Strings;
 import org.joda.time.DateTime;
