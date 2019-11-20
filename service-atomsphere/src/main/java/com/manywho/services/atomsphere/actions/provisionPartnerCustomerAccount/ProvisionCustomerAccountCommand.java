@@ -18,7 +18,7 @@ public class ProvisionCustomerAccountCommand implements ActionCommand<ServiceCon
 		JSONObject body = new JSONObject();
 		body.put("atomId", input);
 
-		JSONObject response = Database.executeAPI(configuration, "AccountProvision", "POST", "execute", null);
+		JSONObject response = Database.executeAPI(configuration, "AccountProvision", "POST", "execute", body);
 
 		return new ActionResponse<>(new ProvisionCustomerAccount.Outputs(response));
 	}

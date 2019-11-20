@@ -13,13 +13,12 @@ public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration
 	public ActionResponse<ExecuteProcess.Outputs> execute(ServiceConfiguration configuration, ServiceRequest request,
 			ExecuteProcess.Inputs input) {
 		JSONObject body = new JSONObject();
-		body.put("processId", input.getProcessId());
 		if (input.getProcessName()!=null && input.getProcessName().length()>0)
 			body.put("processName", input.getProcessName());
 		else
 			body.put("processId", input.getProcessId());
 		body.put("atomId", input.getAtomId());
-		JSONObject response = Database.executeAPI(configuration, "executeProcess", "POST", null, null);
+		JSONObject response = Database.executeAPI(configuration, "executeProcess", "POST", null, body);
 		return new ActionResponse<>(new ExecuteProcess.Outputs(response));
 	}
 }

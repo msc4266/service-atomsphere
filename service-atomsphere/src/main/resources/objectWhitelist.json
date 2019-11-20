@@ -8,7 +8,7 @@
 			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": true
+			"supportsDelete": false
 		},
 		{
 			"name": "AccountGroup",
@@ -18,7 +18,7 @@
 			"supportsCreate": true,
 			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": true
+			"supportsDelete": false
 		},
 		{
 			"name": "AccountGroupAccount",
@@ -182,7 +182,7 @@
 		},
 		{
 			"name": "AuditLog",
-			"primaryKey": "id",
+			"primaryKey": "",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -262,7 +262,7 @@
 		},
 		{
 			"name": "DocumentCountAccount",
-			"primaryKey": "id",
+			"primaryKey": "",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -344,7 +344,7 @@
 			"name": "EnvironmentMapExtension",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
 			"supportsUpdate": false,
 			"supportsExecute": true,
@@ -372,7 +372,7 @@
 		},
 		{
 			"name": "Event",
-			"primaryKey": "id",
+			"primaryKey": "eventId",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -382,7 +382,7 @@
 		},
 		{
 			"name": "ExecutionCountAccount",
-			"primaryKey": "id",
+			"primaryKey": "",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -412,7 +412,7 @@
 		},
 		{
 			"name": "ExecutionSummaryRecord",
-			"primaryKey": "id",
+			"primaryKey": "",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -484,7 +484,7 @@
 			"name": "ListenerStatus",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": false,
 			"supportsUpdate": false,
 			"supportsExecute": false,
@@ -548,7 +548,7 @@
 			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": true
+			"supportsDelete": false
 		},
 		{
 			"name": "ProcessScheduleStatus",
@@ -558,7 +558,7 @@
 			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": true
+			"supportsDelete": false
 		},
 		{
 			"name": "Role",
@@ -592,7 +592,7 @@
 		},
 		{
 			"name": "ThroughputAccount",
-			"primaryKey": "id",
+			"primaryKey": "",
 			"supportsGet": false,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -624,11 +624,11 @@
 			"name": "TradingPartner",
 			"primaryKey": "id",
 			"supportsGet": true,
-			"supportsQuery": true,
+			"supportsQuery": false,
 			"supportsCreate": true,
 			"supportsUpdate": true,
 			"supportsExecute": false,
-			"supportsDelete": true
+			"supportsDelete": false
 		},
 		{
 			"name": "TradingPartnerComponent",

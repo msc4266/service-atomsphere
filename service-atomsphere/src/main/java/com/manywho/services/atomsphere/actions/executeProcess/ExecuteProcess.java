@@ -8,10 +8,10 @@ import com.manywho.sdk.services.actions.Action;
 public class ExecuteProcess {
 	public static class Inputs{
 	    @Action.Input(name = "Process Name", contentType = ContentType.String)
-	    private String processId;
+	    private String processName;
 
 	    @Action.Input(name = "Process ID", contentType = ContentType.String)
-	    private String processName;
+	    private String processId;
 
 	    @Action.Input(name = "Atom Id", contentType = ContentType.String)
 	    private String atomId;

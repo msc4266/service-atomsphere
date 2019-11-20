@@ -13,9 +13,9 @@ public class DownloadProcessLogCommand implements ActionCommand<ServiceConfigura
 	public ActionResponse<DownloadProcessLog.Outputs> execute(ServiceConfiguration configuration, ServiceRequest request,
 			DownloadProcessLog.Inputs input) {
 		JSONObject body = new JSONObject();
-		body.put("processId", input.getProcessId());
+		body.put("executionId", input.getExecutionId());
 		body.put("logLevel", input.getLogLevel());
-		JSONObject response = Database.executeAPI(configuration, "ProcessLog", "POST", null, null);
+		JSONObject response = Database.executeAPI(configuration, "ProcessLog", "POST", null, body);
 		return new ActionResponse<>(new DownloadProcessLog.Outputs(response));
 	}
 }

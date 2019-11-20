@@ -17,7 +17,7 @@ public class ChangeListenerStatusCommand implements ActionCommand<ServiceConfigu
 		body.put("listenerId", input.getListenerId());
 		body.put("containerId", input.getContainerId());
 		body.put("action", input.getAction());
-		JSONObject status = Database.executeAPI(configuration, "changeListenerStatus", "POST", null, null);
+		JSONObject status = Database.executeAPI(configuration, "changeListenerStatus", "POST", null, body);
 
 		return new ActionResponse<>(new ChangeListenerStatus.Outputs(status.toString()));
 	}

@@ -241,4 +241,22 @@ public class ServiceMetadata {
 		}
         return contentType;
 	}	
+	
+	public static TypeElementProperty getProperty(TypeElement typeElement, String propertyName)
+	{
+		for(TypeElementProperty property:typeElement.getProperties())
+		{
+			if (property.getDeveloperName().contentEquals(propertyName))
+				return property;
+		}
+		return null;
+	}
+	
+	public static ContentType getPropertyType(TypeElement typeElement, String propertyName)
+	{
+		TypeElementProperty property = getProperty(typeElement, propertyName);
+		if (property!=null)
+			return property.getContentType();
+		return ContentType.String;
+	}
 }

@@ -19,7 +19,7 @@ public class DownloadAS2ArtifactsLogCommand implements ActionCommand<ServiceConf
 		body.put("atomId", input.getAtomId());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		body.put("logDate", simpleDateFormat.format(input.getLogDate()));
-		JSONObject response = Database.executeAPI(configuration, "AtomAS2Artifacts", "POST", null, null);
+		JSONObject response = Database.executeAPI(configuration, "AtomAS2Artifacts", "POST", null, body);
 		return new ActionResponse<>(new DownloadAS2ArtifactsLog.Outputs(response));
 	}
 }

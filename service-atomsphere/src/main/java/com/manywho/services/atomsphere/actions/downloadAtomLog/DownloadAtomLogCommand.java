@@ -19,7 +19,7 @@ public class DownloadAtomLogCommand implements ActionCommand<ServiceConfiguratio
 		body.put("atomId", input.getAtomId());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		body.put("logDate", simpleDateFormat.format(input.getLogDate()));
-		JSONObject response = Database.executeAPI(configuration, "AtomLog", "POST", null, null);
+		JSONObject response = Database.executeAPI(configuration, "AtomLog", "POST", null, body);
 		return new ActionResponse<>(new DownloadAtomLog.Outputs(response));
 	}
 }

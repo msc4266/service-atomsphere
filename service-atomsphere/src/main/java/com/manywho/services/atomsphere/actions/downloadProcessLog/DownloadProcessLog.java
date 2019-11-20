@@ -7,14 +7,14 @@ import com.manywho.sdk.services.actions.Action;
 @Action.Metadata(name="Download Process Log", summary = "Initiate download of the Process log and return a URL for the download", uri="/atomsphere/downloadProcessLog")
 public class DownloadProcessLog {
 	public static class Inputs{
-	    @Action.Input(name = "Process ID", contentType = ContentType.String)
-	    private String processId;
+	    @Action.Input(name = "Execution ID", contentType = ContentType.String)
+	    private String executionId;
 
 	    @Action.Input(name = "Log Level - SEVERE|WARNING|INFO|CONFIG|FINE|FINER|FINEST|ALL", contentType = ContentType.String)
 	    private String logLevel;
 
-		public String getProcessId() {
-			return processId;
+		public String getExecutionId() {
+			return executionId;
 		}
 
 		public String getLogLevel() {
@@ -34,7 +34,7 @@ public class DownloadProcessLog {
 
 		public Outputs(JSONObject response)
 		{
-			this.statusCode=response.getString("statusCode");
+			this.statusCode=response.getInt("statusCode")+"";
 			this.message=response.getString("message");
 			this.url=response.getString("url");
 		}
