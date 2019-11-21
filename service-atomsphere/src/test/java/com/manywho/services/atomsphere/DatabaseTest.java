@@ -18,7 +18,7 @@ public class DatabaseTest {
 	{
 		configuration = new ServiceConfiguration();
 		configuration.setUsername("dave.hock@dell.com");
-		configuration.setPassword("Gopack!24");
+		configuration.setPassword("");
 		configuration.setAccount("boomi_davehock-T9DOG4");
 	}
 	//TODO Generate edit mobject request payloads from metadata
