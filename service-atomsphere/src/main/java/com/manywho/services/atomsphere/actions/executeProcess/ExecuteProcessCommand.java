@@ -1,5 +1,6 @@
 package com.manywho.services.atomsphere.actions.executeProcess;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import com.manywho.sdk.api.run.elements.config.ServiceRequest;
 import com.manywho.sdk.services.actions.ActionCommand;
@@ -18,6 +19,21 @@ public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration
 		else
 			body.put("processId", input.getProcessId());
 		body.put("atomId", input.getAtomId());
+
+		JSONObject processProperties = new JSONObject();
+		body.put("ProcessProperties", processProperties);
+//		processProperties.put("@type", "ProcessProperties");
+		JSONArray processPropertyArray = new JSONArray();
+		processProperties.put("ProcessProperty", processPropertyArray);
+		for (ProcessProperty processProperty: input.getProcessProperties())
+		{
+			JSONObject prop = new JSONObject();
+			prop.put("Name", processProperty.getName());
+			prop.put("Value", processProperty.getValue());
+//			prop.put("@type", "ProcessProperty");
+			processPropertyArray.put(prop);
+		}
+		
 		JSONObject response = Database.executeAPI(configuration, "executeProcess", "POST", null, body);
 		return new ActionResponse<>(new ExecuteProcess.Outputs(response));
 	}

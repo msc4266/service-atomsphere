@@ -17,7 +17,7 @@ public class DownloadAtomLog {
 	    private Date logDate;
 
 	    @Action.Input(name = "Include Binary Files", contentType = ContentType.Boolean)
-	    private Date includeBin;
+	    private Boolean includeBin;
 
 		public String getAtomId() {
 			return atomId;
@@ -27,14 +27,14 @@ public class DownloadAtomLog {
 			return logDate;
 		}
 
-		public Date getIncludeBin() {
+		public Boolean getIncludeBin() {
 			return includeBin;
 		}
 	}
 	
 	public static class Outputs {
-		@Action.Output(name="Status Code", contentType=ContentType.String)
-		private String statusCode;
+		@Action.Output(name="Status Code", contentType=ContentType.Number)
+		private int statusCode;
 
 		@Action.Output(name="Status Message", contentType=ContentType.String)
 		private String message;
@@ -44,11 +44,11 @@ public class DownloadAtomLog {
 
 		public Outputs(JSONObject response)
 		{
-			this.statusCode=response.getString("statusCode");
+			this.statusCode=response.getInt("statusCode");
 			this.message=response.getString("message");
 			this.url=response.getString("url");
 		}
-		public String getStatusCode() {
+		public int getStatusCode() {
 			return statusCode;
 		}
 

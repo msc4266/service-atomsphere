@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8"?><xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:apim="http://apim.api.platform.boomi.com/" xmlns:bns="http://api.platform.boomi.com/" xmlns:tns="http://apim.api.platform.boomi.com/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" elementFormDefault="qualified" targetNamespace="http://apim.api.platform.boomi.com/" version="1.0">
+
+  <xs:import namespace="http://api.platform.boomi.com/" schemaLocation="https://api.boomi.com/apim/api/soap/v1/boomi_davehock-T9DOG4?xsd=3"/>
+
+  <xs:element name="authSourceId" type="xs:string"/>
+
+  <xs:element name="bulkObject" type="tns:ApimBulkRequest"/>
+
+  <xs:element name="object" type="tns:ApimBaseType"/>
+
+  <xs:element name="objectId" type="xs:string"/>
+
+  <xs:element name="objectType" type="xs:string"/>
+
+  <xs:element name="queryToken" type="xs:string"/>
+
+  <xs:element name="result" nillable="true" type="xs:anyType"/>
+
+  <xs:element name="results" nillable="true" type="xs:anyType"/>
+
+  <xs:element name="successful" type="xs:boolean"/>
+
+  <xs:complexType name="ApimBaseType">
+    <xs:complexContent>
+      <xs:extension base="bns:BaseType">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="KeyCallCount"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="apiKey"/><field name="timeBlock"/><field name="httpStatus"/><field name="environmentId"/><field name="count"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence/>
+        <xs:attribute name="apiKey" type="xs:string"/>
+        <xs:attribute name="timeBlock" type="xs:dateTime"/>
+        <xs:attribute name="httpStatus" type="xs:int"/>
+        <xs:attribute name="environmentId" type="xs:string"/>
+        <xs:attribute name="count" type="xs:long"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ApiKey">
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence/>
+        <xs:attribute name="applicationId" type="xs:string"/>
+        <xs:attribute name="contractId" type="xs:string"/>
+        <xs:attribute name="key" type="xs:string"/>
+        <xs:attribute name="environmentId" type="xs:string"/>
+        <xs:attribute name="apiId" type="xs:string"/>
+        <xs:attribute name="generatedBy" type="xs:string"/>
+        <xs:attribute name="generatedAt" type="xs:dateTime"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+        <xs:attribute name="deleted" type="xs:boolean"/>
+        <xs:attribute name="subscriptionName" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticationSourceUser"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="userName"/><field name="authSourceId"/><field name="groupName"/><field name="enabled"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="groups" type="tns:AuthSourceGroup"/>
+          <xs:element name="credential" type="tns:Credential"/>
+        </xs:sequence>
+        <xs:attribute name="userId" type="xs:string"/>
+        <xs:attribute name="authSourceId" type="xs:string"/>
+        <xs:attribute name="userName" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthSourceGroup">
+    <xs:sequence/>
+    <xs:attribute name="groupId" type="xs:string"/>
+    <xs:attribute name="groupName" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Credential">
+    <xs:sequence/>
+  </xs:complexType>
+
+  <xs:complexType name="CredentialPassword">
+    <xs:complexContent>
+      <xs:extension base="tns:Credential">
+        <xs:sequence/>
+        <xs:attribute name="password" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticationSourceRole"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="roleName"/><field name="authSourceId"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="roleId" type="xs:string"/>
+        <xs:attribute name="authSourceId" type="xs:string"/>
+        <xs:attribute name="roleName" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Application"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="status"/><field name="applicationName"/><field name="companyName"/><field name="applicationId"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="notes" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="applicationId" type="xs:string"/>
+        <xs:attribute name="applicationName" type="xs:string"/>
+        <xs:attribute name="contactName" type="xs:string"/>
+        <xs:attribute name="contactEmail" type="xs:string"/>
+        <xs:attribute name="contactPhone" type="xs:string"/>
+        <xs:attribute name="companyName" type="xs:string"/>
+        <xs:attribute name="companyWebsite" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+        <xs:attribute name="deleted" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticationSourceGroup"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="groupName"/><field name="authSourceId"/><field name="roleName"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="roles" type="tns:AuthSourceRole"/>
+        </xs:sequence>
+        <xs:attribute name="groupId" type="xs:string"/>
+        <xs:attribute name="authSourceId" type="xs:string"/>
+        <xs:attribute name="groupName" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthSourceRole">
+    <xs:sequence/>
+    <xs:attribute name="roleId" type="xs:string"/>
+    <xs:attribute name="roleName" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="Contract">
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence/>
+        <xs:attribute name="contractId" type="xs:string"/>
+        <xs:attribute name="apiId" type="xs:string"/>
+        <xs:attribute name="environmentId" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="maxMessageSize" type="xs:long"/>
+        <xs:attribute name="rateLimit" type="xs:long"/>
+        <xs:attribute name="rateLimitUnit" type="tns:RateLimitUnit"/>
+        <xs:attribute name="quotaLimit" type="xs:long"/>
+        <xs:attribute name="quotaLimitUnit" type="tns:QuotaLimitUnit"/>
+        <xs:attribute name="deleted" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="AuthenticationSource"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="name"/><field name="type"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="authSourceId" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="tns:AuthenticationSourceType"/>
+        <xs:attribute name="brokerIsCurrent" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Plan">
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence/>
+        <xs:attribute name="planId" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="maxMessageSize" type="xs:long"/>
+        <xs:attribute name="rateLimit" type="xs:long"/>
+        <xs:attribute name="rateLimitUnit" type="tns:RateLimitUnit"/>
+        <xs:attribute name="quotaLimit" type="xs:long"/>
+        <xs:attribute name="quotaLimitUnit" type="tns:QuotaLimitUnit"/>
+        <xs:attribute name="status" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PublishedApi"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="atomId"/><field name="environmentId"/><field name="componentId"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:ApimBaseType">
+        <xs:sequence>
+          <xs:element minOccurs="0" name="description" type="xs:string"/>
+          <xs:element minOccurs="0" name="rest" type="tns:RestInfo"/>
+          <xs:element minOccurs="0" name="soap11" type="tns:SoapInfo"/>
+          <xs:element minOccurs="0" name="soap12" type="tns:SoapInfo"/>
+          <xs:element minOccurs="0" name="odata2" type="tns:ODataInfo"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="componentId" type="xs:string"/>
+        <xs:attribute name="atomId" type="xs:string"/>
+        <xs:attribute name="environmentId" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="RestInfo">
+    <xs:sequence/>
+    <xs:attribute name="swaggerUrl" type="xs:string"/>
+    <xs:attribute name="swaggerUiLink" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="SoapInfo">
+    <xs:sequence/>
+    <xs:attribute name="wsdlUrl" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ODataInfo">
+    <xs:sequence/>
+    <xs:attribute name="serviceUrl" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="ApimBulkRequest">
+    <xs:complexContent>
+      <xs:extension base="bns:BulkRequest">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ApimBulkResult">
+    <xs:complexContent>
+      <xs:extension base="bns:BulkResult">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ApimQueryResult">
+    <xs:complexContent>
+      <xs:extension base="bns:apimBaseQueryResult">
+        <xs:sequence/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:simpleType name="RateLimitUnit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="SECOND"/>
+      <xs:enumeration value="MINUTE"/>
+      <xs:enumeration value="HOUR"/>
+      <xs:enumeration value="UNLIMITED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="QuotaLimitUnit">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DAY"/>
+      <xs:enumeration value="WEEK"/>
+      <xs:enumeration value="MONTH"/>
+      <xs:enumeration value="UNLIMITED"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="AuthenticationSourceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="OPENID"/>
+      <xs:enumeration value="SAML"/>
+      <xs:enumeration value="BASIC"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>

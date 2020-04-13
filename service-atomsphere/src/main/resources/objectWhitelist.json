@@ -8,7 +8,7 @@
 			"supportsCreate": true,
 			"supportsUpdate": false,
 			"supportsExecute": false,
-			"supportsDelete": false
+			"supportsDelete": true
 		},
 		{
 			"name": "AccountGroup",
@@ -219,6 +219,16 @@
 			"supportsUpdate": false,
 			"supportsExecute": false,
 			"supportsDelete": true
+		},
+		{
+			"name": "ComponentMetadata",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
 		},
 		{
 			"name": "CustomTrackedField",
@@ -617,16 +627,6 @@
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,
-			"supportsExecute": false,
-			"supportsDelete": false
-		},
-		{
-			"name": "TradingPartner",
-			"primaryKey": "id",
-			"supportsGet": true,
-			"supportsQuery": false,
-			"supportsCreate": true,
-			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},

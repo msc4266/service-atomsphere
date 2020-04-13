@@ -1,11 +1,15 @@
 package com.manywho.services.atomsphere;
 
 import static org.junit.Assert.*;
+import org.junit.Test;
 
 import java.util.List;
-import org.junit.Test;
+
+import com.google.common.collect.Lists;
+import com.manywho.sdk.api.CriteriaType;
 import com.manywho.sdk.api.draw.elements.type.TypeElement;
 import com.manywho.sdk.api.run.elements.type.ListFilter;
+import com.manywho.sdk.api.run.elements.type.ListFilterWhere;
 import com.manywho.sdk.api.run.elements.type.MObject;
 import com.manywho.sdk.api.run.elements.type.ObjectDataType;
 import com.manywho.services.atomsphere.database.Database;
@@ -53,15 +57,27 @@ public class DatabaseTest {
 					else System.out.println("****CREATE - "+typeElement.getDeveloperName() + " - " + e.getMessage());
 				}
 			}
-			
+			int xxxx=0;
+			if (typeElement.getDeveloperName().contentEquals("Process"))
+				xxxx=1;
+
 			//QUERY
 			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsQuery(typeElement.getDeveloperName()))
 			{
 				ListFilter filter = new ListFilter();
 				filter.setOffset(0);
 				filter.setLimit(20);
+				ListFilterWhere listFilterWhere = new ListFilterWhere();
+				listFilterWhere.setColumnName("name");
+				listFilterWhere.setContentValue("(sub)");
+				listFilterWhere.setCriteriaType(CriteriaType.Contains);
+				List<ListFilterWhere> whereList = Lists.newArrayList();
+				whereList.add(listFilterWhere);
+				if (typeElement.getDeveloperName().contentEquals("Process"))
+					filter.setWhere(whereList);
 				try {
 					List<MObject> objects = database.findAll(configuration, objectDataType, filter);
+					System.out.println("****QUERY - "+typeElement.getDeveloperName() + " - " + objects.size());
 				} catch (Exception e) {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for query"))

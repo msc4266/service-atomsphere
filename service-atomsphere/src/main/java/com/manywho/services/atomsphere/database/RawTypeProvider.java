@@ -4,8 +4,6 @@ import com.manywho.sdk.api.describe.DescribeServiceRequest;
 import com.manywho.sdk.api.draw.elements.type.TypeElement;
 import com.manywho.sdk.services.types.TypeProvider;
 import com.manywho.services.atomsphere.ServiceConfiguration;
-import org.sql2o.Connection;
-import org.sql2o.Sql2o;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

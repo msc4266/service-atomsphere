@@ -87,20 +87,34 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 				queryBody.put("QueryFilter", queryFilter);
 				JSONObject expression = new JSONObject();
 				queryFilter.put("expression", expression);
-				expression.put("operator", "and");
-				JSONArray nestedExpressions = new JSONArray();
-				expression.put("nestedExpression", nestedExpressions);
-				for (ListFilterWhere where : filter.getWhere())
+				if (filter.getWhere().size()==1)
 				{
+					ListFilterWhere where = filter.getWhere().get(0);
 					String operator = convertCriteriaType(where.getCriteriaType());
 					if (operator == null) throw new RuntimeException("Query operator not supported by Atomsphere API - " + where.getCriteriaType().name());
-					JSONObject nestedExpression = new JSONObject();
-					nestedExpressions.put(nestedExpression);
-					nestedExpression.put("operator", operator);
-					nestedExpression.put("property", where.getColumnName());
+					expression.put("operator", operator);
+					expression.put("property", where.getColumnName());
 					JSONArray argument = formatFilterArguments(where, typeElement);
 					if (argument.length()>0) //is null and singleton operators
-						nestedExpression.put("argument", argument);
+						expression.put("argument", argument);
+				}
+				else 
+				{
+					expression.put("operator", "and");
+					JSONArray nestedExpressions = new JSONArray();
+					expression.put("nestedExpression", nestedExpressions);
+					for (ListFilterWhere where : filter.getWhere())
+					{
+						String operator = convertCriteriaType(where.getCriteriaType());
+						if (operator == null) throw new RuntimeException("Query operator not supported by Atomsphere API - " + where.getCriteriaType().name());
+						JSONObject nestedExpression = new JSONObject();
+						nestedExpressions.put(nestedExpression);
+						nestedExpression.put("operator", operator);
+						nestedExpression.put("property", where.getColumnName());
+						JSONArray argument = formatFilterArguments(where, typeElement);
+						if (argument.length()>0) //is null and singleton operators
+							nestedExpression.put("argument", argument);
+					}
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
@@ -132,7 +146,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 		
 		
 		JSONObject response = executeAPI(configuration, objectDataType.getDeveloperName(), "POST", "query", queryBody);
-		JSONArray results = response.getJSONArray("result");
+		JSONArray results = response.getJSONArray("result"); 
 		for (int index=filter.getOffset(); index<filter.getOffset()+filter.getLimit() && index<results.length(); index++)
 		{				
 			JSONObject jObj = (JSONObject) results.get(index);
@@ -171,11 +185,12 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     JSONObject mObjectToJson(MObject mObject, String entityName)
     {
     	JSONObject body = new JSONObject();
-    	body.put("@type", entityName);
+//    	body.put("@type", entityName);
     	for (Property property : mObject.getProperties())
     	{
     		//TODO Datatypes getContentValue only returns String so convert
-    		body.put(property.getDeveloperName(), property.getContentValue());
+    		if (property.getContentValue()!=null && property.getContentValue().length()>0)
+    			body.put(property.getDeveloperName(), property.getContentValue());
     	}
     	return body;
     }
@@ -235,7 +250,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 		
         try {
     		URL url = new URL(String.format("https://api.boomi.com/api/rest/v1/%s/%s%s", configuration.getAccount(), entityName, resource));
-    		LOGGER.info(url.toString());
+    		LOGGER.info(method + " " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(method);
 	        conn.setDoOutput(true);
@@ -277,6 +292,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 					while ((responseLine = br.readLine()) != null) {
 					    response.append(responseLine.trim());
 					}
+					LOGGER.error(response.toString());
 					throw new RuntimeException(response.toString());
 				} else throw new RuntimeException(e);
 			} catch (IOException e1) {
@@ -307,6 +323,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 		switch (type)
 		{
 		case Contains:
+			operator="LIKE";
 			break;
 		case EndsWith:
 			break;

@@ -188,6 +188,7 @@ public class ServiceMetadata {
     	switch (xsdType)
     	{
     	case "xs:string":
+    	case "xs:base64Binary":
     		contentType = ContentType.String;   	
     		break;
     	case "xs:int":

@@ -15,7 +15,7 @@ public class DeployProcess {
 	    @Action.Input(name = "Digest", contentType = ContentType.String)
 	    private String digest ;
 
-	    @Action.Input(name = "Deployment ID", contentType = ContentType.String)
+	    @Action.Input(name = "Listener Status", contentType = ContentType.String)
 	    private String listenerStatus ;
 
 		public String getDeploymentId() {

@@ -1,6 +1,7 @@
 package com.manywho.services.atomsphere.actions.executeProcess;
 
 import org.json.JSONObject;
+import java.util.List;
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.actions.Action;
 
@@ -16,6 +17,9 @@ public class ExecuteProcess {
 	    @Action.Input(name = "Atom Id", contentType = ContentType.String)
 	    private String atomId;
 
+	    @Action.Input(name = "Process Properties", contentType = ContentType.List)
+	    private List<ProcessProperty> processProperties;
+
 		public String getProcessId() {
 			return processId;
 		}
@@ -27,6 +31,11 @@ public class ExecuteProcess {
 		public String getAtomId() {
 			return atomId;
 		}
+		
+		public List<ProcessProperty> getProcessProperties() {
+			return processProperties;
+		}
+
 	}
 	
 	public static class Outputs {
