@@ -24,6 +24,34 @@ public class GetClusterLogs {
 	        return errorsOnly;
 	    }
 
+	    @Action.Input(name = "Full Stack Traces", contentType = ContentType.Boolean)
+	    private boolean fullStackTraces;
+
+	    public boolean getFullStackTraces() {
+	        return fullStackTraces;
+	    }
+
+	    @Action.Input(name = "Date/Time Format", contentType = ContentType.String)
+	    private String datetimeFormat;
+
+	    public String getDateTimeFormat() {
+	        return datetimeFormat;
+	    }
+
+	    @Action.Input(name = "Timezone", contentType = ContentType.String)
+	    private String timezone;
+
+	    public String getTimeZone() {
+	        return timezone;
+	    }
+
+	    @Action.Input(name = "Maximum File Size", contentType = ContentType.Number)
+	    private long maxFileSize;
+
+	    public long getMaximumFileSize() {
+	        return maxFileSize;
+	    }
+
 	    @Action.Input(name = "Start Time", contentType = ContentType.DateTime)
 	    private Date startTime;
 
@@ -44,6 +72,54 @@ public class GetClusterLogs {
 	    public int getSecondsAfter() {
 	        return secondsAfter;
 	    }
+
+		public String getDatetimeFormat() {
+			return datetimeFormat;
+		}
+
+		public void setDatetimeFormat(String datetimeFormat) {
+			this.datetimeFormat = datetimeFormat;
+		}
+
+		public String getTimezone() {
+			return timezone;
+		}
+
+		public void setTimezone(String timezone) {
+			this.timezone = timezone;
+		}
+
+		public long getMaxFileSize() {
+			return maxFileSize;
+		}
+
+		public void setMaxFileSize(long maxFileSize) {
+			this.maxFileSize = maxFileSize;
+		}
+
+		public void setAtomId(String atomId) {
+			this.atomId = atomId;
+		}
+
+		public void setErrorsOnly(boolean errorsOnly) {
+			this.errorsOnly = errorsOnly;
+		}
+
+		public void setFullStackTraces(boolean fullStackTraces) {
+			this.fullStackTraces = fullStackTraces;
+		}
+
+		public void setStartTime(Date startTime) {
+			this.startTime = startTime;
+		}
+
+		public void setSecondsBefore(int secondsBefore) {
+			this.secondsBefore = secondsBefore;
+		}
+
+		public void setSecondsAfter(int secondsAfter) {
+			this.secondsAfter = secondsAfter;
+		}
 	}
 	
 	public static class Outputs {

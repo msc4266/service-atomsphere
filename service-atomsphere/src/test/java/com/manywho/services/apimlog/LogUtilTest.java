@@ -1,9 +1,17 @@
 package com.manywho.services.apimlog;
 
 import static org.junit.Assert.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.junit.Before;
 import org.junit.Test;
 
+import com.manywho.services.TestUtil;
 import com.manywho.services.atomsphere.ServiceConfiguration;
+import com.manywho.services.atomsphere.actions.apimatomcompare.AtomPropertyCompareItem;
+import com.manywho.services.atomsphere.actions.apimatomcompare.CompareAtomProperties;
+import com.manywho.services.atomsphere.actions.apimclusterlogs.GetClusterLogs;
 import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
 
 import java.io.InputStream;
@@ -11,8 +19,18 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-
 public class LogUtilTest {
+	ServiceConfiguration configuration;
+	
+	@Before
+	public void init() throws JSONException, Exception
+	{
+		JSONObject testCredentials=new JSONObject(TestUtil.readResource("testCredentials.json", this.getClass()));
+		configuration = new ServiceConfiguration();
+		configuration.setAccount(testCredentials.getString("accountId"));
+		configuration.setUsername(testCredentials.getString("username"));
+		configuration.setPassword(testCredentials.getString("password"));
+	}
 
 	@Test
 	public void testParseFileName()
@@ -44,13 +62,17 @@ public class LogUtilTest {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(LogUtil.ACCESS_LOG_TIME_STAMP_MASK);
 		Date startTime = simpleDateFormat.parse("2020-04-06T05:01:19.862+0000");
-		int secondsBefore = 60;
-		int secondsAfter = 180;
+		GetClusterLogs.Inputs input = new GetClusterLogs.Inputs();
+		input.setAtomId("c418d1f7-d9c7-4886-a69d-88a420406fde");
+		input.setStartTime(startTime);
+		input.setErrorsOnly(false);
+		input.setSecondsBefore(60);
+		input.setSecondsAfter(180);
 		
 		String fileName = "2020_04_06.api_gateway.access.10_101_251_5.log";
-		InputStream is = getResourceAsStream("apimlogs/"+fileName, this.getClass());
+		InputStream is = TestUtil.getResourceAsStream("apimlogs/"+fileName, this.getClass());
 
-		String response = LogUtil.getLogFileRange(fileName, is, false, startTime, secondsBefore, secondsAfter);
+		String response = LogUtil.getLogFileRange(fileName, is, input);
 		is.close();
 		System.out.println(response);
 		assertEquals(8278, response.length());
@@ -60,27 +82,32 @@ public class LogUtilTest {
 	public void testContainerLog() throws Exception {
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(LogUtil.ACCESS_LOG_TIME_STAMP_MASK);
-		Date startTime = simpleDateFormat.parse("2020-04-06T05:52:19.862+0000");
-		int secondsBefore = 60;
-		int secondsAfter = 180;
+		Date startTime = simpleDateFormat.parse("2020-04-06T05:01:19.862+0000");
+		GetClusterLogs.Inputs input = new GetClusterLogs.Inputs();
+		input.setAtomId("c418d1f7-d9c7-4886-a69d-88a420406fde");
+		input.setStartTime(startTime);
+		input.setErrorsOnly(false);
+		input.setSecondsBefore(60);
+		input.setSecondsAfter(180);
 		
 		String fileName = "2020_04_06.container.10_101_251_5.log";
 		
 		String response;
 		InputStream is;
 		
-		is = getResourceAsStream("apimlogs/"+fileName, this.getClass());
+		is = TestUtil.getResourceAsStream("apimlogs/"+fileName, this.getClass());
 		
-		response = LogUtil.getLogFileRange(fileName, is, false, startTime, secondsBefore, secondsAfter);
+		response = LogUtil.getLogFileRange(fileName, is, input);
 		is.close();
 		System.out.println(response);
 		assertEquals(1807, response.length());
 		
 		fileName = "2020_04_06.api_gateway.10_101_251_5.log";
-		is = getResourceAsStream("apimlogs/"+ fileName, this.getClass());
+		is = TestUtil.getResourceAsStream("apimlogs/"+ fileName, this.getClass());
 
 		startTime = simpleDateFormat.parse("2020-04-06T17:52:19.862+0000");
-		response = LogUtil.getLogFileRange(fileName, is, false, startTime, 0, 60);
+		input.setStartTime(startTime);
+		response = LogUtil.getLogFileRange(fileName, is, input);
 		is.close();
 		System.out.println(response);
 		assertEquals(4155388, response.length());
@@ -96,29 +123,27 @@ public class LogUtilTest {
 	
 	@Test
 	public void testGetZip() throws Exception {
-		ServiceConfiguration configuration = new ServiceConfiguration();
-		configuration.setAccount("presales_demochild-WRHG7X");
-		configuration.setUsername("dave.hock@dell.com");
-		configuration.setPassword("Gopack!24");
-		String atomId = "c418d1f7-d9c7-4886-a69d-88a420406fde";
+
+		GetClusterLogs.Inputs input = new GetClusterLogs.Inputs();
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(LogUtil.ACCESS_LOG_TIME_STAMP_MASK);
 		Date startTime = simpleDateFormat.parse("2020-04-08T00:00:01.862+0000");
-		List<NodeLog> logs = LogUtil.getLogFiles(configuration, atomId, false, startTime, 0, 60);
+		input.setAtomId("f494aabc-d1ee-4d28-97f9-7a1d7558a0f2");
+		input.setStartTime(startTime);
+		input.setErrorsOnly(false);
+		input.setSecondsBefore(0);
+		input.setSecondsAfter(60);
+		List<NodeLog> logs = LogUtil.getLogFiles(configuration, input);
 		assertTrue(logs.size()==2);
 		assertEquals(50358, logs.get(0).getEntries().length());
 	}
-	
-    static InputStream getResourceAsStream(String resourcePath, Class theClass) throws Exception
-    {
-    	InputStream is = null;
-		try {
-			is = theClass.getClassLoader().getResourceAsStream(resourcePath);			
-		} catch (Exception e)
-		{
-			throw new Exception("Error loading resource: "+resourcePath + " " + e.getMessage());
-		}
-		if (is==null)
-			throw new Exception("Error loading resource: "+resourcePath);
-		return is;
-    }
+
+	@Test 
+	public void testCompareProps()
+	{
+		CompareAtomProperties.Inputs input = new CompareAtomProperties.Inputs();
+		input.setAtomId1("f494aabc-d1ee-4d28-97f9-7a1d7558a0f2");
+		input.setAtomId2("f494aabc-d1ee-4d28-97f9-7a1d7558a0f2");
+		List<AtomPropertyCompareItem> results = LogUtil.compareAtomProperties(configuration, input);
+		assertTrue(results.size()>5);
+	}
 }

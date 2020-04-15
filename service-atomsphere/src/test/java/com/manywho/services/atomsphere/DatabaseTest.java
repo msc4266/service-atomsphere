@@ -1,6 +1,9 @@
 package com.manywho.services.atomsphere;
 
 import static org.junit.Assert.*;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Test;
 
 import java.util.List;
@@ -12,18 +15,20 @@ import com.manywho.sdk.api.run.elements.type.ListFilter;
 import com.manywho.sdk.api.run.elements.type.ListFilterWhere;
 import com.manywho.sdk.api.run.elements.type.MObject;
 import com.manywho.sdk.api.run.elements.type.ObjectDataType;
+import com.manywho.services.TestUtil;
 import com.manywho.services.atomsphere.database.Database;
 import com.manywho.services.atomsphere.database.ServiceMetadata;
 
 public class DatabaseTest {
 
 	ServiceConfiguration configuration;
-	private void init()
+	private void init() throws JSONException, Exception
 	{
+		JSONObject testCredentials=new JSONObject(TestUtil.readResource("testCredentials.json", this.getClass()));
 		configuration = new ServiceConfiguration();
-		configuration.setUsername("dave.hock@dell.com");
-		configuration.setPassword("");
-		configuration.setAccount("boomi_davehock-T9DOG4");
+		configuration.setAccount(testCredentials.getString("accountId"));
+		configuration.setUsername(testCredentials.getString("username"));
+		configuration.setPassword(testCredentials.getString("password"));
 	}
 	//TODO Generate edit mobject request payloads from metadata
 	@Test

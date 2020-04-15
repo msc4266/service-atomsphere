@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
@@ -19,12 +18,16 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.manywho.services.atomsphere.ServiceConfiguration;
+import com.manywho.services.atomsphere.actions.apimatomcompare.AtomPropertyCompareItem;
+import com.manywho.services.atomsphere.actions.apimatomcompare.CompareAtomProperties;
+import com.manywho.services.atomsphere.actions.apimclusterlogs.GetClusterLogs;
 import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
 import com.manywho.services.atomsphere.actions.downloadAtomLog.DownloadAtomLog;
 import com.manywho.services.atomsphere.database.Database;
@@ -182,7 +185,7 @@ public class LogUtil {
 		return "";
 	}
 	
-	public static String getLogFileRange(String fileName, InputStream is, boolean errorsOnly, Date startTime, int secondsBefore, int secondsAfter) throws IOException, ParseException
+	public static String getLogFileRange(String fileName, InputStream is, GetClusterLogs.Inputs input) throws IOException, ParseException
 	{
 //		if (accessLogEntry!=null && accessLogEntry.trim().length()>0)
 //			startTime = getStartTimeFromLogEntry(accessLogEntry);
@@ -190,24 +193,34 @@ public class LogUtil {
 		String logType = getLogType(fileName);
 		
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getLogDateMask(logType));
-		SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd h:mm:ss.SSS a z");
+		
+		String tdf = "yyyy-MM-dd hh:mm:ss.SSS z";
+		SimpleDateFormat targetDateFormat = new SimpleDateFormat(tdf);
+		String tz="PST";
+		if (input.getTimeZone()!=null && input.getTimeZone().trim().length()==3)
+			tz=input.getTimeZone().trim();
+			
+		targetDateFormat.setTimeZone(TimeZone.getTimeZone(tz));
 		
 		Calendar startRange = Calendar.getInstance();
 		Calendar endRange = Calendar.getInstance();
 		Calendar logCalendar = Calendar.getInstance();
-		startRange.setTime(startTime);
-		startRange.add(Calendar.SECOND,-secondsBefore);
-		endRange.setTime(startTime);
-		endRange.add(Calendar.SECOND, secondsAfter);
+		startRange.setTime(input.getStartTime());
+		startRange.add(Calendar.SECOND,-input.getSecondsBefore());
+		endRange.setTime(input.getStartTime());
+		endRange.add(Calendar.SECOND, input.getSecondsAfter());
 		
 		BufferedReader reader;
 		boolean inRange=false; //we want non timestamped trailer entries if we are in range
 		reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 		String line = reader.readLine();
 		int noTimestampCount = 0;
-		int size=0;
+		long size=0;
+		long maxLogSize=MAXLOGSIZE;
+		if (input.getMaximumFileSize()>0)
+			maxLogSize=input.getMaximumFileSize();
 		while (line != null) {
-			if (size>MAXLOGSIZE)
+			if (size>maxLogSize)
 			{
 				results.append("...");
 				break;
@@ -224,7 +237,7 @@ public class LogUtil {
 					if (logCalendar.before(endRange))
 					{
 						boolean doInclude = true;
-						if (errorsOnly && !hasError(logType,line))
+						if (input.getErrorsOnly() && !hasError(logType,line))
 						{
 							doInclude=false;
 							inRange=false;
@@ -241,7 +254,7 @@ public class LogUtil {
 			} else if (inRange){
 				//include entry only if last timestamp within range
 				noTimestampCount++;
-				if (noTimestampCount<5)
+				if (noTimestampCount<5 || input.getFullStackTraces())
 				{
 					results.append(line+"\r\n");
 					size+=line.length();
@@ -286,22 +299,23 @@ public class LogUtil {
 		return status;
 	}
 	
-	public static List<NodeLog> getLogFiles(ServiceConfiguration configuration, String atomId, boolean errorsOnly, Date startTime, int secondsBefore, int secondsAfter) throws Exception
+	public static List<NodeLog> getLogFiles(ServiceConfiguration configuration, GetClusterLogs.Inputs input) throws Exception
 	{
 		List<NodeLog> logs=Lists.newArrayList();
 		JSONObject body = new JSONObject();
-		body.put("atomId", atomId);
+		body.put("atomId", input.getAtomId());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
-		body.put("logDate", simpleDateFormat.format(startTime)); //need logDate in UTC
+		body.put("logDate", simpleDateFormat.format(input.getStartTime())); //need logDate in UTC
+		LOGGER.info("Start Time: " + input.getStartTime().toString());
 		JSONObject response = Database.executeAPI(configuration, "AtomLog", "POST", null, body);
 		DownloadAtomLog.Outputs outputs = new DownloadAtomLog.Outputs(response);
 		
-		LOGGER.info("Errors Only: " + errorsOnly);
-		LOGGER.info("Start Time: " + startTime);
-		LOGGER.info("Before: " + secondsBefore);
-		LOGGER.info("After: " + secondsAfter);
-		
+//		LOGGER.info("Errors Only: " + input.getErrorsOnly());
+//		LOGGER.info("Start Time: " + input.getStartTime());
+//		LOGGER.info("Before: " + input.);
+//		LOGGER.info("After: " + secondsAfter);
+//		
 		InputStream is = executeGetLogs(configuration, outputs.getUrl());
         ZipInputStream zis = new ZipInputStream(is);
         ZipEntry entry = zis.getNextEntry();
@@ -313,14 +327,15 @@ public class LogUtil {
             String host = getHost(entry.getName());
             if (!entry.isDirectory()) {
                 // if the entry is a file, extracts it
-                String entries = LogUtil.getLogFileRange(entry.getName(), zis, errorsOnly, startTime, secondsBefore, secondsAfter);
+                String entries = LogUtil.getLogFileRange(entry.getName(), zis, input);
                 NodeLog log = new NodeLog();
                 log.setEntries(entries);
                 log.setGuid(UUID.randomUUID().toString());
                 log.setLogType(logType);
                 log.setNode(host);
+                log.setEntrySize(entry.getSize());
                 log.setFileName(entry.getName());
-                log.setEntrySize(log.getEntries().length());
+                log.setSegmentSize(log.getEntries().length());
                 logs.add(log);
                 LOGGER.info("entry: "+ log.getEntries().length() + " " + log.getFileName());
 //                System.out.println(logs);
@@ -390,5 +405,54 @@ public class LogUtil {
 			}
 		}
 //	    LOGGER.info(response.toString());
+	}
+	
+	public static List<AtomPropertyCompareItem> compareAtomProperties(ServiceConfiguration configuration, CompareAtomProperties.Inputs input)
+	{
+		List<AtomPropertyCompareItem> props = Lists.newArrayList();
+		JSONObject props1 = Database.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId1(), null);
+		JSONObject props2 = Database.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId2(), null);
+		JSONArray array1 = props1.getJSONArray("Property");
+		JSONArray array2 = props2.getJSONArray("Property");
+
+		for (int i=0; i<array1.length(); i++)
+		{
+			String msg ="";
+			JSONObject itm1 = array1.getJSONObject(i);
+			AtomPropertyCompareItem prop = new AtomPropertyCompareItem();
+			String name = itm1.getString("name");
+			prop.setPropertyName(name);
+			prop.setValue1(itm1.getString("value"));
+			String value2 = findProperty(array2, name);
+			prop.setValue2(value2);
+			
+			if (!value2.contentEquals(prop.getValue2()))
+				msg = "Warning, property value mismatch. ";
+
+			//TODO Compare with best practice values? maxOpenFiles < 4096?
+			if (name.contentEquals("maxOpenFiles"))
+			{
+				if (Integer.parseInt(value2) < 10000)
+					msg+="Warning property value not best practice. ";
+			}
+			prop.setMessage(msg);
+			props.add(prop);
+		}
+		return props;
+	}
+	
+	private static String findProperty(JSONArray array, String propName)
+	{
+		String result = "";
+		for (int i=0; i<array.length(); i++)
+		{
+			JSONObject itm = array.getJSONObject(i);
+			if (itm.has("name") && itm.getString("name").contentEquals(propName))
+			{
+				result = itm.getString("value");
+				break;
+			}			
+		}
+		return result;
 	}
 }

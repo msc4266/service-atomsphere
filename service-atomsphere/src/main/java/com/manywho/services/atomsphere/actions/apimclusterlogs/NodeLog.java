@@ -16,7 +16,9 @@ public class NodeLog implements Type{
 	@Type.Property(name = "Log File Name", contentType = ContentType.String)
 	private String fileName;
 	@Type.Property(name = "Entry Size", contentType = ContentType.Number)
-	private int entrySize;
+	private long entrySize;
+	@Type.Property(name = "Segment Size", contentType = ContentType.Number)
+	private long segmentSize;
 
 	public NodeLog()
 	{
@@ -56,11 +58,19 @@ public class NodeLog implements Type{
 		this.fileName = fileName;
 	}
 
-	public int getEntrySize() {
+	public long getEntrySize() {
 		return entrySize;
 	}
 
-	public void setEntrySize(int entrySize) {
+	public void setEntrySize(long entrySize) {
 		this.entrySize = entrySize;
+	}
+	
+	public void setSegmentSize(long segmentSize) {
+		this.segmentSize = segmentSize;
+	}
+	
+	public long getSegmentSize() {
+		return segmentSize;
 	}
 }
