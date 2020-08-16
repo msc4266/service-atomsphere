@@ -1,0 +1,106 @@
+{
+	"objectlist": [
+		{
+			"name": "KeyCallCount",
+			"primaryKey": "",
+			"supportsGet": false,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "ApiKey",
+			"pathName" : "apiKey",
+			"primaryKey": "key",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "Application",
+			"primaryKey": "applicationId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "AuthenticationSource",
+			"primaryKey": "",
+			"supportsGet": false,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
+			"name": "AuthenticationSourceGroup",
+			"primaryKey": "groupId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "AuthenticationSourceRole",
+			"primaryKey": "roleId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "AuthenticationSourceUser",
+			"primaryKey": "userId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "Contract",
+			"pathName" : "contract",
+			"primaryKey": "contractId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "Plan",
+			"primaryKey": "planId",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": true,
+			"supportsUpdate": true,
+			"supportsExecute": true,
+			"supportsDelete": true
+		},
+		{
+			"name": "PublishedApi",
+			"primaryKey": "",
+			"supportsGet": false,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		}
+	]
+}
