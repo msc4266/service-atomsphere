@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import com.manywho.sdk.api.run.elements.config.ServiceRequest;
 import com.manywho.sdk.services.actions.ActionCommand;
 import com.manywho.sdk.services.actions.ActionResponse;
-import com.manywho.services.atomsphere.database.Database;
+import com.manywho.services.atomsphere.database.AtomsphereAPI;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class DownloadAS2ArtifactsLogCommand implements ActionCommand<ServiceConfiguration, DownloadAS2ArtifactsLog, DownloadAS2ArtifactsLog.Inputs, DownloadAS2ArtifactsLog.Outputs>{
@@ -19,7 +19,7 @@ public class DownloadAS2ArtifactsLogCommand implements ActionCommand<ServiceConf
 		body.put("atomId", input.getAtomId());
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		body.put("logDate", simpleDateFormat.format(input.getLogDate()));
-		JSONObject response = Database.executeAPI(configuration, "AtomAS2Artifacts", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, "AtomAS2Artifacts", "POST", null, body);
 		return new ActionResponse<>(new DownloadAS2ArtifactsLog.Outputs(response));
 	}
 }

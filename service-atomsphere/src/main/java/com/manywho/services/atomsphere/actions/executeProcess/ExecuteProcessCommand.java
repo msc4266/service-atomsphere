@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import com.manywho.sdk.api.run.elements.config.ServiceRequest;
 import com.manywho.sdk.services.actions.ActionCommand;
 import com.manywho.sdk.services.actions.ActionResponse;
-import com.manywho.services.atomsphere.database.Database;
+import com.manywho.services.atomsphere.database.AtomsphereAPI;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration, ExecuteProcess, ExecuteProcess.Inputs, ExecuteProcess.Outputs>{
@@ -34,7 +34,7 @@ public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration
 			processPropertyArray.put(prop);
 		}
 		
-		JSONObject response = Database.executeAPI(configuration, "executeProcess", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, "executeProcess", "POST", null, body);
 		return new ActionResponse<>(new ExecuteProcess.Outputs(response));
 	}
 }

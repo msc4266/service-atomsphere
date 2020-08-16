@@ -65,11 +65,11 @@
 
   <xs:element name="ComponentMetadata" type="tns:ComponentMetadata"/>
 
+  <xs:element name="Connector" type="tns:Connector"/>
+
   <xs:element name="ConnectorCounts" type="tns:ConnectorCounts"/>
 
   <xs:element name="ConnectorUsage" type="tns:ConnectorUsage"/>
-
-  <xs:element name="ContainerAdminOffboardOperation" type="tns:ContainerAdminOffboardOperation"/>
 
   <xs:element name="ContainerAdminOperation" type="tns:ContainerAdminOperation"/>
 
@@ -100,6 +100,8 @@
   <xs:element name="ExecutionCountAccount" type="tns:ExecutionCountAccount"/>
 
   <xs:element name="ExecutionCountAccountGroup" type="tns:ExecutionCountAccountGroup"/>
+
+  <xs:element name="Folder" type="tns:Folder"/>
 
   <xs:element name="FullInternalAccount" type="tns:FullInternalAccount"/>
 
@@ -139,6 +141,8 @@
       <xs:attribute name="sendCreates" type="xs:boolean"/>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="NodeOffboard" type="tns:NodeOffboard"/>
 
   <xs:element name="PackagedComponent" type="tns:PackagedComponent"/>
 
@@ -295,6 +299,10 @@
   <xs:element name="queryResponse" type="tns:queryResponse"/>
 
   <xs:element name="update" type="tns:update"/>
+
+  <xs:element name="updateBulk" type="tns:updateBulk"/>
+
+  <xs:element name="updateBulkResponse" type="tns:updateBulkResponse"/>
 
   <xs:element name="updateResponse" type="tns:updateResponse"/>
 
@@ -684,6 +692,7 @@
     <xs:attribute name="version" type="tns:RosettaNetVersion"/>
     <xs:attribute name="filterSignals" type="xs:boolean"/>
     <xs:attribute name="rejectDuplicateTransactions" type="xs:boolean"/>
+    <xs:attribute name="outboundDocumentValidation" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="RosettaNetControlInfo">
@@ -1211,6 +1220,7 @@
     <xs:attribute name="expectAckForOutbound" type="xs:boolean"/>
     <xs:attribute name="validateOutboundTransactionSets" type="xs:boolean"/>
     <xs:attribute name="invalidDocumentRouting" type="tns:InvalidDocumentRoutingType"/>
+    <xs:attribute name="qualifierValidation" type="xs:boolean"/>
   </xs:complexType>
 
   <xs:complexType name="AccountUserFederation"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="accountId"/><field name="userId"/><field name="federationId"/></filter></xs:appinfo></xs:annotation>
@@ -1276,6 +1286,7 @@
         <xs:sequence/>
         <xs:attribute name="listenerId" type="xs:string" use="required"/>
         <xs:attribute name="status" type="xs:string" use="required"/>
+        <xs:attribute name="connectorType" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -1519,6 +1530,8 @@
         <xs:sequence>
           <xs:element name="atomId" type="xs:string"/>
           <xs:element name="generalSettings" type="tns:SharedWebServerGeneral"/>
+          <xs:element name="userManagement" type="tns:SharedWebServerUserManagement"/>
+          <xs:element name="corsConfiguration" type="tns:SharedWebServerCors"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -1586,6 +1599,47 @@
     <xs:sequence>
       <xs:element maxOccurs="unbounded" minOccurs="0" name="header" type="xs:string"/>
     </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SharedWebServerUserManagement">
+    <xs:sequence>
+      <xs:element name="enableAPIMInternalRoles" type="xs:boolean"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="users" type="tns:SharedWebServerUser"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SharedWebServerUser">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="componentFilters" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="ipFilters" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="roleAssociations" type="xs:string"/>
+    </xs:sequence>
+    <xs:attribute name="username" type="xs:string" use="required"/>
+    <xs:attribute name="token" type="xs:string"/>
+    <xs:attribute name="clientCertificate" type="xs:string"/>
+    <xs:attribute name="usingIPFilters" type="xs:boolean"/>
+    <xs:attribute name="usingComponentFilters" type="xs:boolean"/>
+    <xs:attribute name="externalUsername" type="xs:string"/>
+  </xs:complexType>
+
+  <xs:complexType name="SharedWebServerCors">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="origins" type="tns:SharedWebServerCORSOrigin"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="SharedWebServerCORSOrigin">
+    <xs:sequence>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="ports" type="xs:int"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="allowRequestHeaders" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="allowResponseHeaders" type="xs:string"/>
+      <xs:element maxOccurs="unbounded" minOccurs="0" name="allowMethods" type="xs:string"/>
+      <xs:element default="false" name="EnableHTTPRequestHandling" type="xs:boolean"/>
+      <xs:element default="false" name="EnableHTTPSRequestHandling" type="xs:boolean"/>
+      <xs:element default="false" name="allowCredentials" type="xs:boolean"/>
+    </xs:sequence>
+    <xs:attribute name="domain" type="xs:string" use="required"/>
+    <xs:attribute name="cacheTimeout" type="xs:long"/>
   </xs:complexType>
 
   <xs:complexType name="ComponentAtomAttachment"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="atomId"/><field name="componentId"/><field name="componentType"/></filter></xs:appinfo></xs:annotation>
@@ -1708,7 +1762,7 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="ComponentMetadata"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="componentId"/><field name="version"/><field name="name"/><field name="type"/><field name="subType"/><field name="createdDate"/><field name="createdBy"/><field name="modifiedDate"/><field name="modifiedBy"/><field name="deleted"/><field name="currentVersion"/><field name="folderName"/><field name="copiedFromComponentId"/><field name="copiedFromComponentVersion"/></filter></xs:appinfo></xs:annotation>
+  <xs:complexType name="ComponentMetadata"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="componentId"/><field name="version"/><field name="name"/><field name="type"/><field name="subType"/><field name="createdDate"/><field name="createdBy"/><field name="modifiedDate"/><field name="modifiedBy"/><field name="deleted"/><field name="currentVersion"/><field name="folderName"/><field name="folderId"/><field name="copiedFromComponentId"/><field name="copiedFromComponentVersion"/></filter></xs:appinfo></xs:annotation>
     <xs:complexContent>
       <xs:extension base="tns:BaseType">
         <xs:sequence/>
@@ -1724,6 +1778,7 @@
         <xs:attribute name="deleted" type="xs:boolean"/>
         <xs:attribute name="currentVersion" type="xs:boolean"/>
         <xs:attribute name="folderName" type="xs:string"/>
+        <xs:attribute name="folderId" type="xs:string"/>
         <xs:attribute name="copiedFromComponentId" type="xs:string"/>
         <xs:attribute name="copiedFromComponentVersion" type="xs:int"/>
       </xs:extension>
@@ -1739,6 +1794,7 @@
           <xs:element name="object" type="xs:anyType"/>
           <xs:element name="processOverrides" type="xs:anyType"/>
         </xs:sequence>
+        <xs:attribute name="folderFullPath" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -1816,6 +1872,23 @@
         <xs:attribute name="countryCode" type="xs:string"/>
         <xs:attribute name="status" type="tns:AccountStatus"/>
         <xs:attribute name="expirationDate" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContainerAdminOperation">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseType">
+        <xs:sequence/>
+        <xs:attribute name="atomId" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ContainerAdminRestartOperation">
+    <xs:complexContent>
+      <xs:extension base="tns:ContainerAdminOperation">
+        <xs:sequence/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -2348,6 +2421,7 @@
                 <xs:element minOccurs="0" name="apiPublishEnabled" type="tns:Feature"/>
                 <xs:element minOccurs="0" name="filterSuggest" type="tns:Feature"/>
                 <xs:element minOccurs="0" name="dataCollection" type="tns:Feature"/>
+                <xs:element minOccurs="0" name="doubleWriteTrackedDocs" type="tns:Feature"/>
               </xs:sequence>
             </xs:complexType>
           </xs:element>
@@ -2469,30 +2543,25 @@
     <xs:attribute name="value" type="xs:int"/>
   </xs:complexType>
 
-  <xs:complexType name="ContainerAdminOperation">
+  <xs:complexType name="Folder"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="id"/><field name="name"/><field name="fullPath"/><field name="deleted"/></filter></xs:appinfo></xs:annotation>
     <xs:complexContent>
       <xs:extension base="tns:BaseType">
         <xs:sequence/>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="fullPath" type="xs:string"/>
+        <xs:attribute name="deleted" type="xs:boolean"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="NodeOffboard">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="nodeId" type="xs:string"/>
+        </xs:sequence>
         <xs:attribute name="atomId" type="xs:string"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="ContainerAdminRestartOperation">
-    <xs:complexContent>
-      <xs:extension base="tns:ContainerAdminOperation">
-        <xs:sequence/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
-  <xs:complexType name="ContainerAdminOffboardOperation">
-    <xs:complexContent>
-      <xs:extension base="tns:ContainerAdminOperation">
-        <xs:sequence/>
-        <xs:attribute name="nodeId" type="xs:string"/>
-        <xs:attribute name="step" type="xs:string"/>
-        <xs:attribute name="operation" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -2506,6 +2575,16 @@
         <xs:attribute name="id" type="xs:string"/>
         <xs:attribute name="name" type="xs:string"/>
         <xs:attribute name="installationType" type="tns:IntegrationPackType"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="Connector"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="type"/><field name="name"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:BaseType">
+        <xs:sequence/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -2787,6 +2866,24 @@
     </xs:complexContent>
   </xs:complexType>
 
+  <xs:complexType name="ComponentReference"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="parentComponentId"/><field name="parentVersion"/><field name="componentId"/><field name="type"/></filter></xs:appinfo></xs:annotation>
+    <xs:complexContent>
+      <xs:extension base="tns:BaseType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="references" type="tns:references"/>
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="references">
+    <xs:sequence/>
+    <xs:attribute name="parentComponentId" type="xs:string"/>
+    <xs:attribute name="parentVersion" type="xs:int"/>
+    <xs:attribute name="componentId" type="xs:string"/>
+    <xs:attribute name="type" type="tns:ReferenceType"/>
+  </xs:complexType>
+
   <xs:complexType name="CustomTrackedField"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"/></xs:appinfo></xs:annotation>
     <xs:complexContent>
       <xs:extension base="tns:BaseType">
@@ -3055,17 +3152,6 @@
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:complexType name="BulkProcessSchedules">
-    <xs:complexContent>
-      <xs:extension base="tns:BaseType">
-        <xs:sequence>
-          <xs:element maxOccurs="unbounded" minOccurs="0" name="updates" type="tns:ProcessSchedules"/>
-        </xs:sequence>
-        <xs:attribute name="atomId" type="xs:string"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-
   <xs:complexType name="ExecutionRecord"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="executionId"/><field name="originalExecutionId"/><field name="account"/><field name="executionTime"/><field name="status"/><field name="executionType"/><field name="processName"/><field name="processId"/><field name="atomName"/><field name="atomId"/><field name="inboundDocumentCount"/><field name="outboundDocumentCount"/><field name="executionDuration"/><field name="message"/><field name="reportKey"/><field name="launcherId"/><field name="nodeId"/></filter></xs:appinfo></xs:annotation>
     <xs:complexContent>
       <xs:extension base="tns:BaseType">
@@ -3198,6 +3284,23 @@
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="PackagedComponentManifest">
+    <xs:complexContent>
+      <xs:extension base="tns:BaseType">
+        <xs:sequence>
+          <xs:element maxOccurs="unbounded" minOccurs="0" name="componentInfo" type="tns:ComponentInfo"/>
+        </xs:sequence>
+        <xs:attribute name="packageId" type="xs:string" use="required"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="ComponentInfo">
+    <xs:sequence/>
+    <xs:attribute name="id" type="xs:string"/>
+    <xs:attribute name="version" type="xs:int"/>
   </xs:complexType>
 
   <xs:complexType name="Event"><xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="eventId"/><field name="accountId"/><field name="atomId"/><field name="atomName"/><field name="eventLevel"/><field name="eventDate"/><field name="status"/><field name="eventType"/><field name="executionId"/><field name="title"/><field name="updateDate"/><field name="startTime"/><field name="endTime"/><field name="errorDocumentCount"/><field name="inboundDocumentCount"/><field name="outboundDocumentCount"/><field name="processName"/><field name="recordDate"/><field name="error"/><field name="environment"/><field name="classification"/></filter></xs:appinfo></xs:annotation>
@@ -3553,6 +3656,8 @@
           <xs:element minOccurs="0" name="timeToAcknowledgeAcceptance" type="xs:string"/>
           <xs:element minOccurs="0" name="timeToAcknowledgeReceipt" type="xs:string"/>
           <xs:element minOccurs="0" name="timeToPerform" type="xs:string"/>
+          <xs:element minOccurs="0" name="outboundValidationStatus" type="xs:string"/>
+          <xs:element minOccurs="0" name="outboundValidationReport" type="xs:string"/>
         </xs:sequence>
       </xs:extension>
     </xs:complexContent>
@@ -3919,6 +4024,19 @@
   <xs:complexType name="queryResponse">
     <xs:sequence>
       <xs:element minOccurs="0" name="results" type="tns:QueryResult"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateBulk">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="objectType" type="xs:string"/>
+      <xs:element minOccurs="0" name="bulkObject" type="tns:BulkRequest"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="updateBulkResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="results" type="tns:BulkResult"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -4734,6 +4852,13 @@
       <xs:enumeration value="basic"/>
       <xs:enumeration value="intermediate"/>
       <xs:enumeration value="advanced"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ReferenceType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="DEPENDENT"/>
+      <xs:enumeration value="INDEPENDENT"/>
     </xs:restriction>
   </xs:simpleType>
 

@@ -1,13 +1,11 @@
 package com.manywho.services.atomsphere;
 
 import static org.junit.Assert.*;
-
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.junit.Test;
-
+import org.junit.jupiter.api.Test;
 import java.util.List;
-
 import com.google.common.collect.Lists;
 import com.manywho.sdk.api.CriteriaType;
 import com.manywho.sdk.api.draw.elements.type.TypeElement;
@@ -37,7 +35,7 @@ public class DatabaseTest {
 		ServiceMetadata serviceMetadata = new ServiceMetadata();
 		Database database = new Database();
 		database.setDoWhitelistOperationSupportedCheck(true); //if false we will let all operations be attempted irregardless of the whitelist supportsXXX entries in order to test whitelists
-		List<TypeElement> typeElements=serviceMetadata.getAllTypesMetadata();
+		List<TypeElement> typeElements=serviceMetadata.getAllTypeElements();
 		for (TypeElement typeElement:typeElements)
 		{
 			Thread.sleep(500);

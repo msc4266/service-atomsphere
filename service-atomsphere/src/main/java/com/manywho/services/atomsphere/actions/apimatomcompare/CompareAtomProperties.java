@@ -7,7 +7,7 @@ import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.actions.Action;
 import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
 
-@Action.Metadata(name="Compare Atom Propertes", summary = "Get GW/Broker/API logs for an atom by time range", uri="/atomsphere/getClusterLogs")
+@Action.Metadata(name="Compare Atom Propertes", summary = "Get GW/Broker/API logs for an atom by time range", uri="/atomsphere/compareAtom")
 public class CompareAtomProperties {
 	public static class Inputs{
 	    @Action.Input(name = "Atom ID 1", contentType = ContentType.String)

@@ -1,5 +1,5 @@
 {
-	"whitelist": [
+	"objectlist": [
 		{
 			"name": "Account",
 			"primaryKey": "accountId",
@@ -42,7 +42,7 @@
 		},
 		{
 			"name": "AccountSSOConfig",
-			"primaryKey": "id",
+			"primaryKey": "accountId",
 			"supportsGet": true,
 			"supportsQuery": false,
 			"supportsCreate": false,
@@ -122,7 +122,7 @@
 		},
 		{
 			"name": "AtomCounters",
-			"primaryKey": "id",
+			"primaryKey": "atomId",
 			"supportsGet": true,
 			"supportsQuery": false,
 			"supportsCreate": false,
@@ -201,6 +201,16 @@
 			"supportsDelete": false
 		},
 		{
+			"name": "Component",
+			"primaryKey": "componentId",
+			"supportsGet": true,
+			"supportsQuery": false,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
 			"name": "ComponentAtomAttachment",
 			"primaryKey": "id",
 			"supportsGet": false,
@@ -222,7 +232,7 @@
 		},
 		{
 			"name": "ComponentMetadata",
-			"primaryKey": "id",
+			"primaryKey": "componentId",
 			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": false,
@@ -252,7 +262,7 @@
 		},
 		{
 			"name": "DeployedPackage",
-			"primaryKey": "id",
+			"primaryKey": "deploymentId",
 			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": true,
@@ -431,6 +441,16 @@
 			"supportsDelete": false
 		},
 		{
+			"name": "Folder",
+			"primaryKey": "id",
+			"supportsGet": true,
+			"supportsQuery": true,
+			"supportsCreate": false,
+			"supportsUpdate": false,
+			"supportsExecute": false,
+			"supportsDelete": false
+		},
+		{
 			"name": "HL7ConnectorRecord",
 			"primaryKey": "id",
 			"supportsGet": false,
@@ -502,7 +522,7 @@
 		},
 		{
 			"name": "PackagedComponent",
-			"primaryKey": "id",
+			"primaryKey": "packageId",
 			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": true,

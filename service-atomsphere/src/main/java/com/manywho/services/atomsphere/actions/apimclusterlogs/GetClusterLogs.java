@@ -17,6 +17,10 @@ public class GetClusterLogs {
 	        return atomId;
 	    }
 
+		public void setAtomId(String atomId) {
+			this.atomId = atomId;
+		}
+
 	    @Action.Input(name = "Errors Only", contentType = ContentType.Boolean)
 	    private boolean errorsOnly;
 
@@ -24,54 +28,23 @@ public class GetClusterLogs {
 	        return errorsOnly;
 	    }
 
-	    @Action.Input(name = "Full Stack Traces", contentType = ContentType.Boolean)
+		public void setErrorsOnly(boolean errorsOnly) {
+			this.errorsOnly = errorsOnly;
+		}
+
+		@Action.Input(name = "Full Stack Traces", contentType = ContentType.Boolean)
 	    private boolean fullStackTraces;
 
 	    public boolean getFullStackTraces() {
 	        return fullStackTraces;
 	    }
 
-	    @Action.Input(name = "Date/Time Format", contentType = ContentType.String)
+		public void setFullStackTraces(boolean fullStackTraces) {
+			this.fullStackTraces = fullStackTraces;
+		}
+
+		@Action.Input(name = "Date/Time Format", contentType = ContentType.String)
 	    private String datetimeFormat;
-
-	    public String getDateTimeFormat() {
-	        return datetimeFormat;
-	    }
-
-	    @Action.Input(name = "Timezone", contentType = ContentType.String)
-	    private String timezone;
-
-	    public String getTimeZone() {
-	        return timezone;
-	    }
-
-	    @Action.Input(name = "Maximum File Size", contentType = ContentType.Number)
-	    private long maxFileSize;
-
-	    public long getMaximumFileSize() {
-	        return maxFileSize;
-	    }
-
-	    @Action.Input(name = "Start Time", contentType = ContentType.DateTime)
-	    private Date startTime;
-
-	    public Date getStartTime() {
-	        return startTime;
-	    }
-
-	    @Action.Input(name = "Seconds Before", contentType = ContentType.Number)
-	    private int secondsBefore;
-
-	    public int getSecondsBefore() {
-	        return secondsBefore;
-	    }
-
-	    @Action.Input(name = "Seconds After", contentType = ContentType.Number)
-	    private int secondsAfter;
-
-	    public int getSecondsAfter() {
-	        return secondsAfter;
-	    }
 
 		public String getDatetimeFormat() {
 			return datetimeFormat;
@@ -81,6 +54,9 @@ public class GetClusterLogs {
 			this.datetimeFormat = datetimeFormat;
 		}
 
+	    @Action.Input(name = "Timezone", contentType = ContentType.String)
+	    private String timezone;
+
 		public String getTimezone() {
 			return timezone;
 		}
@@ -88,6 +64,9 @@ public class GetClusterLogs {
 		public void setTimezone(String timezone) {
 			this.timezone = timezone;
 		}
+
+	    @Action.Input(name = "Maximum File Size", contentType = ContentType.Number)
+	    private long maxFileSize;
 
 		public long getMaxFileSize() {
 			return maxFileSize;
@@ -97,25 +76,34 @@ public class GetClusterLogs {
 			this.maxFileSize = maxFileSize;
 		}
 
-		public void setAtomId(String atomId) {
-			this.atomId = atomId;
-		}
+	    @Action.Input(name = "Start Time", contentType = ContentType.DateTime)
+	    private Date startTime;
 
-		public void setErrorsOnly(boolean errorsOnly) {
-			this.errorsOnly = errorsOnly;
-		}
-
-		public void setFullStackTraces(boolean fullStackTraces) {
-			this.fullStackTraces = fullStackTraces;
-		}
+	    public Date getStartTime() {
+	        return startTime;
+	    }
 
 		public void setStartTime(Date startTime) {
 			this.startTime = startTime;
 		}
 
+	    @Action.Input(name = "Seconds Before", contentType = ContentType.Number)
+	    private int secondsBefore;
+
+	    public int getSecondsBefore() {
+	        return secondsBefore;
+	    }
+
 		public void setSecondsBefore(int secondsBefore) {
 			this.secondsBefore = secondsBefore;
 		}
+
+	    @Action.Input(name = "Seconds After", contentType = ContentType.Number)
+	    private int secondsAfter;
+
+	    public int getSecondsAfter() {
+	        return secondsAfter;
+	    }
 
 		public void setSecondsAfter(int secondsAfter) {
 			this.secondsAfter = secondsAfter;

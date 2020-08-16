@@ -30,6 +30,7 @@ import com.manywho.services.atomsphere.actions.apimatomcompare.CompareAtomProper
 import com.manywho.services.atomsphere.actions.apimclusterlogs.GetClusterLogs;
 import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
 import com.manywho.services.atomsphere.actions.downloadAtomLog.DownloadAtomLog;
+import com.manywho.services.atomsphere.database.AtomsphereAPI;
 import com.manywho.services.atomsphere.database.Database;
 
 //BROKER
@@ -66,8 +67,8 @@ import com.manywho.services.atomsphere.database.Database;
 
 public class LogUtil {
 	
-    private static final Logger LOGGER = LoggerFactory.getLogger(Database.class);
-	public static final String ACCESS_LOG_TIME_STAMP_MASK = "yyyy-MM-dd'T'hh:mm:ss.SSSZ";
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogUtil.class);
+	public static final String ACCESS_LOG_TIME_STAMP_MASK = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final int ACCESS_LOG_TIME_STAMP_LENGTH = "2020-04-06T00:01:19.862+0000".length();
 	public static final int MAXLOGSIZE = 500000;
 
@@ -102,7 +103,7 @@ public class LogUtil {
 		case  "api_portal.access":
 		case  "shared_http_server":
 			//18.206.164.196 - testuser [08/Apr/2020:00:00:00 +0000]
-			return "dd/MMM/yyyy:hh:mm:ss Z"; //"08/Apr/2020:00:00:00 +0000";
+			return "dd/MMM/yyyy:HH:mm:ss Z"; //"08/Apr/2020:00:00:00 +0000";
 		}
 		return "";
 	}
@@ -143,11 +144,13 @@ public class LogUtil {
 		case "container":
 		case  "api_gateway":
 			//Apr 8, 2020 6:03:40 PM UTC ERROR 
-			timeEndMarker = " UTC ";
+//			timeEndMarker = " UTC ";
+			timeEndMarker="    [";
 			dateEnd = line.indexOf(timeEndMarker);
 			if (dateEnd>-1)
 			{
-				dateEnd += timeEndMarker.length()-1;
+//				dateEnd += timeEndMarker.length()-1;
+				dateEnd -= " INFO".length();
 				dateString = line.substring(0, dateEnd);
 			}
 			break;
@@ -185,6 +188,21 @@ public class LogUtil {
 		return "";
 	}
 	
+	public static SimpleDateFormat getTargetDateFormat(String tz, String fmt)
+	{
+		String tdf = "yyyy-MM-dd HH:mm:ss z";
+		if (fmt!=null && fmt.trim().length()>0)
+			tdf = fmt.trim();
+		SimpleDateFormat targetDateFormat = new SimpleDateFormat(tdf);
+		
+		String ttz="PST";
+		if (tz!=null && tz.trim().length()==3)
+			ttz=tz.trim();
+			
+		targetDateFormat.setTimeZone(TimeZone.getTimeZone(ttz));
+		return targetDateFormat;
+	}
+	
 	public static String getLogFileRange(String fileName, InputStream is, GetClusterLogs.Inputs input) throws IOException, ParseException
 	{
 //		if (accessLogEntry!=null && accessLogEntry.trim().length()>0)
@@ -192,23 +210,22 @@ public class LogUtil {
 		StringBuilder results = new StringBuilder();
 		String logType = getLogType(fileName);
 		
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(getLogDateMask(logType));
+		SimpleDateFormat logDateFormat = new SimpleDateFormat(getLogDateMask(logType));
 		
-		String tdf = "yyyy-MM-dd hh:mm:ss.SSS z";
-		SimpleDateFormat targetDateFormat = new SimpleDateFormat(tdf);
-		String tz="PST";
-		if (input.getTimeZone()!=null && input.getTimeZone().trim().length()==3)
-			tz=input.getTimeZone().trim();
-			
-		targetDateFormat.setTimeZone(TimeZone.getTimeZone(tz));
+		SimpleDateFormat targetDateFormat = getTargetDateFormat(input.getTimezone(), input.getDatetimeFormat());
 		
 		Calendar startRange = Calendar.getInstance();
 		Calendar endRange = Calendar.getInstance();
 		Calendar logCalendar = Calendar.getInstance();
 		startRange.setTime(input.getStartTime());
+
+		LOGGER.info("Start Time: " + input.getStartTime().toString());
+		LOGGER.info("Start Time Parsed: " + startRange.getTime().toString());
+
 		startRange.add(Calendar.SECOND,-input.getSecondsBefore());
 		endRange.setTime(input.getStartTime());
 		endRange.add(Calendar.SECOND, input.getSecondsAfter());
+		LOGGER.info("End Time Parsed: " + endRange.getTime().toString());
 		
 		BufferedReader reader;
 		boolean inRange=false; //we want non timestamped trailer entries if we are in range
@@ -217,8 +234,8 @@ public class LogUtil {
 		int noTimestampCount = 0;
 		long size=0;
 		long maxLogSize=MAXLOGSIZE;
-		if (input.getMaximumFileSize()>0)
-			maxLogSize=input.getMaximumFileSize();
+		if (input.getMaxFileSize()>0)
+			maxLogSize=input.getMaxFileSize();
 		while (line != null) {
 			if (size>maxLogSize)
 			{
@@ -228,7 +245,7 @@ public class LogUtil {
 			String dateString = getLogEntryTime(logType, line);
 			if (dateString.length()>0)
 			{
-				Date logDate = simpleDateFormat.parse(dateString);
+				Date logDate = logDateFormat.parse(dateString);
 				logCalendar.setTime(logDate);
 				if (logCalendar.after(startRange))
 				{
@@ -244,7 +261,9 @@ public class LogUtil {
 						}
 						if (doInclude)
 						{
+//TODO keep timestamp for debugging
 							results.append(targetDateFormat.format(logDate) + " " + line.replace(dateString, "")+"\r\n");
+//							results.append(targetDateFormat.format(logDate) + line+ "\r\n");
 							size+=line.length();
 						}
 					} else {
@@ -308,7 +327,7 @@ public class LogUtil {
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		body.put("logDate", simpleDateFormat.format(input.getStartTime())); //need logDate in UTC
 		LOGGER.info("Start Time: " + input.getStartTime().toString());
-		JSONObject response = Database.executeAPI(configuration, "AtomLog", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, "AtomLog", "POST", null, body);
 		DownloadAtomLog.Outputs outputs = new DownloadAtomLog.Outputs(response);
 		
 //		LOGGER.info("Errors Only: " + input.getErrorsOnly());
@@ -354,7 +373,7 @@ public class LogUtil {
         StringBuffer response= new StringBuffer();
         int downloadCheckIterations=0;
         int sleepTime=1000;
-        int maxIterations = 60;
+        int maxIterations = 50;
 		
         try {
     		URL url = new URL(urlString);
@@ -367,13 +386,14 @@ public class LogUtil {
     	    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
     	    	String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
     	    	conn.setRequestProperty ("Authorization", basicAuth);
+    	    	LOGGER.info("LOG DOWNLOAD ATTEMPT RESULT: + "+ conn.getResponseCode());
     	    	if (conn.getResponseCode()==202)
     	    	{
     	    		//TODO close inputstream??
     	    		conn.getInputStream().close();
     	    		downloadCheckIterations++;
     	    		if(downloadCheckIterations>maxIterations)
-    	    			throw new Exception("Log download wait time exceeded " + sleepTime * maxIterations);
+    	    			throw new Exception("Log download 60 secound wait time exceeded. Log too large?" + sleepTime * maxIterations);
     	    		Thread.sleep(sleepTime);
     	    	} else {
     	    		done=true;
@@ -410,8 +430,8 @@ public class LogUtil {
 	public static List<AtomPropertyCompareItem> compareAtomProperties(ServiceConfiguration configuration, CompareAtomProperties.Inputs input)
 	{
 		List<AtomPropertyCompareItem> props = Lists.newArrayList();
-		JSONObject props1 = Database.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId1(), null);
-		JSONObject props2 = Database.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId2(), null);
+		JSONObject props1 = AtomsphereAPI.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId1(), null);
+		JSONObject props2 = AtomsphereAPI.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId2(), null);
 		JSONArray array1 = props1.getJSONArray("Property");
 		JSONArray array2 = props2.getJSONArray("Property");
 
@@ -425,14 +445,16 @@ public class LogUtil {
 			prop.setValue1(itm1.getString("value"));
 			String value2 = findProperty(array2, name);
 			prop.setValue2(value2);
+			prop.setGuid(UUID.randomUUID().toString());
 			
-			if (!value2.contentEquals(prop.getValue2()))
+			if (!value2.contentEquals(prop.getValue1()))
 				msg = "Warning, property value mismatch. ";
 
 			//TODO Compare with best practice values? maxOpenFiles < 4096?
 			if (name.contentEquals("maxOpenFiles"))
-			{
-				if (Integer.parseInt(value2) < 10000)
+			{	
+				
+				if (isNumeric(value2) && Long.parseLong(value2) < 10000)
 					msg+="Warning property value not best practice. ";
 			}
 			prop.setMessage(msg);
@@ -454,5 +476,17 @@ public class LogUtil {
 			}			
 		}
 		return result;
+	}
+	
+	public static boolean isNumeric(String strNum) {
+	    if (strNum == null) {
+	        return false;
+	    }
+	    try {
+	        double d = Long.parseLong(strNum);
+	    } catch (NumberFormatException nfe) {
+	        return false;
+	    }
+	    return true;
 	}
 }

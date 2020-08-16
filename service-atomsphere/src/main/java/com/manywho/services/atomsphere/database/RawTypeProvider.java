@@ -20,13 +20,13 @@ public class RawTypeProvider implements TypeProvider<ServiceConfiguration> {
 
     @Override
     public boolean doesTypeExist(ServiceConfiguration configuration, String s) {
-        return true;
+        return serviceMetadata.findTypeElement(s)!=null;
     }
 
     @Override
     public List<TypeElement> describeTypes(ServiceConfiguration configuration, DescribeServiceRequest describeServiceRequest) {
      	try {
-     		return serviceMetadata.getAllTypesMetadata();
+     		return serviceMetadata.getAllTypeElements();
          } catch (Exception e) {
             throw new RuntimeException(e);
         }
