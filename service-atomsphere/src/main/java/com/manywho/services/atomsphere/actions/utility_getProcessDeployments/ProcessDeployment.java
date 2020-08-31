@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.getProcessDeployments;
+package com.manywho.services.atomsphere.actions.utility_getProcessDeployments;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.types.Type;

@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.apimclusterlogs;
+package com.manywho.services.atomsphere.actions.utility_apimclusterlogs;
 
 import java.util.Collections;
 import java.util.Comparator;

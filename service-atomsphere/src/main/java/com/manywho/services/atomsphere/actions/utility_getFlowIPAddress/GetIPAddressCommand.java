@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.getFlowIPAddress;
+package com.manywho.services.atomsphere.actions.utility_getFlowIPAddress;
 
 import java.io.BufferedReader;
 import java.io.IOException;

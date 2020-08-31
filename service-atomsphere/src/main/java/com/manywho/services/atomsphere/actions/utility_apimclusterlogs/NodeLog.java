@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.apimclusterlogs;
+package com.manywho.services.atomsphere.actions.utility_apimclusterlogs;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.types.Type;

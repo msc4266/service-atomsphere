@@ -1,11 +1,11 @@
-package com.manywho.services.atomsphere.actions.apimclusterlogs;
+package com.manywho.services.atomsphere.actions.utility_apimclusterlogs;
 
 import java.util.Date;
 import java.util.List;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.actions.Action;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.NodeLog;
 
 @Action.Metadata(name="Get Cluster Logs", summary = "Get GW/Broker/API logs for an atom by time range", uri="/atomsphere/getClusterLogs")
 public class GetClusterLogs {

@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.getProcessDeployments;
+package com.manywho.services.atomsphere.actions.utility_getProcessDeployments;
 
 import org.json.JSONObject;
 import org.slf4j.Logger;

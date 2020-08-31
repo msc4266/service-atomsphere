@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.apimatomcompare;
+package com.manywho.services.atomsphere.actions.utility_atomcompare;
 
 import java.util.Collections;
 import java.util.Comparator;

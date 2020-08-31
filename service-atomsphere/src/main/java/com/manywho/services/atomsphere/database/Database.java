@@ -28,6 +28,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
@@ -52,7 +53,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
             throw new RuntimeException("Create not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
  		JSONObject response = AtomsphereAPI.executeAPI(configuration, object.getDeveloperName(), "POST", "", body);
-		return jsonToMObject(response, object.getDeveloperName());
+		return jsonToMObject(response);
     }
 
     @Override
@@ -66,7 +67,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsGet(objectDataType.getDeveloperName()))
             throw new RuntimeException("Get not supported for " + objectDataType.getDeveloperName());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, objectDataType.getDeveloperName(), "GET", id, null);
-		return jsonToMObject(response, objectDataType.getDeveloperName());
+		return jsonToMObject(response);
     }
 
     @Override
@@ -101,7 +102,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
 			{				
 				JSONObject jObj = (JSONObject) results.get(index);
-				mObjects.add(jsonToMObject(jObj, objectDataType.getDeveloperName()));
+				mObjects.add(jsonToMObject(jObj));
 				totalRecords++;
 			}
 			while (response.has("queryToken"))
@@ -111,7 +112,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 				for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
 				{				
 					JSONObject jObj = (JSONObject) results.get(index);
-					mObjects.add(jsonToMObject(jObj, objectDataType.getDeveloperName()));
+					mObjects.add(jsonToMObject(jObj));
 					totalRecords++;
 				}
 			}
@@ -135,13 +136,12 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     {
 		if (filter.getWhere()!=null && filter.getWhere().size()>0)
 		{
+			JSONObject queryFilter = new JSONObject();
+			JSONObject expression = new JSONObject();
+			queryFilter.put("expression", expression);
 			try {
 				TypeElement typeElement = this.serviceMetadata.findTypeElement(objectDataType.getDeveloperName());
 					
-				JSONObject queryFilter = new JSONObject();
-				queryBody.put("QueryFilter", queryFilter);
-				JSONObject expression = new JSONObject();
-				queryFilter.put("expression", expression);
 				if (filter.getWhere().size()==1)
 				{
 					ListFilterWhere where = filter.getWhere().get(0);
@@ -150,14 +150,13 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 					expression.put("operator", operator);
 					expression.put("property", where.getColumnName());
 					JSONArray argument = formatFilterArguments(where, typeElement);
-					if (argument.length()>0) //is null and singleton operators
+					if (argument.length()>0 && !"%".contentEquals((String)argument.get(0))) //is null and singleton operators
 						expression.put("argument", argument);
 				}
 				else 
 				{
-					expression.put("operator", "and");
+					expression.put("operator", filter.getComparisonType().toString().toLowerCase());
 					JSONArray nestedExpressions = new JSONArray();
-					expression.put("nestedExpression", nestedExpressions);
 					for (ListFilterWhere where : filter.getWhere())
 					{
 						String operator = convertCriteriaType(where.getCriteriaType());
@@ -168,15 +167,19 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 						JSONArray argument = formatFilterArguments(where, typeElement);
 						if (argument.length()>0) //is null and singleton operators
 							nestedExpression.put("argument", argument);
-						logger.warning(argument.toString());
-						//If it is % we will not add the expression. This trick deals with the fact the flow boolean expressions are static
+						logger.info(argument.toString());
+						//If it is % we will not add the expression. This trick deals with the fact the flow boolean expressions are static in the UI
 						if (argument.length()!=1 || !(argument.get(0) instanceof String) || !"%".contentEquals((String)argument.get(0)))
 							nestedExpressions.put(nestedExpression);
 					}
+					if (nestedExpressions.length()>0)
+						expression.put("nestedExpression", nestedExpressions);
 				}
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
+			if (expression.has("nestedExpression") || expression.has("nestedExpression"))
+				queryBody.put("QueryFilter", queryFilter);
 		}
     }
     
@@ -270,7 +273,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
             throw new RuntimeException("Update not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
-		return jsonToMObject(response, object.getDeveloperName());
+		return jsonToMObject(response);
     }
 
     @Override
@@ -304,46 +307,99 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	return body;
     }
     
+    void addMObjectProperties(MObject mObject, JSONObject body)
+    {
+    	List<Property> properties = mObject.getProperties();
+       	for (String key:body.keySet())
+       	{
+       		if (!"@type".contentEquals(key))
+       		{
+               	Property property=null;
+               	property = new Property();
+               	property.setDeveloperName(key);
+
+               	Object propObject = body.get(key);
+           		if (propObject instanceof JSONObject)
+           		{
+           			JSONObject propertyObject = (JSONObject) propObject;
+           			String type = propertyObject.getString("@type");
+           			TypeElement typeElement = serviceMetadata.findTypeElement(type);
+           			if (typeElement!=null) //TODO Account.licensing has @type "" but has for objects inside that must be iterated
+           			{
+               			property.setContentType(ContentType.Object);
+                       	property.setTypeElementPropertyId(typeElement.getId());
+               			MObject childMObject = jsonToMObject((JSONObject)propObject);
+               			List<MObject> list = new ArrayList<MObject>();
+               			list.add(childMObject);
+               			property.setObjectData(list);          			
+                       	properties.add(property);           			
+           			} else {
+           				//iterate objects and add each as a property
+           				this.addMObjectProperties(mObject, propertyObject);
+           			}
+           		}         	
+           		else if (propObject instanceof JSONArray)
+           		{
+           			JSONArray array = (JSONArray) propObject;
+           			List<MObject> list = new ArrayList<MObject>();
+           			property.setContentType(ContentType.List);
+           			
+           			for (int i=0; i<array.length(); i++)
+           			{
+           				MObject item = jsonToMObject(array.getJSONObject(i));
+           				list.add(item);
+           			}
+           			property.setObjectData(list);
+                   	properties.add(property);
+           		}
+           		else
+           		{
+               		ContentType contentType = ContentType.String;
+               		//TODO ContentType.DateTime
+                   	//TODO we can do a TypeElement typeElement = getTypeElement(entityName) but that requires a hit on xsd 
+                   	String value = body.get(key).toString();
+                   	
+                   	//TODO Hack to fix long types returned as ["long",####]
+                   	if (value.startsWith("[\"Long") || value.startsWith("[\"Double"))
+                   	{
+                   		contentType = ContentType.Number;
+                   		String split[] = value.split(",");
+                   		if (split.length==2)
+                   			value = split[1].replace("]", "");
+                   		else
+                   			value="0";
+                   	} else if (propObject instanceof Boolean){
+                   		contentType = ContentType.Boolean;
+                   	}
+                   	
+                  	property.setContentValue(value);
+                  	property.setContentType(contentType);
+//                   	logger.info(String.format("Property key: %s value %s type: %s", key, value, contentType));
+                   	properties.add(property);
+           		}
+       		}
+       	}
+    }
+    
     //Process Response
-    MObject jsonToMObject(JSONObject body, String entityName)
+    MObject jsonToMObject(JSONObject body)
     {
     	MObject mObject = new MObject();
+    	logger.info(body.toString());
     	
     	List<Property> properties = Lists.newArrayList();
        	mObject.setProperties(properties);
-       	mObject.setDeveloperName(entityName);
-       	serviceMetadata.getPrimaryKey(entityName);
-       	String primaryKey = serviceMetadata.getPrimaryKey(entityName);
+       	
+       	String typeName = body.getString("@type");
+       	mObject.setDeveloperName(typeName);
+
+       	mObject.setExternalId(UUID.randomUUID().toString());
+       	String primaryKey = serviceMetadata.getPrimaryKey(typeName);
        	if (primaryKey!=null && primaryKey.length()>0)
-       		mObject.setExternalId(body.getString(primaryKey));
-       	else
-       		mObject.setExternalId(UUID.randomUUID().toString());
-       	for (String key:body.keySet())
-       	{
-           	Property property=null;
-       		ContentType contentType = ContentType.String;
-       		//TODO ContentType.DateTime
-           	//TODO we can do a TypeElement typeElement = getTypeElement(entityName) but that requires a hit on xsd 
-           	property = new Property();
-           	String value = body.get(key).toString();
-           	
-           	//TODO Hack to fix long types returned as ["long",####]
-           	if (value.startsWith("[\"Long") || value.startsWith("[\"Double"))
-           	{
-           		contentType = ContentType.Number;
-           		String split[] = value.split(",");
-           		if (split.length==2)
-           			value = split[1].replace("]", "");
-           		else
-           			value="0";
-           	}
-           		
-          	property.setContentValue(value);
-          	property.setContentType(contentType);
-           	property.setDeveloperName(key);
-//           	logger.warning(String.format("Property key: %s value %s type: %s", key, value, contentType));
-           	properties.add(property);
-       	}
+       		mObject.setExternalId(body.getString(primaryKey));       		
+
+       	addMObjectProperties(mObject, body);
+
     	return mObject;
     }
 

@@ -25,10 +25,10 @@ import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
 import com.manywho.services.atomsphere.ServiceConfiguration;
-import com.manywho.services.atomsphere.actions.apimatomcompare.AtomPropertyCompareItem;
-import com.manywho.services.atomsphere.actions.apimatomcompare.CompareAtomProperties;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.GetClusterLogs;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
+import com.manywho.services.atomsphere.actions.utility_atomcompare.AtomPropertyCompareItem;
+import com.manywho.services.atomsphere.actions.utility_atomcompare.CompareAtomProperties;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.GetClusterLogs;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.NodeLog;
 import com.manywho.services.atomsphere.actions.downloadAtomLog.DownloadAtomLog;
 import com.manywho.services.atomsphere.database.AtomsphereAPI;
 import com.manywho.services.atomsphere.database.Database;

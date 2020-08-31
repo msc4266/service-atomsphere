@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.apimprocessloganalysis;
+package com.manywho.services.atomsphere.actions.utility_processloganalysis;
 
 import java.util.UUID;
 

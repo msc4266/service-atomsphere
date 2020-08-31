@@ -9,11 +9,11 @@ import org.junit.Test;
 
 import com.manywho.services.TestUtil;
 import com.manywho.services.atomsphere.ServiceConfiguration;
-import com.manywho.services.atomsphere.actions.apimatomcompare.AtomPropertyCompareItem;
-import com.manywho.services.atomsphere.actions.apimatomcompare.CompareAtomProperties;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.GetClusterLogs;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
-import com.manywho.services.atomsphere.actions.apimprocessloganalysis.ProcessLogItem;
+import com.manywho.services.atomsphere.actions.utility_atomcompare.AtomPropertyCompareItem;
+import com.manywho.services.atomsphere.actions.utility_atomcompare.CompareAtomProperties;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.GetClusterLogs;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.NodeLog;
+import com.manywho.services.atomsphere.actions.utility_processloganalysis.ProcessLogItem;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

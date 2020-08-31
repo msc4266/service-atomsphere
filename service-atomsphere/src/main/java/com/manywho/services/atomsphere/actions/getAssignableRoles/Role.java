@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.types.Type;
 
-@Type.Element(name = "Property")
+@Type.Element(name = "Assignable Role")
 public class Role implements Type{
 	@Type.Identifier
 	private String guid;

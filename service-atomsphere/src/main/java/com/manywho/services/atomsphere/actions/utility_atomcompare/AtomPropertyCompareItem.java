@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.apimatomcompare;
+package com.manywho.services.atomsphere.actions.utility_atomcompare;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.types.Type;

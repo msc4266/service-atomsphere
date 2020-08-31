@@ -56,7 +56,7 @@ public class ServiceMetadata {
 	}
 
 	//Note apim and atomsphere have no entity name clashes
-	public JSONObject getObjectListEntry(String entityName)
+	public JSONObject getObjectListEntry(String entityName, boolean doCheck)
 	{
 		for (Object obj : atomsphereObjectList)
 		{
@@ -70,7 +70,9 @@ public class ServiceMetadata {
 			if (jObj.getString("name").contentEquals(entityName))
 				return jObj;
 		}
-		throw new RuntimeException(entityName + " type is a subtype and does not support direct database operations. Please refer to help.boomi.com API Reference to view object capabilities.");
+		if (doCheck)
+			throw new RuntimeException(entityName + " type is a child type of a parent and does not support direct database operations. Please refer to help.boomi.com API Reference to view object capabilities.");
+		return null;
 	}
 	
 	public boolean isAPIManagerEntity(String entityName)
@@ -86,32 +88,34 @@ public class ServiceMetadata {
 
 	public boolean supportsCreate(String entityName)
 	{
-		return getObjectListEntry(entityName).getBoolean("supportsCreate");
+		return getObjectListEntry(entityName, true).getBoolean("supportsCreate");
 	}
 	
 	public boolean supportsUpdate(String entityName)
 	{
-		return getObjectListEntry(entityName).getBoolean("supportsUpdate");
+		return getObjectListEntry(entityName, true).getBoolean("supportsUpdate");
 	}
 	
 	public boolean supportsDelete(String entityName)
 	{
-		return getObjectListEntry(entityName).getBoolean("supportsDelete");
+		return getObjectListEntry(entityName, true).getBoolean("supportsDelete");
 	}
 	
 	public boolean supportsQuery(String entityName)
 	{
-		return getObjectListEntry(entityName).getBoolean("supportsQuery");
+		return getObjectListEntry(entityName, true).getBoolean("supportsQuery");
 	}
 	
 	public boolean supportsGet(String entityName)
 	{
-		return getObjectListEntry(entityName).getBoolean("supportsGet");
+		return getObjectListEntry(entityName, true).getBoolean("supportsGet");
 	}
 	
 	public String getPrimaryKey(String entityName)
 	{
-		JSONObject entry = getObjectListEntry(entityName);
+		JSONObject entry = getObjectListEntry(entityName, false);
+		if (entry==null)
+			return null;
 		return entry.getString("primaryKey");
 	}
 
@@ -138,22 +142,24 @@ public class ServiceMetadata {
 		{
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");			
-			this.getTypeElementsForObject(name, this.atomsphereXSDTopElement);
+			this.getTypeElementsForObject(null, name, this.atomsphereXSDTopElement);
  		}    
 		for (Object obj : apimObjectList)
 		{
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");			
-			this.getTypeElementsForObject(name, this.apimXSDTopElement);
+			this.getTypeElementsForObject(null, name, this.apimXSDTopElement);
  		}    
-		resolveComplexProperties(_typeElements);
+		resolveComplexPropertyIDReferences(_typeElements);
 	}
 	
-	public boolean getTypeElementsForObject(String typeName, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
+	public boolean getTypeElementsForObject(String parentType, String typeName, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
 	{
 		boolean success=false;
 		TypeElement typeElement = new TypeElement();
 		typeElement.setDeveloperName(typeName);
+		if (parentType!=null)
+			typeElement.setDeveloperSummary("Parent type: " + parentType);
 		
     	List<TypeElementProperty> typeElementProperties = Lists.newArrayList();
     	typeElement.setProperties(typeElementProperties);
@@ -162,7 +168,8 @@ public class ServiceMetadata {
     	typeElement.setBindings(typeElementBindings);
     	
 		List<TypeElementPropertyBinding> typeElementPropertyBindings = Lists.newArrayList();
-		typeElementBindings.add(new TypeElementBinding(typeElement.getDeveloperName(), "The binding for " + typeElement.getDeveloperName(), typeElement.getDeveloperName(), typeElementPropertyBindings));
+		TypeElementBinding typeElementBinding = new TypeElementBinding(typeElement.getDeveloperName(), "The binding for " + typeElement.getDeveloperName(), typeElement.getDeveloperName(), typeElementPropertyBindings);
+		typeElementBindings.add(typeElementBinding);
 
 		populatePropertiesForComplexType(typeName, typeElement, typeElementPropertyBindings, xsdTopElement);
 		typeElement.setId(UUID.randomUUID());
@@ -170,6 +177,8 @@ public class ServiceMetadata {
        	{
        		if (findTypeElement(typeName)==null) //No dupes
        			_typeElements.add(typeElement);
+       		else
+       			logger.info("Type used multiple times: " + typeName + " " + parentType);
        		success = true;
        	}
        	else
@@ -250,7 +259,7 @@ public class ServiceMetadata {
 		if (maxOccursAttribute!=null && maxOccursAttribute.getNodeValue().contentEquals("unbounded"))
 			isList=true;
 
-		ContentType contentType = contentTypeFromXSDType(xsdType, isList, xsdTopElement);
+		ContentType contentType = contentTypeFromXSDType(typeName, xsdType, isList, xsdTopElement);
 		if (contentType!=null)
 		{
 			TypeElementProperty typeElementProperty = new TypeElementProperty();
@@ -267,7 +276,8 @@ public class ServiceMetadata {
 			//TODO I think we wait until the end and loop to apply binding ids at that time
 			if (contentType==ContentType.Object || contentType == ContentType.List)
 			{
-				typeElementProperty.setTypeElementDeveloperName(getLocalName(xsdType));
+				String complexTypeName = getLocalName(xsdType);
+				typeElementProperty.setTypeElementDeveloperName(complexTypeName);
 			}
 			
 		} else {
@@ -275,7 +285,7 @@ public class ServiceMetadata {
 		}
 	}
 	
-	void resolveComplexProperties(List<TypeElement> typeElements)
+	void resolveComplexPropertyIDReferences(List<TypeElement> typeElements)
 	{
 		for (TypeElement typeElement : typeElements)
 		{
@@ -300,7 +310,7 @@ public class ServiceMetadata {
 		return null;
 	}
 
-	private ContentType contentTypeFromXSDType(String xsdType, boolean isList, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
+	private ContentType contentTypeFromXSDType(String parentType, String xsdType, boolean isList, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
     {
     	ContentType  contentType = null;
     	switch (xsdType)
@@ -326,7 +336,7 @@ public class ServiceMetadata {
     		xsdType = getLocalName(xsdType);
     		if (xsdType!=null)
     		{
-        		contentType = resolveComplexType(xsdType, xsdTopElement);
+        		contentType = resolveComplexType(parentType, xsdType, xsdTopElement);
         		//TODO make this recursive to get sub types? 
         		//License, ConnectorVersion, Counter, MapExtension, AtomSecurityPoliciesType, 
         		//Property, AuditLogProperty, CloudAtom, DocumentCountAccountGroup, ExecutionCountAccountGroup, DeployedProcess, ProcessIntegrationPackInfo...
@@ -334,13 +344,13 @@ public class ServiceMetadata {
             	if (contentType==null)
         		{
         			//TODO Complex Types
-//        			if(getTypeElementsForObject(xsdType, xsdTopElement))
-//        			{
-//        				if (isList)
-//            				contentType = ContentType.List;
-//        				else
-//        					contentType = ContentType.Object;
-//        			}
+        			if(getTypeElementsForObject(parentType, xsdType, xsdTopElement))
+        			{
+        				if (isList)
+            				contentType = ContentType.List;
+        				else
+        					contentType = ContentType.Object;
+        			}
         		}
 //TODO complexTypes        		
     		}
@@ -357,7 +367,7 @@ public class ServiceMetadata {
 		return null;
 	}
 	
-	ContentType resolveComplexType(String xsdType, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
+	ContentType resolveComplexType(String parentType, String xsdType, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
 	{
 		ContentType contentType = null;
         NodeList simpleTypes = xsdTopElement.getElementsByTagName("xs:simpleType");
@@ -376,7 +386,7 @@ public class ServiceMetadata {
            				{
            					Node restriction = restrictions.item(0);
            					String subType=restriction.getAttributes().getNamedItem("base").getNodeValue();
-           					contentType=this.contentTypeFromXSDType(subType,false,xsdTopElement);
+           					contentType=this.contentTypeFromXSDType(parentType, subType,false,xsdTopElement);
            				}
            				break;
            			}

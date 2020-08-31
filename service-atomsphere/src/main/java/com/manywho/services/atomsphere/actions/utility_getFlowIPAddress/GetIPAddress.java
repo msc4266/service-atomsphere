@@ -1,4 +1,4 @@
-package com.manywho.services.atomsphere.actions.getFlowIPAddress;
+package com.manywho.services.atomsphere.actions.utility_getFlowIPAddress;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.actions.Action;

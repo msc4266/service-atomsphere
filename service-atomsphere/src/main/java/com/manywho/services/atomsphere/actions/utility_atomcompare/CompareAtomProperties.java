@@ -1,11 +1,11 @@
-package com.manywho.services.atomsphere.actions.apimatomcompare;
+package com.manywho.services.atomsphere.actions.utility_atomcompare;
 
 import java.util.Date;
 import java.util.List;
 
 import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.actions.Action;
-import com.manywho.services.atomsphere.actions.apimclusterlogs.NodeLog;
+import com.manywho.services.atomsphere.actions.utility_apimclusterlogs.NodeLog;
 
 @Action.Metadata(name="Compare Atom Propertes", summary = "Get GW/Broker/API logs for an atom by time range", uri="/atomsphere/compareAtom")
 public class CompareAtomProperties {

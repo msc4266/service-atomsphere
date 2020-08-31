@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.manywho.services.atomsphere.ServiceConfiguration;
-import com.manywho.services.atomsphere.actions.apimprocessloganalysis.ProcessLogItem;
+import com.manywho.services.atomsphere.actions.utility_processloganalysis.ProcessLogItem;
 import com.manywho.services.atomsphere.actions.downloadAtomLog.DownloadAtomLog;
 import com.manywho.services.atomsphere.database.AtomsphereAPI;
 import com.manywho.services.atomsphere.database.Database;
