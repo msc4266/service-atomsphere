@@ -18,18 +18,10 @@ import org.json.JSONObject;
 import org.xml.sax.SAXException;
 import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -93,22 +85,23 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 //			for (int index=filter.getOffset(); index<filter.getOffset()+filter.getLimit() && index<results.length(); index++)
 			
 			//If no sort, we iterate with no offset?
-			logger.warning("Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
-
+			logger.info("findAll Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
+			logger.fine("Response: " + response.toString());
 			int totalRecords=0;
 			int maxRecords=filter.getOffset()+filter.getLimit();
 			if (this.hasSort(filter))
-				maxRecords=1000;//we allow up to 1000 records to allow for sorting
+				maxRecords=5000;//we allow up to 5000 records to allow for sorting
 			for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
 			{				
 				JSONObject jObj = (JSONObject) results.get(index);
 				mObjects.add(jsonToMObject(jObj));
 				totalRecords++;
 			}
-			while (response.has("queryToken"))
+			while (response.has("queryToken") && totalRecords<maxRecords)
 			{
 				response = AtomsphereAPI.executeAPIQueryMore(configuration, objectDataType.getDeveloperName(), response.getString("queryToken"), this.serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 				results=response.getJSONArray("result");
+				logger.info("findAll queryToken Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
 				for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
 				{				
 					JSONObject jObj = (JSONObject) results.get(index);
@@ -117,6 +110,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 				}
 			}
 		}
+		
 		this.sortMObjects(mObjects, filter);
 		//Truncate 
 		List<MObject> returnMObjects = Lists.newArrayList();
@@ -195,10 +189,11 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     private void sortMObjects(List<MObject> mObjects, ListFilter filter)
     {
 		//Atomsphere doesn't support sorting so we will do a poor person's in memory sort of a single page of data. Only good for a single page/request of a data set
-
+    	if (!this.hasSort(filter))
+    		return;
 		if (filter.getOrderBy()!=null && filter.getOrderBy().size()>0)
 		{
-			logger.warning("Order By:" + filter.getOrderBy().size());
+			logger.info("Order By:" + filter.getOrderBy().size());
 			mObjects.sort(new Comparator<MObject>() {
 			    @Override
 			    public int compare(MObject m1, MObject m2) {
@@ -212,7 +207,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			    }
 			});
 		} else if (filter.hasOrderByPropertyDeveloperName()) {
-			logger.warning("Order By:" + filter.getOrderByPropertyDeveloperName());
+			logger.info("Order By:" + filter.getOrderByPropertyDeveloperName());
 			mObjects.sort(new Comparator<MObject>() {
 			    @Override
 			    public int compare(MObject m1, MObject m2) {
@@ -317,8 +312,8 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                	Property property=null;
                	property = new Property();
                	property.setDeveloperName(key);
-
                	Object propObject = body.get(key);
+               	String value = propObject.toString();
            		if (propObject instanceof JSONObject)
            		{
            			JSONObject propertyObject = (JSONObject) propObject;
@@ -338,7 +333,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            				this.addMObjectProperties(mObject, propertyObject);
            			}
            		}         	
-           		else if (propObject instanceof JSONArray)
+           		else if (propObject instanceof JSONArray && !isNumber(value))
            		{
            			JSONArray array = (JSONArray) propObject;
            			List<MObject> list = new ArrayList<MObject>();
@@ -357,10 +352,9 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                		ContentType contentType = ContentType.String;
                		//TODO ContentType.DateTime
                    	//TODO we can do a TypeElement typeElement = getTypeElement(entityName) but that requires a hit on xsd 
-                   	String value = body.get(key).toString();
                    	
                    	//TODO Hack to fix long types returned as ["long",####]
-                   	if (value.startsWith("[\"Long") || value.startsWith("[\"Double"))
+                   	if (isNumber(value))
                    	{
                    		contentType = ContentType.Number;
                    		String split[] = value.split(",");
@@ -381,11 +375,16 @@ public class Database implements RawDatabase<ServiceConfiguration> {
        	}
     }
     
+    boolean isNumber(String value)
+    {
+    	return value.startsWith("[\"Long") || value.startsWith("[\"Double"); 
+    }
+    
     //Process Response
     MObject jsonToMObject(JSONObject body)
     {
     	MObject mObject = new MObject();
-    	logger.info(body.toString());
+//    	logger.info(body.toString());
     	
     	List<Property> properties = Lists.newArrayList();
        	mObject.setProperties(properties);

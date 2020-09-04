@@ -52,6 +52,7 @@ public class ServiceMetadata {
 		is=this.getClass().getClassLoader().getResourceAsStream(apimObjectListFile);
 		apimObjectList = (new JSONObject(new JSONTokener(is)).getJSONArray("objectlist"));
         logger = Logger.getLogger(this.getClass().getName());
+        logger.info("ServiceMetadata");
         initAllTypeElements();
 	}
 
@@ -178,7 +179,7 @@ public class ServiceMetadata {
        		if (findTypeElement(typeName)==null) //No dupes
        			_typeElements.add(typeElement);
        		else
-       			logger.info("Type used multiple times: " + typeName + " " + parentType);
+       			logger.finest("Type used multiple times: " + typeName + " " + parentType);
        		success = true;
        	}
        	else
