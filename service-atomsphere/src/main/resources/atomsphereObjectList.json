@@ -183,7 +183,7 @@
 		{
 			"name": "AuditLog",
 			"primaryKey": "",
-			"supportsGet": false,
+			"supportsGet": true,
 			"supportsQuery": true,
 			"supportsCreate": false,
 			"supportsUpdate": false,

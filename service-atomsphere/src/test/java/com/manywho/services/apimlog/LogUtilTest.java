@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.services.TestUtil;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 import com.manywho.services.atomsphere.actions.utility_atomcompare.AtomPropertyCompareItem;
@@ -22,6 +23,7 @@ import java.util.List;
 
 public class LogUtilTest {
 	ServiceConfiguration configuration;
+	AuthenticatedWho user = new AuthenticatedWho();
 	
 	@Before
 	public void init() throws JSONException, Exception
@@ -196,7 +198,7 @@ public class LogUtilTest {
 		input.setErrorsOnly(false);
 		input.setSecondsBefore(0);
 		input.setSecondsAfter(60);
-		List<NodeLog> logs = LogUtil.getLogFiles(configuration, input);
+		List<NodeLog> logs = LogUtil.getLogFiles(configuration, user, input);
 		assertTrue(logs.size()==2);
 		assertEquals(50358, logs.get(0).getEntries().length());
 	}
@@ -207,7 +209,7 @@ public class LogUtilTest {
 		CompareAtomProperties.Inputs input = new CompareAtomProperties.Inputs();
 		input.setAtomId1("f494aabc-d1ee-4d28-97f9-7a1d7558a0f2");
 		input.setAtomId2("f494aabc-d1ee-4d28-97f9-7a1d7558a0f2");
-		List<AtomPropertyCompareItem> results = LogUtil.compareAtomProperties(configuration, input);
+		List<AtomPropertyCompareItem> results = LogUtil.compareAtomProperties(configuration, user, input);
 		assertTrue(results.size()>5);
 	}
 	
@@ -224,7 +226,7 @@ public class LogUtilTest {
 	public void testAnalyzeLogs() throws Exception
 	{
 		ProcessLogUtil util = new ProcessLogUtil();
-		List<ProcessLogItem> items = util.analyzeLog(configuration, "execution-e009c44b-cf71-4dff-b74d-4d9048837ed6-2020.04.27", false);
+		List<ProcessLogItem> items = util.analyzeLog(configuration, user, "execution-e009c44b-cf71-4dff-b74d-4d9048837ed6-2020.04.27", false);
 		assertTrue(items.size()>0);
 	}
 }

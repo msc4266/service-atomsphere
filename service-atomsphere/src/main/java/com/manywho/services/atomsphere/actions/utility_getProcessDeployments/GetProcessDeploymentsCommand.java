@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.UUID;
 
+import javax.inject.Inject;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ import com.manywho.sdk.api.run.elements.type.ListFilterWhere;
 import com.manywho.sdk.api.run.elements.type.MObject;
 import com.manywho.sdk.api.run.elements.type.ObjectDataType;
 import com.manywho.sdk.api.run.elements.type.Property;
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.sdk.services.actions.ActionCommand;
 import com.manywho.sdk.services.actions.ActionResponse;
 import com.manywho.services.atomsphere.database.Database;
@@ -27,6 +29,14 @@ import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class GetProcessDeploymentsCommand implements ActionCommand<ServiceConfiguration, GetProcessDeployments, GetProcessDeployments.Inputs, GetProcessDeployments.Outputs>{
     private static final Logger LOGGER = LoggerFactory.getLogger(GetProcessDeploymentsCommand.class);
+
+    AuthenticatedWho user;
+    @Inject
+    public GetProcessDeploymentsCommand(AuthenticatedWho user) 
+    {
+    	this.user=user;
+    }
+    
 	@Override
 	public ActionResponse<GetProcessDeployments.Outputs> execute(ServiceConfiguration configuration, ServiceRequest request,
 			GetProcessDeployments.Inputs input) {
@@ -34,7 +44,7 @@ public class GetProcessDeploymentsCommand implements ActionCommand<ServiceConfig
 		List<ProcessDeployment> processDeployments = Lists.newArrayList();
 		try {
 
-			Database database = new Database();
+			Database database = new Database(user);
 	
 			ListFilter filter = new ListFilter();
 			filter.setOffset(0);

@@ -18,12 +18,15 @@ import java.util.UUID;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import javax.inject.Inject;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.collect.Lists;
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 import com.manywho.services.atomsphere.actions.utility_atomcompare.AtomPropertyCompareItem;
 import com.manywho.services.atomsphere.actions.utility_atomcompare.CompareAtomProperties;
@@ -67,6 +70,13 @@ import com.manywho.services.atomsphere.database.Database;
 
 public class LogUtil {
 	
+	AuthenticatedWho user;
+    @Inject
+    public LogUtil(AuthenticatedWho user) 
+    {
+    	this.user=user;
+    }
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(LogUtil.class);
 	public static final String ACCESS_LOG_TIME_STAMP_MASK = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
 	public static final int ACCESS_LOG_TIME_STAMP_LENGTH = "2020-04-06T00:01:19.862+0000".length();
@@ -318,7 +328,7 @@ public class LogUtil {
 		return status;
 	}
 	
-	public static List<NodeLog> getLogFiles(ServiceConfiguration configuration, GetClusterLogs.Inputs input) throws Exception
+	public static List<NodeLog> getLogFiles(ServiceConfiguration configuration, AuthenticatedWho user, GetClusterLogs.Inputs input) throws Exception
 	{
 		List<NodeLog> logs=Lists.newArrayList();
 		JSONObject body = new JSONObject();
@@ -327,7 +337,7 @@ public class LogUtil {
 		simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 		body.put("logDate", simpleDateFormat.format(input.getStartTime())); //need logDate in UTC
 		LOGGER.info("Start Time: " + input.getStartTime().toString());
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, "AtomLog", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), "AtomLog", "POST", null, body.toString(), false);
 		DownloadAtomLog.Outputs outputs = new DownloadAtomLog.Outputs(response);
 		
 //		LOGGER.info("Errors Only: " + input.getErrorsOnly());
@@ -335,7 +345,7 @@ public class LogUtil {
 //		LOGGER.info("Before: " + input.);
 //		LOGGER.info("After: " + secondsAfter);
 //		
-		InputStream is = executeGetLogs(configuration, outputs.getUrl());
+		InputStream is = executeGetLogs(configuration, user.getToken(), outputs.getUrl());
         ZipInputStream zis = new ZipInputStream(is);
         ZipEntry entry = zis.getNextEntry();
 
@@ -367,7 +377,7 @@ public class LogUtil {
         return logs;
 	}
 	
-	public static InputStream executeGetLogs(ServiceConfiguration configuration, String urlString) throws Exception 
+	public static InputStream executeGetLogs(ServiceConfiguration configuration, String token, String urlString) throws Exception 
 	{
         HttpURLConnection conn=null;
         StringBuffer response= new StringBuffer();
@@ -383,9 +393,13 @@ public class LogUtil {
                 conn = (HttpURLConnection) url.openConnection();
     			conn.setRequestMethod("GET");
     	        conn.setDoOutput(true);
-    	    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
-    	    	String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-    	    	conn.setRequestProperty ("Authorization", basicAuth);
+    	        if (!configuration.useIDPCredentials())
+    	        {
+    		    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
+    		    	token = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+    	        }
+
+    	    	conn.setRequestProperty ("Authorization", token);
     	    	LOGGER.info("LOG DOWNLOAD ATTEMPT RESULT: + "+ conn.getResponseCode());
     	    	if (conn.getResponseCode()==202)
     	    	{
@@ -427,11 +441,11 @@ public class LogUtil {
 //	    LOGGER.info(response.toString());
 	}
 	
-	public static List<AtomPropertyCompareItem> compareAtomProperties(ServiceConfiguration configuration, CompareAtomProperties.Inputs input)
+	public static List<AtomPropertyCompareItem> compareAtomProperties(ServiceConfiguration configuration, AuthenticatedWho user, CompareAtomProperties.Inputs input)
 	{
 		List<AtomPropertyCompareItem> props = Lists.newArrayList();
-		JSONObject props1 = AtomsphereAPI.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId1(), null);
-		JSONObject props2 = AtomsphereAPI.executeAPI(configuration, "AtomStartupProperties", "GET", input.getAtomId2(), null);
+		JSONObject props1 = AtomsphereAPI.executeAPI(configuration, user.getToken(), "AtomStartupProperties", "GET", input.getAtomId1(), null, false);
+		JSONObject props2 = AtomsphereAPI.executeAPI(configuration, user.getToken(), "AtomStartupProperties", "GET", input.getAtomId2(), null, false);
 		JSONArray array1 = props1.getJSONArray("Property");
 		JSONArray array2 = props2.getJSONArray("Property");
 

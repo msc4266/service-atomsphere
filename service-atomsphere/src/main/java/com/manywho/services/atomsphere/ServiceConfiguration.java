@@ -4,14 +4,17 @@ import com.manywho.sdk.api.ContentType;
 import com.manywho.sdk.services.configuration.Configuration;
 
 public class ServiceConfiguration implements Configuration {
-    @Configuration.Setting(name="Username", contentType= ContentType.String)
+    @Configuration.Setting(name="Username", contentType= ContentType.String, required = false)
     private String username;
 
-    @Configuration.Setting(name="Password", contentType= ContentType.Password)
+    @Configuration.Setting(name="Password", contentType= ContentType.Password, required = false)
     private String password;
 
     @Configuration.Setting(name="Account", contentType= ContentType.String)
     private String account;
+
+	@Configuration.Setting(name="Use Identity Service Credentials", contentType= ContentType.Boolean, required = false)
+    private Boolean useIDPCredentials;
 
     @Configuration.Setting(name = "Server Public Certificate", contentType = ContentType.String, required = false)
     private String serverPublicCertificate;
@@ -47,4 +50,12 @@ public class ServiceConfiguration implements Configuration {
 	public void setServerPublicCertificate(String serverPublicCertificate) {
 		this.serverPublicCertificate = serverPublicCertificate;
 	}
+    public Boolean useIDPCredentials() {
+		return useIDPCredentials;
+	}
+
+	public void setUseIDPCredentials(Boolean useIDPCredentials) {
+		this.useIDPCredentials = useIDPCredentials;
+	}
+
 }

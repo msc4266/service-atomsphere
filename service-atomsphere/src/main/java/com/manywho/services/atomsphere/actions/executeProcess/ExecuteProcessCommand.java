@@ -1,8 +1,11 @@
 package com.manywho.services.atomsphere.actions.executeProcess;
 
+import javax.inject.Inject;
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import com.manywho.sdk.api.run.elements.config.ServiceRequest;
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.sdk.services.actions.ActionCommand;
 import com.manywho.sdk.services.actions.ActionResponse;
 import com.manywho.services.atomsphere.database.AtomsphereAPI;
@@ -10,6 +13,13 @@ import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration, ExecuteProcess, ExecuteProcess.Inputs, ExecuteProcess.Outputs>{
 
+	AuthenticatedWho user;
+    @Inject
+    public ExecuteProcessCommand(AuthenticatedWho user) 
+    {
+    	this.user=user;
+    }
+    
 	@Override
 	public ActionResponse<ExecuteProcess.Outputs> execute(ServiceConfiguration configuration, ServiceRequest request,
 			ExecuteProcess.Inputs input) {
@@ -34,7 +44,7 @@ public class ExecuteProcessCommand implements ActionCommand<ServiceConfiguration
 			processPropertyArray.put(prop);
 		}
 		
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, "executeProcess", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), "executeProcess", "POST", null, body.toString(), false);
 		return new ActionResponse<>(new ExecuteProcess.Outputs(response));
 	}
 }

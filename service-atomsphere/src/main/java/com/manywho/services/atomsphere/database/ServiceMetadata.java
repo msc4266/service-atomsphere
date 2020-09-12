@@ -143,25 +143,26 @@ public class ServiceMetadata {
 		{
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");			
-			this.getTypeElementsForObject(null, name, this.atomsphereXSDTopElement);
+			this.getTypeElementsForObject(null, name, this.atomsphereXSDTopElement, "Atomsphere");
  		}    
 		for (Object obj : apimObjectList)
 		{
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");			
-			this.getTypeElementsForObject(null, name, this.apimXSDTopElement);
+			this.getTypeElementsForObject(null, name, this.apimXSDTopElement, "API Manager");
  		}    
 		resolveComplexPropertyIDReferences(_typeElements);
 	}
 	
-	public boolean getTypeElementsForObject(String parentType, String typeName, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
+	public boolean getTypeElementsForObject(String parentType, String typeName, Element xsdTopElement, String developerSummary) throws SAXException, IOException, ParserConfigurationException
 	{
 		boolean success=false;
 		TypeElement typeElement = new TypeElement();
 		typeElement.setDeveloperName(typeName);
 		if (parentType!=null)
 			typeElement.setDeveloperSummary("Parent type: " + parentType);
-		
+		else
+			typeElement.setDeveloperSummary(developerSummary);
     	List<TypeElementProperty> typeElementProperties = Lists.newArrayList();
     	typeElement.setProperties(typeElementProperties);
     	
@@ -183,7 +184,7 @@ public class ServiceMetadata {
        		success = true;
        	}
        	else
-       		logger.finest("Type has no properties and is excluded: " + typeElement.getDeveloperName());
+       		logger.fine("Type has no properties and is excluded: " + typeElement.getDeveloperName());
 
        	return success;
 	}
@@ -247,7 +248,7 @@ public class ServiceMetadata {
 				}           	
 		} else {
 			if (!typeName.contentEquals("BaseType"))
-				logger.finest("***Warning type not found:" + typeName);
+				logger.warning("***Warning type not found:" + typeName);
 		}
     }
     
@@ -261,6 +262,8 @@ public class ServiceMetadata {
 			isList=true;
 
 		ContentType contentType = contentTypeFromXSDType(typeName, xsdType, isList, xsdTopElement);
+		if (contentType==null) //if no type we default to String
+			contentType=ContentType.String;
 		if (contentType!=null)
 		{
 			TypeElementProperty typeElementProperty = new TypeElementProperty();
@@ -279,10 +282,9 @@ public class ServiceMetadata {
 			{
 				String complexTypeName = getLocalName(xsdType);
 				typeElementProperty.setTypeElementDeveloperName(complexTypeName);
-			}
-			
-		} else {
-			logger.finest(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
+			}			
+//		} else {
+//			logger.warning(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
 		}
 	}
 	
@@ -345,7 +347,7 @@ public class ServiceMetadata {
             	if (contentType==null)
         		{
         			//TODO Complex Types
-        			if(getTypeElementsForObject(parentType, xsdType, xsdTopElement))
+        			if(getTypeElementsForObject(parentType, xsdType, xsdTopElement, ""))
         			{
         				if (isList)
             				contentType = ContentType.List;

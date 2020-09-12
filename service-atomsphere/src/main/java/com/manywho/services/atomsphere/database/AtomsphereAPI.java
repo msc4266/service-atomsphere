@@ -9,25 +9,32 @@ import java.net.HttpURLConnection;
 import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Base64;
+import java.util.logging.Logger;
 
 import org.json.JSONObject;
 
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class AtomsphereAPI {
-	public static JSONObject executeAPI(ServiceConfiguration configuration, String entityName, String method, String resource, JSONObject payload) 
+    private static Logger logger = Logger.getLogger(AtomsphereAPI.class.getName());
+
+//	private static JSONObject executeAPI(String accountId, String token, String entityName, String method, String resource, JSONObject payload) 
+//	{
+//		String payloadString=null;
+//		if (payload!=null) payloadString=payload.toString();
+//		return executeAPI(accountId, token, entityName, method, resource, payloadString, false);
+//	}
+	
+	//Pagination of Query Results
+	public static JSONObject executeAPIQueryMore(ServiceConfiguration configuration, String token, String entityName, String queryToken, boolean isAPIMEntity) 
 	{
-		String payloadString=null;
-		if (payload!=null) payloadString=payload.toString();
-		return executeAPI(configuration, entityName, method, resource, payloadString, false);
+		return executeAPI(configuration, token, entityName, "POST", "queryMore", queryToken, isAPIMEntity);
 	}
-	public static JSONObject executeAPIQueryMore(ServiceConfiguration configuration, String entityName, String queryToken, boolean isAPIMEntity) 
-	{
-		return executeAPI(configuration, entityName, "POST", "queryMore", queryToken, isAPIMEntity);
-	}
-    //TODO queryMore queryToken uses just a text blob, not jsonobject so we need to support passing a string payload
+	
+    //queryMore queryToken uses just a text blob, not jsonobject so we pass in a string payload
     //APIM https://api.boomi.com/apim/api/rest/v1/{accountID}
-    public static JSONObject executeAPI(ServiceConfiguration configuration, String entityName, String method, String resource, String payload, boolean isAPIMEntity) 
+    public static JSONObject executeAPI(ServiceConfiguration configuration, String token, String entityName, String method, String resource, String payload, boolean isAPIMEntity) 
 	{
 		if (resource!=null)
 			resource="/"+resource;
@@ -43,15 +50,21 @@ public class AtomsphereAPI {
         try {
 Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms   	
     		URL url = new URL(urlString+String.format("%s/%s%s", configuration.getAccount(), entityName, resource));
-//    		logger.info(method + " " + url.toString());
+    		logger.info(method + " " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(method);
 	        conn.setDoOutput(true);
 	        conn.setRequestProperty("Content-Type", "application/json");
 	        conn.setRequestProperty("Accept", "application/json");
-	    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
-	    	String basicAuth = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-	    	conn.setRequestProperty ("Authorization", basicAuth);
+
+	        if (!configuration.useIDPCredentials())
+	        {
+		    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
+		    	logger.info("Userpass:" + userpass);
+		    	token = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+	        }
+	    	conn.setRequestProperty ("Authorization", token);
+	    	
 	    	if (payload!=null)
 	    	{
 		        conn.setDoInput(true);
@@ -62,8 +75,7 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 		        OutputStream os = conn.getOutputStream();
 		        os.write(input, 0, input.length);  
 	    	}  
-	    		
-	 
+	    		 
 			responseCode = conn.getResponseCode() +"";
 	        
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream())) ;
@@ -98,7 +110,7 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 				throw new RuntimeException(e1);
 			}
 		}
-//	    LOGGER.info(response.toString());
+		logger.fine("Response: " + response.toString());
         String responseString = response.toString();
         JSONObject responseObj = null;
         if (responseString.length()==0)

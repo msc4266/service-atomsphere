@@ -11,6 +11,7 @@ import com.manywho.sdk.api.run.elements.type.ListFilterWhere;
 import com.manywho.sdk.api.run.elements.type.MObject;
 import com.manywho.sdk.api.run.elements.type.ObjectDataType;
 import com.manywho.sdk.api.run.elements.type.Property;
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.sdk.services.database.RawDatabase;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 import org.json.JSONArray;
@@ -32,11 +33,13 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     private ServiceMetadata serviceMetadata;
     private boolean doWhitelistOperationSupportedCheck=true;
     private Logger logger;
+    private AuthenticatedWho user;
 
     @Inject
-    public Database() throws SAXException, IOException, ParserConfigurationException {
+    public Database(AuthenticatedWho user) throws SAXException, IOException, ParserConfigurationException {
         serviceMetadata = new ServiceMetadata();
         logger = Logger.getLogger(this.getClass().getName());
+        this.user=user;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsCreate(object.getDeveloperName()))
             throw new RuntimeException("Create not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
- 		JSONObject response = AtomsphereAPI.executeAPI(configuration, object.getDeveloperName(), "POST", "", body);
+ 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", "", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
 		return jsonToMObject(response);
     }
 
@@ -58,7 +61,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	//https://api.boomi.com/api/rest/v1/boomi_davehock-T9DOG4/Process/095b2e9f-71ab-43aa-ae4b-9d521b61e0f4
     	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsGet(objectDataType.getDeveloperName()))
             throw new RuntimeException("Get not supported for " + objectDataType.getDeveloperName());
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, objectDataType.getDeveloperName(), "GET", id, null);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "GET", id, null, serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		return jsonToMObject(response);
     }
 
@@ -77,7 +80,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 		
 		addFilterToBody(filter, objectDataType, queryBody);
 		logger.info("WHERE params: " + queryBody.toString());
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, objectDataType.getDeveloperName(), "POST", "query", queryBody);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "POST", "query", queryBody.toString(), serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		if (response.has("result"))
 		{
 			JSONArray results=response.getJSONArray("result"); 
@@ -86,7 +89,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			
 			//If no sort, we iterate with no offset?
 			logger.info("findAll Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
-			logger.fine("Response: " + response.toString());
 			int totalRecords=0;
 			int maxRecords=filter.getOffset()+filter.getLimit();
 			if (this.hasSort(filter))
@@ -99,7 +101,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			}
 			while (response.has("queryToken") && totalRecords<maxRecords)
 			{
-				response = AtomsphereAPI.executeAPIQueryMore(configuration, objectDataType.getDeveloperName(), response.getString("queryToken"), this.serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
+				response = AtomsphereAPI.executeAPIQueryMore(configuration, user.getToken(), objectDataType.getDeveloperName(), response.getString("queryToken"), this.serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 				results=response.getJSONArray("result");
 				logger.info("findAll queryToken Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
 				for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
@@ -172,7 +174,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			} catch (Exception e) {
 				throw new RuntimeException(e);
 			}
-			if (expression.has("nestedExpression") || expression.has("nestedExpression"))
+			if (expression.has("nestedExpression") || expression.has("argument"))
 				queryBody.put("QueryFilter", queryFilter);
 		}
     }
@@ -267,7 +269,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsUpdate(object.getDeveloperName()))
             throw new RuntimeException("Update not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
 		return jsonToMObject(response);
     }
 
@@ -280,7 +282,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     public void delete(ServiceConfiguration configuration, MObject object) {
     	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsDelete(object.getDeveloperName()))
             throw new RuntimeException("Delete not supported for " + object.getDeveloperName());
-    	AtomsphereAPI.executeAPI(configuration, object.getDeveloperName(), "DELETE", object.getExternalId(), null, serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
+    	AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "DELETE", object.getExternalId(), null, serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
     }
 
     @Override

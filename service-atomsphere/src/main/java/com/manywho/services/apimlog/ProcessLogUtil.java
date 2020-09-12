@@ -12,9 +12,14 @@ import java.util.Scanner;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+import javax.inject.Inject;
+
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 import com.manywho.services.atomsphere.actions.utility_processloganalysis.ProcessLogItem;
 import com.manywho.services.atomsphere.actions.downloadAtomLog.DownloadAtomLog;
@@ -23,6 +28,7 @@ import com.manywho.services.atomsphere.database.Database;
 
 
 public class ProcessLogUtil {
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessLogUtil.class);
 	public List<ProcessLogItem> analyzeLogStream(InputStream is, Boolean aggregate) throws Exception
 	{
@@ -109,15 +115,15 @@ public class ProcessLogUtil {
 		}
 	}
 	
-	public List<ProcessLogItem> analyzeLog(ServiceConfiguration configuration, String executionId, Boolean aggregate) throws Exception
+	public List<ProcessLogItem> analyzeLog(ServiceConfiguration configuration, AuthenticatedWho user, String executionId, Boolean aggregate) throws Exception
 	{
 		JSONObject body = new JSONObject();
 		List<ProcessLogItem> items=null;
 		body.put("executionId", executionId);
 		body.put("logLevel", "INFO");
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, "ProcessLog", "POST", null, body);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), "ProcessLog", "POST", null, body.toString(), false);
 		DownloadAtomLog.Outputs outputs = new DownloadAtomLog.Outputs(response);
-		InputStream is = LogUtil.executeGetLogs(configuration, outputs.getUrl());
+		InputStream is = LogUtil.executeGetLogs(configuration, user.getToken(), outputs.getUrl());
         ZipInputStream zis = new ZipInputStream(is);
         ZipEntry entry = zis.getNextEntry();
 

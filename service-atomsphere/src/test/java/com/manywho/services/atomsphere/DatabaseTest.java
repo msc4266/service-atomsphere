@@ -13,6 +13,8 @@ import com.manywho.sdk.api.run.elements.type.ListFilter;
 import com.manywho.sdk.api.run.elements.type.ListFilterWhere;
 import com.manywho.sdk.api.run.elements.type.MObject;
 import com.manywho.sdk.api.run.elements.type.ObjectDataType;
+import com.manywho.sdk.api.security.AuthenticatedWho;
+import com.manywho.sdk.services.identity.AuthenticatedUser;
 import com.manywho.services.TestUtil;
 import com.manywho.services.atomsphere.database.Database;
 import com.manywho.services.atomsphere.database.ServiceMetadata;
@@ -20,6 +22,7 @@ import com.manywho.services.atomsphere.database.ServiceMetadata;
 public class DatabaseTest {
 
 	ServiceConfiguration configuration;
+	AuthenticatedWho user;
 	private void init() throws JSONException, Exception
 	{
 		JSONObject testCredentials=new JSONObject(TestUtil.readResource("testCredentials.json", this.getClass()));
@@ -27,13 +30,15 @@ public class DatabaseTest {
 		configuration.setAccount(testCredentials.getString("accountId"));
 		configuration.setUsername(testCredentials.getString("username"));
 		configuration.setPassword(testCredentials.getString("password"));
+		user = new AuthenticatedWho();
 	}
 	//TODO Generate edit mobject request payloads from metadata
 	@Test
 	public void testAllCRUD() throws Exception {
 		init();
+		
 		ServiceMetadata serviceMetadata = new ServiceMetadata();
-		Database database = new Database();
+		Database database = new Database(user);
 		database.setDoWhitelistOperationSupportedCheck(true); //if false we will let all operations be attempted irregardless of the whitelist supportsXXX entries in order to test whitelists
 		List<TypeElement> typeElements=serviceMetadata.getAllTypeElements();
 		for (TypeElement typeElement:typeElements)
