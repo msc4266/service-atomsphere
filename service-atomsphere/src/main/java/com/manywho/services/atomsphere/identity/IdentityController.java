@@ -193,14 +193,12 @@ public class IdentityController extends AbstractIdentityController {
     {
     	String status="200";
     	try {
-    		//if we get a 401 or 403, we didn't authenticate
-    		//400 is OK because Atom XXXX does not exist
-    		JSONObject response = AtomsphereAPI.executeAPI(configuration, token, "Atom", "GET", "XXXX", null, false);
+    		String body = "{\"QueryFilter\": {\"expression\": {\"argument\": [\"XXXX\"],\"operator\": \"EQUALS\",\"property\": \"name\"}}}";
+    		JSONObject response = AtomsphereAPI.executeAPI(configuration, token, "Atom", "GET", "query", body, false);
     	} catch (Exception e)
     	{
-    		if (!e.getMessage().startsWith("Error code: 400"))
-    			status="401";
-    		logger.info(e.getMessage());
+   			status="401";
+    		logger.info("verifyCredentialsWithAtomAPI:" + e.getMessage());
     	}
     	return status;
     }

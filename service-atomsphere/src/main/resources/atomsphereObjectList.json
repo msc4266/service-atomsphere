@@ -573,20 +573,20 @@
 		{
 			"name": "ProcessSchedules",
 			"primaryKey": "id",
-			"supportsGet": false,
+			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": true,
-			"supportsUpdate": false,
+			"supportsCreate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},
 		{
 			"name": "ProcessScheduleStatus",
 			"primaryKey": "id",
-			"supportsGet": false,
+			"supportsGet": true,
 			"supportsQuery": true,
-			"supportsCreate": true,
-			"supportsUpdate": false,
+			"supportsCreate": false,
+			"supportsUpdate": true,
 			"supportsExecute": false,
 			"supportsDelete": false
 		},

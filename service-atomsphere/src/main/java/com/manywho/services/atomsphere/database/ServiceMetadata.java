@@ -57,7 +57,7 @@ public class ServiceMetadata {
 	}
 
 	//Note apim and atomsphere have no entity name clashes
-	public JSONObject getObjectListEntry(String entityName, boolean doCheck)
+	public JSONObject getObjectListEntry(String entityName)
 	{
 		for (Object obj : atomsphereObjectList)
 		{
@@ -71,8 +71,6 @@ public class ServiceMetadata {
 			if (jObj.getString("name").contentEquals(entityName))
 				return jObj;
 		}
-		if (doCheck)
-			throw new RuntimeException(entityName + " type is a child type of a parent and does not support direct database operations. Please refer to help.boomi.com API Reference to view object capabilities.");
 		return null;
 	}
 	
@@ -89,32 +87,47 @@ public class ServiceMetadata {
 
 	public boolean supportsCreate(String entityName)
 	{
-		return getObjectListEntry(entityName, true).getBoolean("supportsCreate");
+		JSONObject entry = getObjectListEntry(entityName);
+		if (entry==null)
+			return false;
+		return entry.getBoolean("supportsCreate");
 	}
 	
 	public boolean supportsUpdate(String entityName)
 	{
-		return getObjectListEntry(entityName, true).getBoolean("supportsUpdate");
+		JSONObject entry = getObjectListEntry(entityName);
+		if (entry==null)
+			return false;
+		return entry.getBoolean("supportsUpdate");
 	}
 	
 	public boolean supportsDelete(String entityName)
 	{
-		return getObjectListEntry(entityName, true).getBoolean("supportsDelete");
+		JSONObject entry = getObjectListEntry(entityName);
+		if (entry==null)
+			return false;
+		return entry.getBoolean("supportsDelete");
 	}
 	
 	public boolean supportsQuery(String entityName)
 	{
-		return getObjectListEntry(entityName, true).getBoolean("supportsQuery");
+		JSONObject entry = getObjectListEntry(entityName);
+		if (entry==null)
+			return false;
+		return entry.getBoolean("supportsQuery");
 	}
 	
 	public boolean supportsGet(String entityName)
 	{
-		return getObjectListEntry(entityName, true).getBoolean("supportsGet");
+		JSONObject entry = getObjectListEntry(entityName);
+		if (entry==null)
+			return false;
+		return entry.getBoolean("supportsGet");
 	}
 	
 	public String getPrimaryKey(String entityName)
 	{
-		JSONObject entry = getObjectListEntry(entityName, false);
+		JSONObject entry = getObjectListEntry(entityName);
 		if (entry==null)
 			return null;
 		return entry.getString("primaryKey");

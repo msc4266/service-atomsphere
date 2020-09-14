@@ -28,7 +28,7 @@ APIM Action Send Changes to Authentication Source
 public class ServiceMetadataTest {
 
 	@Test
-	public void testGetAllTypesMetadata() throws SAXException, IOException, ParserConfigurationException {
+	public void testGetAllTypeElements() throws SAXException, IOException, ParserConfigurationException {
 		ServiceMetadata serviceMetadata = new ServiceMetadata();
 		List<TypeElement> typeElements=serviceMetadata.getAllTypeElements();
 		for (TypeElement typeElement:typeElements)

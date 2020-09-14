@@ -51,6 +51,8 @@ public class ServiceConfiguration implements Configuration {
 		this.serverPublicCertificate = serverPublicCertificate;
 	}
     public Boolean useIDPCredentials() {
+    	if (useIDPCredentials==null)
+    		return false;
 		return useIDPCredentials;
 	}
 

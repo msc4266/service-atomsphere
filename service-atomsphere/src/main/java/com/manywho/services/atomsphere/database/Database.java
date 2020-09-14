@@ -504,5 +504,4 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 	public void setDoWhitelistOperationSupportedCheck(boolean doWhitelistOperationSupportedCheck) {
 		this.doWhitelistOperationSupportedCheck = doWhitelistOperationSupportedCheck;
 	}
-
 }
