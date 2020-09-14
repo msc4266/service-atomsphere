@@ -194,7 +194,7 @@ public class IdentityController extends AbstractIdentityController {
     	String status="200";
     	try {
     		String body = "{\"QueryFilter\": {\"expression\": {\"argument\": [\"XXXX\"],\"operator\": \"EQUALS\",\"property\": \"name\"}}}";
-    		JSONObject response = AtomsphereAPI.executeAPI(configuration, token, "Atom", "GET", "query", body, false);
+    		JSONObject response = AtomsphereAPI.executeAPI(configuration, token, "Atom", "POST", "query", body, false);
     	} catch (Exception e)
     	{
    			status="401";
@@ -205,8 +205,6 @@ public class IdentityController extends AbstractIdentityController {
     
     private String buildAuthToken(String username, String password)
     {
-    	String userpass = username + ":" + password;
-    	logger.info("Userpass:" + userpass);
-    	return "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
+    	return username + ":" + password;
     }
 }

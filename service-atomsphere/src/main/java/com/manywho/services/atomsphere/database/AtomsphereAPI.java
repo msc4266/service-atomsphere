@@ -10,10 +10,7 @@ import java.net.ProtocolException;
 import java.net.URL;
 import java.util.Base64;
 import java.util.logging.Logger;
-
 import org.json.JSONObject;
-
-import com.manywho.sdk.api.security.AuthenticatedWho;
 import com.manywho.services.atomsphere.ServiceConfiguration;
 
 public class AtomsphereAPI {
@@ -57,12 +54,14 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 	        conn.setRequestProperty("Content-Type", "application/json");
 	        conn.setRequestProperty("Accept", "application/json");
 
-	        if (!configuration.useIDPCredentials())
-	        {
-		    	String userpass = configuration.getUsername() + ":" + configuration.getPassword();
-		    	logger.info("Userpass:" + userpass);
-		    	token = "Basic " + new String(Base64.getEncoder().encode(userpass.getBytes()));
-	        }
+	        
+
+	    	if (!configuration.useIDPCredentials())
+	    		token = configuration.getUsername() + ":" + configuration.getPassword();
+	    	token = "Basic " + new String(Base64.getEncoder().encode(token.getBytes()));
+
+	    	logger.info("Userpass:" + token);
+
 	    	conn.setRequestProperty ("Authorization", token);
 	    	
 	    	if (payload!=null)
