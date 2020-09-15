@@ -47,20 +47,17 @@ public class AtomsphereAPI {
         try {
 Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms   	
     		URL url = new URL(urlString+String.format("%s/%s%s", configuration.getAccount(), entityName, resource));
-    		logger.info(method + " " + url.toString());
+    		logger.info("Account: " + configuration.getAccount());
+    		logger.fine(method + " " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(method);
 	        conn.setDoOutput(true);
 	        conn.setRequestProperty("Content-Type", "application/json");
-	        conn.setRequestProperty("Accept", "application/json");
+	        conn.setRequestProperty("Accept", "application/json");        
 
-	        
-
-	    	if (!configuration.useIDPCredentials())
+	    	if (token==null || token.length()==0)
 	    		token = configuration.getUsername() + ":" + configuration.getPassword();
 	    	token = "Basic " + new String(Base64.getEncoder().encode(token.getBytes()));
-
-	    	logger.info("Userpass:" + token);
 
 	    	conn.setRequestProperty ("Authorization", token);
 	    	

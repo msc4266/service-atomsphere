@@ -60,11 +60,10 @@ public class IdentityController extends AbstractIdentityController {
     public AuthenticatedWhoResult authentication(AuthenticationCredentials authenticationCredentials) throws Exception {
         AuthenticatedWhoResult authenticatedWhoResult = new AuthenticatedWhoResult();
         ServiceConfiguration configuration = (ServiceConfiguration)configurationParser.from(authenticationCredentials);
-        logger.info(configuration.getAccount());
-        configuration.setUseIDPCredentials(true);
+        logger.fine(configuration.getAccount());
         token = this.buildAuthToken(authenticationCredentials.getUsername(), authenticationCredentials.getPassword());
-        logger.info(authenticationCredentials.getUsername());
-        logger.info("authentication");
+        logger.fine(authenticationCredentials.getUsername());
+        logger.fine("authentication");
         String status = this.verifyCredentialsWithAtomAPI(configuration, token);
         if (!"200".contentEquals(status)) {
             authenticatedWhoResult.setStatus(AuthenticatedWhoResult.AuthenticationStatus.AccessDenied);
@@ -98,7 +97,7 @@ public class IdentityController extends AbstractIdentityController {
     @Override
     public ObjectDataResponse authorization(ObjectDataRequest objectDataRequest) throws Exception {
         AuthenticatedWho authenticatedWho = authenticatedWhoProvider.get();
-        logger.info("authorization");
+        logger.fine("authorization");
 
         $User userObject;
         ServiceConfiguration configuration = configurationParser.from(objectDataRequest);
@@ -132,7 +131,7 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public ObjectDataResponse groupAttributes(ObjectDataRequest objectDataRequest) throws Exception {
-        logger.info("groupAttributes");
+        logger.fine("groupAttributes");
         AuthorizationAttribute attribute = new AuthorizationAttribute("users", "Users");
 
         return new ObjectDataResponse(typeBuilder.from(attribute));
@@ -142,7 +141,7 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public ObjectDataResponse groups(ObjectDataRequest objectDataRequest) throws Exception {
-        logger.info("groups");
+        logger.fine("groups");
         List<MObject> groupsToReturn = new ArrayList<>();
 
         return createResponse(groupsToReturn, false);
@@ -152,7 +151,7 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public ObjectDataResponse userAttributes(ObjectDataRequest objectDataRequest) throws Exception {
-        logger.info("userAttributes");
+        logger.fine("userAttributes");
         AuthorizationAttribute authorizationAttribute = new AuthorizationAttribute("accountId", "Account ID");
 
         return new ObjectDataResponse(typeBuilder.from(authorizationAttribute));
@@ -162,14 +161,14 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public ObjectDataResponse users(ObjectDataRequest objectDataRequest) throws Exception {
-        logger.info("users");
+        logger.fine("users");
         List<MObject> usersToReturn = new ArrayList<>();
  
         return createResponse(usersToReturn, false);
     }
 
     public String getUserAuthorizationStatus(Authorization authorization, AuthenticatedWho user) {
-        logger.info("getUserAuthorizationStatus");
+        logger.fine("getUserAuthorizationStatus");
         switch (authorization.getGlobalAuthenticationType()) {
             case Public:
                 return "401";
@@ -182,7 +181,7 @@ public class IdentityController extends AbstractIdentityController {
     }
 
     private ObjectDataResponse createResponse(List<MObject> objectCollection, boolean hasMore) {
-        logger.info("createResponse");
+        logger.fine("createResponse");
         ObjectDataResponse objectDataResponse =  new ObjectDataResponse(objectCollection);
         objectDataResponse.setHasMoreResults(hasMore);
 
@@ -198,7 +197,7 @@ public class IdentityController extends AbstractIdentityController {
     	} catch (Exception e)
     	{
    			status="401";
-    		logger.info("verifyCredentialsWithAtomAPI:" + e.getMessage());
+    		logger.fine("verifyCredentialsWithAtomAPI:" + e.getMessage());
     	}
     	return status;
     }

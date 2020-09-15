@@ -79,7 +79,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 //			throw new RuntimeException("Offset pagination not supported when sorting is set. Please set your filter 'Number of records to return' to the maximum records required.");
 		
 		addFilterToBody(filter, objectDataType, queryBody);
-		logger.info("WHERE params: " + queryBody.toString());
+		logger.fine("WHERE params: " + queryBody.toString());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "POST", "query", queryBody.toString(), serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		if (response.has("result"))
 		{
@@ -88,7 +88,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 //			for (int index=filter.getOffset(); index<filter.getOffset()+filter.getLimit() && index<results.length(); index++)
 			
 			//If no sort, we iterate with no offset?
-			logger.info("findAll Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
+			logger.fine("findAll Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
 			int totalRecords=0;
 			int maxRecords=filter.getOffset()+filter.getLimit();
 			if (this.hasSort(filter))
@@ -103,7 +103,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			{
 				response = AtomsphereAPI.executeAPIQueryMore(configuration, user.getToken(), objectDataType.getDeveloperName(), response.getString("queryToken"), this.serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 				results=response.getJSONArray("result");
-				logger.info("findAll queryToken Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
+				logger.fine("findAll queryToken Entity: " + objectDataType.getDeveloperName() + " Limit: " + filter.getLimit() + " Offset: "+ filter.getOffset() + " numberOfResults: "+response.getInt("numberOfResults") + " size:" + results.length());
 				for (int index=0; index<results.length() && totalRecords<maxRecords; index++)
 				{				
 					JSONObject jObj = (JSONObject) results.get(index);
@@ -163,7 +163,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 						JSONArray argument = formatFilterArguments(where, typeElement);
 						if (argument.length()>0) //is null and singleton operators
 							nestedExpression.put("argument", argument);
-						logger.info(argument.toString());
+						logger.fine(argument.toString());
 						//If it is % we will not add the expression. This trick deals with the fact the flow boolean expressions are static in the UI
 						if (argument.length()!=1 || !(argument.get(0) instanceof String) || !"%".contentEquals((String)argument.get(0)))
 							nestedExpressions.put(nestedExpression);
@@ -195,7 +195,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     		return;
 		if (filter.getOrderBy()!=null && filter.getOrderBy().size()>0)
 		{
-			logger.info("Order By:" + filter.getOrderBy().size());
+			logger.fine("Order By:" + filter.getOrderBy().size());
 			mObjects.sort(new Comparator<MObject>() {
 			    @Override
 			    public int compare(MObject m1, MObject m2) {
@@ -209,7 +209,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			    }
 			});
 		} else if (filter.hasOrderByPropertyDeveloperName()) {
-			logger.info("Order By:" + filter.getOrderByPropertyDeveloperName());
+			logger.fine("Order By:" + filter.getOrderByPropertyDeveloperName());
 			mObjects.sort(new Comparator<MObject>() {
 			    @Override
 			    public int compare(MObject m1, MObject m2) {
@@ -370,7 +370,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                    	
                   	property.setContentValue(value);
                   	property.setContentType(contentType);
-//                   	logger.info(String.format("Property key: %s value %s type: %s", key, value, contentType));
+//                   	logger.fine(String.format("Property key: %s value %s type: %s", key, value, contentType));
                    	properties.add(property);
            		}
        		}
@@ -386,7 +386,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     MObject jsonToMObject(JSONObject body)
     {
     	MObject mObject = new MObject();
-//    	logger.info(body.toString());
+//    	logger.fine(body.toString());
     	
     	List<Property> properties = Lists.newArrayList();
        	mObject.setProperties(properties);

@@ -52,7 +52,7 @@ public class ServiceMetadata {
 		is=this.getClass().getClassLoader().getResourceAsStream(apimObjectListFile);
 		apimObjectList = (new JSONObject(new JSONTokener(is)).getJSONArray("objectlist"));
         logger = Logger.getLogger(this.getClass().getName());
-        logger.info("ServiceMetadata");
+        logger.fine("ServiceMetadata");
         initAllTypeElements();
 	}
 
@@ -261,7 +261,7 @@ public class ServiceMetadata {
 				}           	
 		} else {
 			if (!typeName.contentEquals("BaseType"))
-				logger.warning("***Warning type not found:" + typeName);
+				logger.fine("***Warning type not found:" + typeName);
 		}
     }
     
@@ -297,7 +297,7 @@ public class ServiceMetadata {
 				typeElementProperty.setTypeElementDeveloperName(complexTypeName);
 			}			
 //		} else {
-//			logger.warning(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
+//			logger.fine(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
 		}
 	}
 	
