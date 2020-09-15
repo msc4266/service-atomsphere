@@ -55,8 +55,11 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 	        conn.setRequestProperty("Content-Type", "application/json");
 	        conn.setRequestProperty("Accept", "application/json");        
 
-	    	if (token==null || token.length()==0)
+	    	if (!configuration.useIDPCredentials())
+	    	{
 	    		token = configuration.getUsername() + ":" + configuration.getPassword();
+	    		logger.info("API using set credentials");
+	    	}
 	    	token = "Basic " + new String(Base64.getEncoder().encode(token.getBytes()));
 
 	    	conn.setRequestProperty ("Authorization", token);

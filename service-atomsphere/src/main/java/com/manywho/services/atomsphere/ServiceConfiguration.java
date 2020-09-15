@@ -13,6 +13,9 @@ public class ServiceConfiguration implements Configuration {
     @Configuration.Setting(name="Account", contentType= ContentType.String)
     private String account;
 
+	@Configuration.Setting(name="Use Identity Service Credentials", contentType= ContentType.Boolean, required = false)
+    private Boolean useIDPCredentials;
+
     @Configuration.Setting(name = "Server Public Certificate", contentType = ContentType.String, required = false)
     private String serverPublicCertificate;
 
@@ -47,4 +50,14 @@ public class ServiceConfiguration implements Configuration {
 	public void setServerPublicCertificate(String serverPublicCertificate) {
 		this.serverPublicCertificate = serverPublicCertificate;
 	}
+    public Boolean useIDPCredentials() {
+    	if (useIDPCredentials==null)
+    		return false;
+		return useIDPCredentials;
+	}
+
+	public void setUseIDPCredentials(Boolean useIDPCredentials) {
+		this.useIDPCredentials = useIDPCredentials;
+	}
+
 }

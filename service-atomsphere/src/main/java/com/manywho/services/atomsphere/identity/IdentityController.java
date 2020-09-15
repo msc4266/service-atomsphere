@@ -64,6 +64,7 @@ public class IdentityController extends AbstractIdentityController {
         token = this.buildAuthToken(authenticationCredentials.getUsername(), authenticationCredentials.getPassword());
         logger.fine(authenticationCredentials.getUsername());
         logger.fine("authentication");
+        configuration.setUseIDPCredentials(true);
         String status = this.verifyCredentialsWithAtomAPI(configuration, token);
         if (!"200".contentEquals(status)) {
             authenticatedWhoResult.setStatus(AuthenticatedWhoResult.AuthenticationStatus.AccessDenied);
