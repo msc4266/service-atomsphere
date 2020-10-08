@@ -316,12 +316,13 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                	property.setDeveloperName(key);
                	Object propObject = body.get(key);
                	String value = propObject.toString();
-           		if (propObject instanceof JSONObject)
+               	if (propObject instanceof JSONObject)
            		{
            			JSONObject propertyObject = (JSONObject) propObject;
            			String type = propertyObject.getString("@type");
            			TypeElement typeElement = serviceMetadata.findTypeElement(type);
-           			if (typeElement!=null) //TODO Account.licensing has @type "" but has for objects inside that must be iterated
+
+           			if (typeElement!=null) //TODO Account.licensing has @type "" but has 4 objects inside that must be iterated
            			{
                			property.setContentType(ContentType.Object);
                        	property.setTypeElementPropertyId(typeElement.getId());
@@ -334,12 +335,21 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            				//iterate objects and add each as a property
            				this.addMObjectProperties(mObject, propertyObject);
            			}
-           		}         	
+           		} 
            		else if (propObject instanceof JSONArray && !isNumber(value))
            		{
            			JSONArray array = (JSONArray) propObject;
            			List<MObject> list = new ArrayList<MObject>();
            			property.setContentType(ContentType.List);
+           			//We need to dig down and get the type of the list
+           			if (array.length()>0)
+           			{
+           				JSONObject arrayElementObject = array.getJSONObject(0);
+               			String type = arrayElementObject.getString("@type");
+               			TypeElement typeElement = serviceMetadata.findTypeElement(type);
+               			if (typeElement!=null)
+               				property.setTypeElementPropertyId(typeElement.getId());           				
+           			}
            			
            			for (int i=0; i<array.length(); i++)
            			{
