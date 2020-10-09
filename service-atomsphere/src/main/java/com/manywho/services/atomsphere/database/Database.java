@@ -79,6 +79,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 //			throw new RuntimeException("Offset pagination not supported when sorting is set. Please set your filter 'Number of records to return' to the maximum records required.");
 		
 		addFilterToBody(filter, objectDataType, queryBody);
+		logger.fine("WHERE params: " + queryBody.toString());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "POST", "query", queryBody.toString(), serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		if (response.has("result"))
 		{
@@ -315,13 +316,12 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                	property.setDeveloperName(key);
                	Object propObject = body.get(key);
                	String value = propObject.toString();
-               	if (propObject instanceof JSONObject)
+           		if (propObject instanceof JSONObject)
            		{
            			JSONObject propertyObject = (JSONObject) propObject;
            			String type = propertyObject.getString("@type");
            			TypeElement typeElement = serviceMetadata.findTypeElement(type);
-
-           			if (typeElement!=null) //TODO Account.licensing has @type "" but has 4 objects inside that must be iterated
+           			if (typeElement!=null) //TODO Account.licensing has @type "" but has for objects inside that must be iterated
            			{
                			property.setContentType(ContentType.Object);
                        	property.setTypeElementPropertyId(typeElement.getId());
@@ -334,21 +334,12 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            				//iterate objects and add each as a property
            				this.addMObjectProperties(mObject, propertyObject);
            			}
-           		} 
+           		}         	
            		else if (propObject instanceof JSONArray && !isNumber(value))
            		{
            			JSONArray array = (JSONArray) propObject;
            			List<MObject> list = new ArrayList<MObject>();
            			property.setContentType(ContentType.List);
-           			//We need to dig down and get the type of the list
-           			if (array.length()>0)
-           			{
-           				JSONObject arrayElementObject = array.getJSONObject(0);
-               			String type = arrayElementObject.getString("@type");
-               			TypeElement typeElement = serviceMetadata.findTypeElement(type);
-               			if (typeElement!=null)
-               				property.setTypeElementPropertyId(typeElement.getId());           				
-           			}
            			
            			for (int i=0; i<array.length(); i++)
            			{
