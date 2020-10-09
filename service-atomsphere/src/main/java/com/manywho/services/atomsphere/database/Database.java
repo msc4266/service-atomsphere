@@ -79,7 +79,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 //			throw new RuntimeException("Offset pagination not supported when sorting is set. Please set your filter 'Number of records to return' to the maximum records required.");
 		
 		addFilterToBody(filter, objectDataType, queryBody);
-		logger.fine("WHERE params: " + queryBody.toString());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "POST", "query", queryBody.toString(), serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		if (response.has("result"))
 		{
