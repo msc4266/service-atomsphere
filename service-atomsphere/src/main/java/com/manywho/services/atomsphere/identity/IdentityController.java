@@ -97,7 +97,14 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public ObjectDataResponse authorization(ObjectDataRequest objectDataRequest) throws Exception {
-        AuthenticatedWho authenticatedWho = authenticatedWhoProvider.get();
+    	AuthenticatedWho authenticatedWho=null;
+    	try {
+    		authenticatedWho = authenticatedWhoProvider.get();
+    	}
+        catch(Exception e)
+        {
+        	throw new Exception("Unable to authorize user");
+        }
         logger.fine("authorization");
 
         $User userObject;
@@ -205,6 +212,8 @@ public class IdentityController extends AbstractIdentityController {
     
     private String buildAuthToken(String username, String password)
     {
-    	return username + ":" + password;
+    	//remove the base64 padding char because the injection to authorization chokes on it with:
+    	// Unable to provision, see the following errors:\n\n1) Error in custom provider, java.lang.IllegalArgumentException: Chunk .........is not a valid entry\n while locating com.manywho.sdk.services.providers.AuthenticatedWhoProvider\n at
+    	return (new String(Base64.getEncoder().encode((username + ":" + password).getBytes()))).replaceAll("=","");
     }
 }

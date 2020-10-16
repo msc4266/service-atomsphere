@@ -60,8 +60,10 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 	    		token = configuration.getUsername() + ":" + configuration.getPassword();
 	    		logger.info("API using set credentials");
 	    	}
-	    	token = "Basic " + new String(Base64.getEncoder().encode(token.getBytes()));
-
+	    	token = "Basic " + token;
+	    	//restore base64 padding due to identity provider authorizating puking on =
+	    	while ((token.length()%4)!=0)
+	    		token+="=";
 	    	conn.setRequestProperty ("Authorization", token);
 	    	
 	    	if (payload!=null)
