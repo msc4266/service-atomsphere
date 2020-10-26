@@ -48,7 +48,7 @@ public class AtomsphereAPI {
 Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms   	
     		URL url = new URL(urlString+String.format("%s/%s%s", configuration.getAccount(), entityName, resource));
     		logger.info("Account: " + configuration.getAccount());
-    		logger.fine(method + " " + url.toString());
+    		logger.info(method + " " + url.toString());
             conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod(method);
 	        conn.setDoOutput(true);
@@ -57,20 +57,19 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 
 	    	if (!configuration.useIDPCredentials())
 	    	{
-	    		token = configuration.getUsername() + ":" + configuration.getPassword();
+	    		token = buildAuthToken(configuration.getUsername(), configuration.getPassword());
 	    		logger.info("API using set credentials");
 	    	}
-	    	token = "Basic " + token;
-	    	//restore base64 padding due to identity provider authorizating puking on =
+	    	//restore base64 padding due to identity provider authorization puking on =
 	    	while ((token.length()%4)!=0)
 	    		token+="=";
+	    	token = "Basic " + token;
 	    	conn.setRequestProperty ("Authorization", token);
-	    	
 	    	if (payload!=null)
 	    	{
 		        conn.setDoInput(true);
 	    		String body = payload;
-//		        LOGGER.info(body);
+//		        logger.info(body);
 		        byte[] input = body.getBytes();
 		 		conn.setRequestProperty("Content-Length", ""+input.length);
 		        OutputStream os = conn.getOutputStream();
@@ -104,14 +103,15 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 						    response.append(responseLine.trim());
 						}
 					}
-//					logger.error(response.toString());
+					logger.severe("API Error:" + response.toString());
 					throw new RuntimeException(response.toString());
 				} else throw new RuntimeException(e);
 			} catch (IOException e1) {
+				logger.severe("API Error:" + e1.toString());
 				throw new RuntimeException(e1);
 			}
 		}
-		logger.fine("Response: " + response.toString());
+		logger.info(response.toString());
         String responseString = response.toString();
         JSONObject responseObj = null;
         if (responseString.length()==0)
@@ -123,4 +123,12 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
         }
         return responseObj;
 	}
+    
+    public static String buildAuthToken(String username, String password)
+    {
+    	//remove the base64 padding char because the injection to authorization chokes on it with:
+    	// Unable to provision, see the following errors:\n\n1) Error in custom provider, java.lang.IllegalArgumentException: Chunk .........is not a valid entry\n while locating com.manywho.sdk.services.providers.AuthenticatedWhoProvider\n at
+    	String token = new String(Base64.getEncoder().encode((username + ":" + password).getBytes()));
+    	return token.replaceAll("=","");
+    }
 }

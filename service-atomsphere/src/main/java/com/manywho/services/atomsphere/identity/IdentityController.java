@@ -58,12 +58,10 @@ public class IdentityController extends AbstractIdentityController {
     @POST
     @Override
     public AuthenticatedWhoResult authentication(AuthenticationCredentials authenticationCredentials) throws Exception {
+        logger.fine("authentication");
         AuthenticatedWhoResult authenticatedWhoResult = new AuthenticatedWhoResult();
         ServiceConfiguration configuration = (ServiceConfiguration)configurationParser.from(authenticationCredentials);
-        logger.fine(configuration.getAccount());
-        token = this.buildAuthToken(authenticationCredentials.getUsername(), authenticationCredentials.getPassword());
-        logger.fine(authenticationCredentials.getUsername());
-        logger.fine("authentication");
+        token = AtomsphereAPI.buildAuthToken(authenticationCredentials.getUsername(), authenticationCredentials.getPassword());
         configuration.setUseIDPCredentials(true);
         String status = this.verifyCredentialsWithAtomAPI(configuration, token);
         if (!"200".contentEquals(status)) {
@@ -208,12 +206,5 @@ public class IdentityController extends AbstractIdentityController {
     		logger.fine("verifyCredentialsWithAtomAPI:" + e.getMessage());
     	}
     	return status;
-    }
-    
-    private String buildAuthToken(String username, String password)
-    {
-    	//remove the base64 padding char because the injection to authorization chokes on it with:
-    	// Unable to provision, see the following errors:\n\n1) Error in custom provider, java.lang.IllegalArgumentException: Chunk .........is not a valid entry\n while locating com.manywho.sdk.services.providers.AuthenticatedWhoProvider\n at
-    	return (new String(Base64.getEncoder().encode((username + ":" + password).getBytes()))).replaceAll("=","");
     }
 }
