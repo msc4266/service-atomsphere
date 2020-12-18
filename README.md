@@ -35,13 +35,13 @@ This service feature allows you to use Boomi Atomsphere as an identity system wi
 * Sorting limitations - The underlying API does not support sorting. When sorting is enabled, a maximum of 5000 rows are queried and then sorted before returning a page to Flow.
 * Maximum return rows - The Data service allows returning a maximum 5000 rows. If your object contains more objects, implement filters to limit the returned data set.
 
-# Installing the Atomsphere API Service
+## Installing the Atomsphere API Service
 To use the Boomi Atomsphere API service, you will first need to install the service into your flow tenant.
 Before you begin, Users of the service will need the appropriate privileges within the Boomi Platform. At minimum, the API Access privilege is required to use the service. For example, to query the Audit Log API object, the View Audit Logs is required.
 
 For more information regarding Boomi user and permission management, please refer to: https://help.boomi.com/bundle/atomsphere_platform/page/r-atm-User_management.html
 
-# Installing the Boomi Atomsphere API service
+## Installing the Boomi Atomsphere API service
 1. On the Home tab, select Services from the main menu.
 1. Click Install Service.
 1. Select the 'Boomi Atomsphere API' service from the Install Service drop-down menu.
@@ -61,8 +61,6 @@ Use Identity Service Credentials | Boolean | X | Indicates whether to use the us
 Username | String |  | Optional: If the Identity service is not used, you must set the Atomsphere API username. This can be a standard platform credential or an API Token. For more info regarding API tokens please refer to: https://help.boomi.com/bundle/integration/page/int-AtomSphere_API_and_Partner_API_authentication.html
 Password | String |  | Optional: If the Identity service is not used, you must set the Atomsphere API password or API token
 Server Public Certificate |  |  | Specify a URL Server Certificate for server verification.
-Note: Using SSL and a Server Public Certificate is recommended best practice when implementing the SQL service, particularly if the connection between the SQL database and the SQL service is not in your private network.
-
 
 ## Contributing
 
