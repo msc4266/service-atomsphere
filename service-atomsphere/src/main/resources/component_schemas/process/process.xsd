@@ -1,0 +1,2474 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:extensionBindingPrefixes="xjc ih"
+           jxb:version="2.0">
+    <xs:complexType name="Shape">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="configuration">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:any>
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="value"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:any>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="dragpoints">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="dragPoints"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <jxb:property name="list"/>
+                            </xs:appinfo>
+                        </xs:annotation>
+                        <xs:element name="dragpoint" type="DragPoint"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="notes" type="xs:string" />
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="userlabel" type="xs:string"/>
+        <xs:attribute name="image" type="xs:string"/>
+        <xs:attribute name="x" type="xs:float"/>
+        <xs:attribute name="y" type="xs:float"/>
+        <xs:attribute name="shapetype" type="ShapeType">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="shapeType"/>
+                </xs:appinfo>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:complexType name="DragPoint">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="lineSegments"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="linesegment" type="LineSegment"/>
+        </xs:sequence>
+
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="fromShape" type="xs:string"/>
+        <xs:attribute name="toShape" type="xs:string"/>
+        <xs:attribute name="identifier" type="xs:string"/>
+        <xs:attribute name="text" type="xs:string"/>
+        <xs:attribute name="x" type="xs:float"/>
+        <xs:attribute name="y" type="xs:float"/>
+        <xs:attribute name="lastX" type="xs:float"/>
+        <xs:attribute name="lastY" type="xs:float"/>
+    </xs:complexType>
+
+    <xs:complexType name="LineSegment">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="length" type="xs:int"/>
+        <xs:attribute name="orient">
+            <xs:simpleType>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumClass name="Orientation"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="horizontal"/>
+                    <xs:enumeration value="vertical"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="label" type="xs:string"/>
+        <xs:attribute name="x" type="xs:float"/>
+        <xs:attribute name="y" type="xs:float"/>
+    </xs:complexType>
+
+    <xs:simpleType name="ShapeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="branch"/>
+            <xs:enumeration value="route"/>
+            <xs:enumeration value="documentproperties"/>
+            <xs:enumeration value="connectoraction"/>
+            <xs:enumeration value="tradingpartneraction"/>
+            <xs:enumeration value="merge"/>
+            <xs:enumeration value="start"/>
+            <xs:enumeration value="returndocuments"/>
+            <xs:enumeration value="flowcontrol"/>
+            <xs:enumeration value="decision"/>
+            <xs:enumeration value="exception"/>
+            <xs:enumeration value="notify"/>
+            <xs:enumeration value="message"/>
+            <xs:enumeration value="map"/>
+            <xs:enumeration value="note"/>
+            <xs:enumeration value="programexecution"/>
+            <xs:enumeration value="programcmd"/>
+            <xs:enumeration value="stop"/>
+            <xs:enumeration value="processcall"/>
+            <xs:enumeration value="dataprocess"/>
+            <xs:enumeration value="cleanse"/>
+            <xs:enumeration value="changedatacapture"/>
+            <xs:enumeration value="businessrules"/>
+            <xs:enumeration value="catcherrors"/>
+            <xs:enumeration value="doccacheload"/>
+            <xs:enumeration value="doccacheretrieve"/>
+            <xs:enumeration value="processroute"/>
+            <xs:enumeration value="doccacheremove"/>
+            <!-- <xs:enumeration value="documentsplit"/>-->
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="process">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.common.Copyable</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element name="shapes">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="list"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="shape" type="Shape"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="schedules">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="list"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="schedule" type="Schedule"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="retrySchedules">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="list"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="schedule" type="Schedule"/>
+                        </xs:sequence>
+                        <xs:attribute name="maxRetries" type="xs:int" default="5"/>                        
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="allowSimultaneous" type="xs:boolean" default="true"/>
+            <xs:attribute name="enableUserLog" type="xs:boolean" default="false"/>
+            <xs:attribute name="updateRunDates" type="xs:boolean" default="true"/>
+            <xs:attribute name="processLogOnErrorOnly" type="xs:boolean" default="false"/>
+            <xs:attribute name="workload" type="ProcessWorkloadType"/>
+            <xs:attribute name="purgeDataImmediately" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="ProcessWorkloadType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="general"/>
+            <xs:enumeration value="low_latency"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="ScheduleType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="minute"/>
+            <xs:enumeration value="hour"/>
+            <xs:enumeration value="day"/>
+            <xs:enumeration value="month"/>
+            <xs:enumeration value="year"/>
+            <xs:enumeration value="advanced"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="Schedule">
+        <xs:attribute name="type" type="ScheduleType"/>
+        <xs:attribute name="minute" type="xs:string"/>
+        <xs:attribute name="hour" type="xs:string"/>
+        <xs:attribute name="dayofweek" type="xs:string"/>
+        <xs:attribute name="dayofmonth" type="xs:string"/>
+        <xs:attribute name="month" type="xs:string"/>
+        <xs:attribute name="year" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Shapes -->
+
+    <!-- Common elements -->
+
+
+    <xs:simpleType name="CompareType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="equals"/>
+            <xs:enumeration value="notequals"/>
+            <xs:enumeration value="greaterthan"/>
+            <xs:enumeration value="greaterthaneq"/>
+            <xs:enumeration value="lessthan"/>
+            <xs:enumeration value="lessthaneq"/>
+            <xs:enumeration value="regex"/>
+            <xs:enumeration value="wildcard"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="parametervalue">
+      <xs:annotation>
+          <xs:appinfo>
+              <jxb:class name="ParameterValue"/>
+          </xs:appinfo>
+      </xs:annotation>
+      <xs:complexType>
+        <xs:complexContent>
+          <xs:extension base="Parameter"></xs:extension>
+        </xs:complexContent>
+      </xs:complexType>    
+    </xs:element>
+
+    <xs:simpleType name="parameterdatatype">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="ParameterDataType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:short">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="STRING"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="INT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="FLOAT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DATETIME"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="Parameter">
+        <xs:sequence>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="value"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="valueType" type="ParameterType"/>
+        <xs:attribute name="dataType" type="parameterdatatype"/>
+        <xs:attribute name="key" type="xs:string"/>
+        <xs:attribute name="childKey" type="xs:string"/>
+        <xs:attribute name="elementToSetId" type="xs:int"/>
+        <xs:attribute name="elementToSetName" type="xs:string"/>
+        <xs:attribute name="tagListKey" type="xs:string"/>
+        <xs:attribute name="tagListValueLabel" type="xs:string"/>
+    </xs:complexType>
+
+
+
+
+    <xs:simpleType name="ParameterType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="static"/>
+            <xs:enumeration value="process"/>
+            <xs:enumeration value="sql"/>
+            <xs:enumeration value="sp"/>
+            <xs:enumeration value="unique"/>
+            <xs:enumeration value="track"/>
+            <xs:enumeration value="profile"/>
+            <xs:enumeration value="errormessage"/>
+            <xs:enumeration value="execution"/>
+            <xs:enumeration value="keygen"/>
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="command"/>
+            <xs:enumeration value="connector"/>
+            <xs:enumeration value="current"/>
+            <xs:enumeration value="crossref"/>
+            <xs:enumeration value="tradingpartnerref"/>
+            <xs:enumeration value="documentcache"/>
+            <xs:enumeration value="definedparameter"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ProfileType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="profile.edi"/>
+            <xs:enumeration value="profile.db"/>
+            <xs:enumeration value="profile.flatfile"/>
+            <xs:enumeration value="profile.xml"/>
+            <xs:enumeration value="profile.json"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="staticparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="StaticParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="staticproperty" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="processparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ProcessParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="processproperty" type="xs:string"/>
+            <xs:attribute name="processpropertydefaultvalue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="executionparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ExecutionParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="executionproperty" type="executionPropertyType"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="executionPropertyType">
+        <xs:restriction  base="xs:string">
+            <xs:enumeration value="Account Id"/>
+            <xs:enumeration value="Atom Id"/>
+            <xs:enumeration value="Atom Name"/>
+            <xs:enumeration value="Document Count"/>
+            <xs:enumeration value="Execution Id"/>
+            <xs:enumeration value="Node Id"/>
+            <xs:enumeration value="Process Id"/>
+            <xs:enumeration value="Process Name"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="dynamicdocumentparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DynamicDocumentParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="dynamicdocumentproperty" type="xs:string"/>
+            <xs:attribute name="dynamicdocumentpropertydefaultvalue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dateparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DateParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="datedelta" type="DateDelta"/>
+            </xs:sequence>
+
+            <xs:attribute name="datetimemask" type="xs:string"/>
+            <xs:attribute name="dateparametertype" type="DateParameterType"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="DateParameterType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="current"/>
+            <xs:enumeration value="relative"/>
+            <xs:enumeration value="last"/>
+            <xs:enumeration value="lastsuccessful"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="DateDelta">
+        <xs:attribute name="sign" type="Sign"/>
+        <xs:attribute name="value" type="xs:int"/>
+        <xs:attribute name="unit" type="Unit"/>
+    </xs:complexType>
+
+    <xs:simpleType name="Sign">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="plus"/>
+            <xs:enumeration value="minus"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="Unit">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="seconds"/>
+            <xs:enumeration value="minutes"/>
+            <xs:enumeration value="hours"/>
+            <xs:enumeration value="days"/>
+            <xs:enumeration value="weeks"/>
+            <xs:enumeration value="months"/>
+            <xs:enumeration value="years"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="keygenparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="SequentialParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="keyname" type="xs:string"/>
+            <xs:attribute name="keyfixtolength" type="xs:int"/>
+            <xs:attribute name="batchSize" type="xs:int" default="1"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="trackparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="TrackParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="propertyId" type="xs:string"/>
+            <xs:attribute name="propertyName" type="xs:string"/>
+            <xs:attribute name="defaultValue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="definedprocessparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DefinedProcessParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="componentId" type="xs:string"/>
+            <xs:attribute name="componentName" type="xs:string"/>
+            <xs:attribute name="propertyKey" type="xs:string"/>
+            <xs:attribute name="propertyLabel" type="xs:string"/>
+            <xs:attribute name="propertyValue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="sqlparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="SqlParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="sqltoexecute" type="xs:string"/>
+                <xs:element name="parameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="connection" type="xs:string"/>
+            <xs:attribute name="outputpos" default="1" type="xs:int"/>
+            <xs:attribute name="cachevalues" type="xs:boolean"/>
+            <xs:attribute name="outputdatatype" type="parameterdatatype"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="connectorparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ConnectorParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="inputs">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="operationId" type="xs:string"/>
+            <xs:attribute name="connectionId" type="xs:string"/>
+            <xs:attribute name="outputParamName" type="xs:string"/>
+            <xs:attribute name="outputParamId" type="xs:string"/>
+            <xs:attribute name="tagListKey" type="xs:string"/>
+            <xs:attribute name="tagListValueLabel" type="xs:string"/>
+            <xs:attribute name="enforceSingleResult" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="crossrefparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="CrossRefParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="inputs">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="crossRefTableId" type="xs:string"/>
+            <xs:attribute name="outputParamName" type="xs:string"/>
+            <xs:attribute name="outputParamId" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="tradingpartnerparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="TradingPartnerParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="partnerId" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="spparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="StoredProcedureParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+
+                <xs:element name="parameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="sqltoexecute" type="xs:string"/>
+            <xs:attribute name="connection" type="xs:string"/>
+            <xs:attribute name="outputpos" type="xs:string"/>
+            <xs:attribute name="cachevalues" type="xs:boolean"/>
+            <xs:attribute name="outputdatatype" type="parameterdatatype"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="profileelement">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ProfileElement"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="elementId" type="xs:string"/>
+            <xs:attribute name="elementName" type="xs:string"/>
+            <xs:attribute name="tagListKey" type="xs:string"/>
+            <xs:attribute name="tagListValueLabel" type="xs:string"/>
+            <xs:attribute name="profileId" type="xs:string"/>
+            <xs:attribute name="profileType" type="ProfileType"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="commandparameter">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="CommandParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+
+        <xs:complexType>
+            <xs:attribute name="command" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Branch -->
+    <xs:element name="branch">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Branch"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="numBranches" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="BaseProcessCall" abstract="true">
+        <xs:sequence>
+            <xs:element name="parameters">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <jxb:property name="parameterValues"/>
+                            </xs:appinfo>
+                        </xs:annotation>
+                        <xs:element name="parametervalue" type="Parameter"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="returnpaths">
+                <xs:complexType>
+                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                        <xs:annotation>
+                            <xs:appinfo>
+                                <jxb:property name="returnpaths"/>
+                            </xs:appinfo>
+                        </xs:annotation>
+                        <xs:element name="returnpaths" type="ReturnPath"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="wait" type="xs:boolean"/>
+        <xs:attribute name="abort" type="xs:boolean"/>
+    </xs:complexType>
+
+    <!-- ProcessCall-->
+    <xs:element name="processcall">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ProcessCall"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="BaseProcessCall">
+                    <xs:attribute name="processId" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="processroutecall">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ProcessRouteCall"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="BaseProcessCall">
+                    <xs:sequence>
+                        <xs:element name="routeParameter" minOccurs="0" maxOccurs="unbounded" type="Parameter">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="routeParameters"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="routeType" type="ProcessRouteType" default="processroute"/>
+                    <xs:attribute name="processRouteId" type="xs:string"/>
+                    <xs:attribute name="processRouteName" type="xs:string"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="ProcessRouteType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="ProcessRouteType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="processroute">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="PROCESSROUTE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="tradingpartnergroup">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="TRADINGPARTNERGROUP"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="ReturnPath">
+        <xs:attribute name="childShapeName" type="xs:string"/>
+        <xs:attribute name="returnLabel" type="xs:string"/>
+    </xs:complexType>
+
+    <!-- Messsage -->
+    <xs:element name="message">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Message"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="msgTxt" type="xs:string"/>
+                <xs:element name="msgParameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="combined" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Note -->
+    <xs:element name="note">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Note"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="1" maxOccurs="1">
+                <xs:element name="noteText" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="createdBy" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Cleanse -->
+    <xs:element name="cleanse">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Cleanse"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="cleanseDetails"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:element name="cleanseDetail" type="CleanseDetail"/>
+            </xs:sequence>
+            <xs:attribute name="profileType" type="xs:string"/>
+            <xs:attribute name="profileId" type="xs:string"/>
+            <xs:attribute name="profileName" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="CleanseDetail">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="CleanseDetail"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="elementKey" type="xs:int"/>
+        <xs:attribute name="tagListKey" type="xs:string"/>
+        <xs:attribute name="repairMandatory" type="RepairMandatoryType"/>
+        <xs:attribute name="mandatoryDefault" type="xs:string"/>
+        <xs:attribute name="repairMinLength" type="RepairMinLengthType"/>
+        <xs:attribute name="minLengthPad" type="xs:string"/>
+        <xs:attribute name="repairMaxLength" type="RepairMaxLengthType"/>
+        <xs:attribute name="repairNumeric" type="RepairNumericType"/>
+        <xs:attribute name="numericDefault" type="xs:string"/>
+        <xs:attribute name="repairDateTime" type="RepairDateTimeType"/>
+        <xs:attribute name="datetimeDefault" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="RepairMandatoryType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RepairMandatoryType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="default">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DEFAULT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RepairMinLengthType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RepairMinLengthType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="prepend">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="PREPEND"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="append">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="APPEND"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RepairMaxLengthType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RepairMaxLengthType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="ltrim">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="LEFT_TRIM"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="rtrim">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="RIGHT_TRIM"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RepairNumericType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RepairNumericType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="default">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DEFAULT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="RepairDateTimeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RepairDateTimeType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="default">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DEFAULT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- DataProcess -->
+    <xs:element name="dataprocess">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcess"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="steps"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:element name="step" type="DataProcessStep"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DataProcessStep">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessStep"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="value"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="processtype" type="DataProcessType"/>
+        <xs:attribute name="index" type="xs:short"/>
+        <xs:attribute name="key" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:element name="dataprocessdatasplit">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessDataSplit"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="value"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+            </xs:sequence>
+            <xs:attribute name="profiletype">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DataSplitProfileType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="flatfile">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="FlatFile"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="xml">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="XML"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="edi">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="EDI"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="flatfilesplit">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="FlatFileSplit"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="profile1Id" type="xs:string"/>
+            <xs:attribute name="profile2Id" type="xs:string"/>
+            <xs:attribute name="profile3Id" type="xs:string"/>
+            <xs:attribute name="profile4Id" type="xs:string"/>
+            <xs:attribute name="linkelements" type="xs:string"/>
+            <xs:attribute name="unique" type="xs:boolean"/>
+            <xs:attribute name="numberoflines" type="xs:short"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="xmlsplit">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="XMLSplit"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="xmlpath" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="edisplit">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="EDISplit"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="numberofmessages" type="xs:short"/>
+            <xs:attribute name="segmentId" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessreplace">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessReplace"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="texttofind" type="xs:string"/>
+            <xs:attribute name="replacewith" type="xs:string"/>
+            <xs:attribute name="searchCharacterLimit" type="xs:int"/>
+            <xs:attribute name="searchType">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DataReplaceSearchType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="document">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="DOCUMENT"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="line">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="LINE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="char_limit">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="CHAR_LIMIT"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>            
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocesscharcode">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessCharCode"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="charset" type="xs:string"/>
+            <xs:attribute name="encode" type="xs:boolean"/>            
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessbase64code">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessBase64Code"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="encode" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocesspgpencrypt">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessPGPEncrypt"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="encryptalias" type="xs:string"/>
+            <xs:attribute name="signalias" type="xs:string"/>
+            <xs:attribute name="clearSign" type="xs:boolean"/>
+            <xs:attribute name="useVersion3" type="xs:boolean" default="false"/>                      
+            <xs:attribute name="queuesecurity">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="PGPQueSecurityType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="na">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="NA"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="signed">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="SIGNED"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="encrypted">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="ENCRYPTED"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="signed_encrypted">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="SIGNED_ENCRYPTED"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="propertyValue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocesspgpdecrypt">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessPGPDecrypt"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="decryptalias" type="xs:string"/>
+            <xs:attribute name="signalias" type="xs:string"/>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="propertyValue" type="xs:string"/>
+            <xs:attribute name="enforceStrictSigned" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessscript">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessScript"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="script" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="useComponent" type="xs:boolean" default="false"/>
+            <xs:attribute name="componentId" type="xs:string"/>
+            <xs:attribute name="language" type="xs:string"/>
+            <xs:attribute name="combineDocs" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessxslt">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessXSLT"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="stylesheet" type="xs:string"/>
+            </xs:sequence>
+            <xs:attribute name="componentId" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocesszip">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessZip"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="propertyValue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessconverttoflatfile">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessConvertToFlatFile"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="delimiter" type="xs:string"/>
+            <xs:attribute name="useHeader" type="xs:boolean"/>
+            <xs:attribute name="profileId" type="xs:string"/>
+            <xs:attribute name="profileType" type="xs:string"/>
+            <xs:attribute name="combineDocs" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessunzip">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessUnZip"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="propertyValue" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+      <xs:element name="dataprocesscombine">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessCombine"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:choice>
+                <xs:element name="FFOptions" type="DocumentCombineFFOptions"/>
+                <xs:element name="XMLOptions" type="DocumentCombineXMLOptions"/>
+                <xs:element name="JSONOptions" type="DocumentCombineJSONOptions"/>
+            </xs:choice>
+            <xs:attribute name="profileType">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DocumentCombineProfileType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="flatfile">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="FLATFILE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="xml">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="XML"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="json">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="JSON"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="none">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="NONE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessmimeformat">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessMimeFormat"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="DocumentCacheRetrieveConfig">
+                    <xs:attribute name="formInput" type="xs:boolean" default="true"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="dataprocessmimeparse">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DataProcessMimeParse"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="documentCacheId" type="xs:string"/>
+            <xs:attribute name="profileVariant" type="mimeProfileVariant"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="mimeProfileVariant">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="ARRAY"/>
+            <xs:enumeration value="OBJECT"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DataProcessType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="DataProcessType"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:short">
+            <xs:enumeration value="1">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="REPLACE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="2">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="PGP_ENCRYPT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="3">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="PGP_DECRYPT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="4">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="ZIP"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="5">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="UNZIP"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="6">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="BASE64_ENCODE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="7">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="BASE64_DECODE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="8">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DATA_SPLIT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="9">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DATA_COMBINE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="10">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="CHAR_ENCODE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="11">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="CHAR_DECODE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="12">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="SCRIPTING"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="13">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="CONVERT_TO_FLAT_FILE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="14">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="MIME_FORMAT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="15">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="MIME_PARSE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="16">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="XSLT_TRANSFORMATION"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Stop -->
+    <xs:element name="stop">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Stop"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="continue" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Exception -->
+    <xs:element name="exception">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Exception"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="exMessage" type="xs:string"/>
+                <xs:element name="exParameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="title" type="xs:string"/>
+            <xs:attribute name="stopsingledoc" type="xs:boolean" default="false"/>
+            <xs:attribute name="stopProcessReturnSingleDoc" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Return Documents -->
+    <xs:element name="returndocuments">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ReturnDocuments"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="label" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Flow Control-->
+    <xs:element name="flowcontrol">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="FlowControl"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="forEachCount" type="xs:int" default="0"/>
+            <xs:attribute name="chunks" type="xs:int" default="0"/>
+            <xs:attribute name="chunkStyle">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="ChunkStyle"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="threadOnly"/>
+                        <xs:enumeration value="multiProcess"/>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Notify -->
+    <xs:element name="notify">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Notify"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="notifyMessage" type="xs:string"/>
+                <xs:element name="notifyMessageLevel" type="xs:string"/>
+                <xs:element name="notifyParameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="title" type="xs:string"/>
+            <xs:attribute name="disableEvent" type="xs:boolean" default="true"/>
+            <xs:attribute name="enableUserLog" type="xs:boolean" default="false"/>
+            <xs:attribute name="perExecution" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Program Command -->
+    <xs:element name="programcmd">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ProgramCommand"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="configuration" type="Parameter"/>
+                <xs:element name="parameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="perExecution" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!--Components used by Decision -->
+    <!-- Decision -->
+    <xs:element name="decision">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Decision"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="2" maxOccurs="2">
+                <xs:element name="decisionvalue" type="Parameter"/>
+                <xs:element name="decisionvalue" type="Parameter"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="description" type="xs:string"/>
+            <xs:attribute name="comparison" type="CompareType">
+
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+
+
+    <!-- Route -->
+    <xs:element name="route">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Route"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="routeproperty" type="Parameter"/>
+                <xs:element name="routevalues" type="RouteValues"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="RouteValues">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="routevalue">
+                <xs:complexType>
+                    <xs:attribute name="qualifier" type="CompareType"/>
+                    <xs:attribute name="name" type="xs:string"/>
+                    <xs:attribute name="key" type="xs:string"/>
+                    <xs:attribute name="value" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Document Properties -->
+    <xs:element name="documentproperties">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentProperties"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="documentproperty">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="sourcevalues" minOccurs="0" maxOccurs="1">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <jxb:property name="sourceValues"/>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                                        <xs:annotation>
+                                            <xs:appinfo>
+                                                <jxb:property name="list"/>
+                                            </xs:appinfo>
+                                        </xs:annotation>
+                                        <xs:element name="parametervalue" type="Parameter"/>
+                                    </xs:sequence>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+
+
+                        <xs:attribute name="persist" type="xs:boolean" default="false"/>
+                        <xs:attribute name="propertyName" type="xs:string"/>
+                        <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="propertyId" type="xs:string"/>
+                        <xs:attribute name="defaultValue" type="xs:string"/>
+                        <xs:attribute name="key" type="xs:string"/>
+                        <xs:attribute name="isTradingPartner" type="xs:boolean" default="false"/>
+                        <xs:attribute name="standard" type="xs:string"/>
+                        <xs:attribute name="classification" type="xs:string"/>
+                        <xs:attribute name="isDynamicCredential" type="xs:boolean" default="false"/>
+                        <xs:attribute name="connectionId" type="xs:string"/>
+                        <xs:attribute name="fieldId" type="xs:string"/>
+                        <xs:attribute name="shouldEncrypt" type="xs:boolean" default="false"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- No Connector Action -->
+    <xs:element name="noaction">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="NoAction"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Passthrough Connector Action -->
+    <xs:element name="passthroughaction">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="PassthroughAction"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="DynamicConnectorPropType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="NONE"/>
+            <xs:enumeration value="PROCESS"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <!-- Connector Action -->
+    <xs:element name="connectoraction">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ConnectorAction"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="parameters">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="parameterValues"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="parametervalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="dynamicFields">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element name="field" type="DynamicField"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="dynamicProperties">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="dynamicPropertyValues"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="propertyvalue" type="Parameter"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="operationId" type="xs:string"/>
+            <xs:attribute name="connectionId" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="parameter-profile" type="xs:string"/>
+            <xs:attribute name="hideSettings" type="xs:boolean" default="false"/>
+            <xs:attribute name="allowDynamicCredentials" type="DynamicConnectorPropType" default="NONE"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DynamicField">
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="xpath" type="xs:string"/>
+        <xs:attribute name="usesEncryption" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <!-- Trading Partner Action -->
+    <xs:element name="tradingpartneraction">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="TradingPartnerAction"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="TradingPartners">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="TradingPartnerList"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="TradingPartner" type="TradingPartnerRef"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="MyCompanies" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="MyCompanyList"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:element name="MyCompany" type="MyCompanyRef"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="standard" type="xs:string"/>
+            <xs:attribute name="customStandardId" type="xs:string"/>
+            <xs:attribute name="communicationMethod" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="myTradingPartnerId" type="xs:string"/>
+            <xs:attribute name="useGroupComponent" type="xs:boolean" default="false"/>
+            <xs:attribute name="tpGroupId" type="xs:string"/>
+            <xs:attribute name="includeArchivePath" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="MyCompanyRef">
+        <xs:sequence maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="tradingPartners"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="TradingPartner" type="TradingPartnerRef"/>
+        </xs:sequence>
+        <xs:attribute name="standard" type="xs:string"/>
+        <xs:attribute name="customStandardId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="TradingPartnerRef">
+        <xs:attribute name="partnerId" type="xs:string"/>
+        <xs:attribute name="keyIndex" type="xs:int"/>
+        <xs:attribute name="default" type="xs:boolean"/>
+        <xs:attribute name="standard" type="xs:string"/>
+    </xs:complexType>
+
+
+    <!-- Map -->
+    <xs:element name="map">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="Map"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="mapId" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="documentsplit">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentSplit"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="SplitOptions">
+                    <xs:complexType>
+                        <xs:choice>
+                            <xs:element name="FFOptions" type="DocumentSplitFFOptions"/>
+                            <xs:element name="XMLOptions" type="DocumentSplitXMLOptions"/>
+                            <xs:element name="EDIOptions" type="DocumentSplitEDIOptions"/>
+                            <xs:element name="JSONOptions" type="DocumentSplitJSONOptions"/>
+                        </xs:choice>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="profileType">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DocumentSplitProfileType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ff">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="FLATFILE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="xml">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="XML"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="edi">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="EDI"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="json">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="JSON"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="DocumentSplitFFOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="batchCount" type="xs:int"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+        <xs:attribute name="splitOption" type="xs:string"/>
+        <xs:attribute name="headersOption" default="none">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DataSplitHeaderType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="none">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="NONE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="remove">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="REMOVE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="retain">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="RETAIN"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>  
+    </xs:complexType>
+
+    <xs:complexType name="DocumentSplitXMLOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+        <xs:attribute name="batchCount" type="xs:int"/>
+    </xs:complexType>
+
+     <xs:complexType name="DocumentSplitEDIOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+    </xs:complexType>
+    
+     <xs:complexType name="DocumentSplitJSONOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+        <xs:attribute name="batchCount" type="xs:int"/>         
+    </xs:complexType>
+
+    <xs:complexType name="DocumentCombineFFOptions">
+        <xs:attribute name="freeFormHeader" type="xs:string"/>
+        <xs:attribute name="freeFormFooter" type="xs:string"/>
+        <xs:attribute name="headersOption" default="none">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="DataProcessCombineHeaderType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="none">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="NONE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="remove">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="REMOVE"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="retain">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="RETAIN"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>  
+    </xs:complexType>
+    
+    <xs:complexType name="DocumentCombineXMLOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+        <xs:attribute name="combineIntoProfileId" type="xs:string"/>
+        <xs:attribute name="combineIntoLinkElementKey" type="xs:string"/>
+        <xs:attribute name="combineIntoLinkElementName" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="DocumentCombineJSONOptions">
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="linkElementKey" type="xs:string"/>
+        <xs:attribute name="linkElementName" type="xs:string"/>
+        <xs:attribute name="combineIntoProfileId" type="xs:string"/>
+        <xs:attribute name="combineIntoLinkElementKey" type="xs:string"/>
+        <xs:attribute name="combineIntoLinkElementName" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="changedatacapture">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="ChangeDataCapture"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="KeyColumn" type="ChangeDataCaptureKeyColumn"/>
+            </xs:sequence>
+            <xs:attribute name="profileId" type="xs:string"/>
+            <xs:attribute name="profileType">
+                <xs:simpleType>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:typesafeEnumClass name="ChangeDataCaptureProfileType"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:restriction base="xs:string">
+                        <xs:enumeration value="ff">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="FlatFile"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="db">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="Datebase"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                        <xs:enumeration value="xml">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:typesafeEnumMember name="XML"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:enumeration>
+                    </xs:restriction>
+                </xs:simpleType>
+            </xs:attribute>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="ChangeDataCaptureKeyColumn">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:element name="businessrules">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="BusinessRules"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="rules"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:element name="rule" type="BusinessRule"/>
+            </xs:sequence>
+            <xs:attribute name="profileId" type="xs:string"/>
+            <xs:attribute name="profileName" type="xs:string"/>
+            <xs:attribute name="profileType" type="ProfileType"/>
+        </xs:complexType>
+    </xs:element>
+        
+    <xs:complexType name="BusinessRule">
+        <xs:sequence>
+          <xs:element minOccurs="0" maxOccurs="unbounded" name="input" type="BusinessRuleInput">
+          	<xs:annotation>
+            	<xs:appinfo>
+                	<jxb:property name="inputs"/>
+                </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+          <xs:element minOccurs="0" maxOccurs="1" name="condition" type="Condition"/>
+          <xs:element minOccurs="0" maxOccurs="1" name="errorMessage" type="BusinessRuleErrorMessage"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="index" type="xs:short"/>
+        <xs:attribute name="key" type="xs:int"/>
+    </xs:complexType>
+    
+    <xs:complexType name="BusinessRuleInput" abstract="true">
+        <xs:attribute name="id" type="xs:int" use="required"/> 
+    </xs:complexType>
+
+	<xs:complexType name="BusinessRuleField">
+		<xs:complexContent>
+			<xs:extension base="BusinessRuleInput">
+				<xs:attribute name="elementKey" type="xs:int" use="required" />
+				<xs:attribute name="taglist" type="xs:int" />
+				<xs:attribute name="name" type="xs:string" use="required" />
+				<xs:attribute name="alias" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<xs:complexType name="BusinessRuleFunction">
+		<xs:complexContent>
+			<xs:extension base="BusinessRuleInput">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded" name="inputMapping"
+						type="BusinessRuleFunctionMapping">
+						<xs:annotation>
+							<xs:appinfo>
+								<jxb:property name="mappings" />
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:element>
+					<xs:any>
+						<xs:annotation>
+							<xs:appinfo>
+								<jxb:property name="functionStep" />
+							</xs:appinfo>
+						</xs:annotation>
+					</xs:any>
+				</xs:sequence>
+				<xs:attribute name="alias" type="xs:string" use="required" />
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+    
+    <xs:complexType name="BusinessRuleFunctionMapping">
+        <xs:attribute name="fromElementKey" type="xs:int" use="required"/>
+        <xs:attribute name="fromTaglist" type="xs:int"/>
+        <xs:attribute name="fromName" type="xs:string" use="required"/>
+        <xs:attribute name="toFunctionInputKey" type="xs:int"/>
+    </xs:complexType>
+    
+    <xs:complexType name="BusinessRuleErrorMessage">
+            <xs:sequence>
+           <xs:element minOccurs="0" maxOccurs="unbounded" name="input" type="BusinessRuleErrorMessageInput">
+          	<xs:annotation>
+            	<xs:appinfo>
+                	<jxb:property name="inputs"/>
+                </xs:appinfo>
+            </xs:annotation>
+          </xs:element>
+        </xs:sequence>
+        <xs:attribute name="content" type="xs:string"/>
+    </xs:complexType>
+    
+   <xs:complexType name="BusinessRuleErrorMessageInput">
+        <xs:sequence>
+           <xs:element minOccurs="1" maxOccurs="1" name="input" type="ConditionInput" />
+        </xs:sequence>
+        <xs:attribute name="index" type="xs:int" use="required"/>
+    </xs:complexType>
+    
+    <xs:complexType name="Condition" abstract="true"/>
+    
+    <xs:complexType name="ConditionInput" abstract="true">
+        <xs:attribute name="name" type="xs:string" use="required"/>
+        <xs:attribute name="id" type="xs:int" use="required"/> 
+        <xs:attribute name="deleted" type="xs:boolean" use="required" default="false"/> 
+    </xs:complexType>
+    
+    <xs:complexType name="FunctionConditionInput">
+        <xs:complexContent>
+            <xs:extension base="ConditionInput">            
+                <xs:attribute name="outputId" type="xs:int" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="StaticConditionInput">
+        <xs:complexContent>
+            <xs:extension base="ConditionInput">
+                <xs:attribute name="value" type="xs:string" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    <xs:complexType name="FieldConditionInput">
+        <xs:complexContent>
+            <xs:extension base="ConditionInput"/>
+        </xs:complexContent>
+    </xs:complexType>
+    
+    
+    <xs:complexType name="SimpleCondition">
+        <xs:complexContent>
+            <xs:extension base="Condition">
+                <xs:sequence>
+                    <xs:element name="leftInput" type="ConditionInput" minOccurs="1" maxOccurs="1"/>
+                    <xs:element name="rightInput" type="ConditionInput" minOccurs="1" maxOccurs="1"/>
+                </xs:sequence>
+                <xs:attribute name="operator" type="ConditionOperator" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="GroupingCondition">
+        <xs:complexContent>
+            <xs:extension base="Condition">
+                <xs:sequence>
+                    <xs:element name="nestedExpression" type="Condition" minOccurs="0" maxOccurs="unbounded"/>                      
+                </xs:sequence>
+                <xs:attribute name="operator" type="GroupingConditionOperator" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="GroupingConditionOperator">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="AND" value="and"/>
+                    <jxb:typesafeEnumMember name="OR" value="or"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="or"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:simpleType name="ConditionOperator">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="EQUAL" value="="/>
+                    <jxb:typesafeEnumMember name="NOT_EQUAL" value="!="/>
+                    <jxb:typesafeEnumMember name="LESS_THAN" value="&lt;"/>
+                    <jxb:typesafeEnumMember name="GREATER_THAN" value=">"/>
+                    <jxb:typesafeEnumMember name="LESS_OR_EQUAL" value="&lt;="/>
+                    <jxb:typesafeEnumMember name="GREATER_OR_EQUAL" value=">="/>
+                    <jxb:typesafeEnumMember name="CONTAINS" value="contains"/>
+                    <jxb:typesafeEnumMember name="NOT_CONTAINS" value="does not contain"/>
+                    <jxb:typesafeEnumMember name="STARTS_WITH" value="starts with"/>
+                    <jxb:typesafeEnumMember name="IS_EMPTY" value="is empty"/>
+                    <jxb:typesafeEnumMember name="IS_NOT_EMPTY" value="is not empty"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="="/>
+            <xs:enumeration value="!="/>
+            <xs:enumeration value="&lt;"/>
+            <xs:enumeration value=">"/>
+            <xs:enumeration value="&lt;="/>
+            <xs:enumeration value=">="/>
+            <xs:enumeration value="contains"/>
+            <xs:enumeration value="does not contain"/>
+            <xs:enumeration value="starts with"/>
+            <xs:enumeration value="is empty"/>
+            <xs:enumeration value="is not empty"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+
+    <!-- Catch Errors -->
+    <xs:element name="catcherrors">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="CatchErrors"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="retryCount" type="xs:int"/>
+            <xs:attribute name="catchAll" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+     <xs:element name="doccacheload">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentCacheLoad"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:attribute name="docCache" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="doccacheremove">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentCacheRemove"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="DocumentCacheRemoveConfig"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DocumentCacheRemoveConfig">
+        <xs:sequence>
+            <xs:element name="cacheKeyValues" type="CacheKeyValues"/>
+        </xs:sequence>
+        <xs:attribute name="docCache" type="xs:string"/>
+        <xs:attribute name="docCacheIndex" type="xs:int"/>
+        <xs:attribute name="removeAllDocuments" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+
+    <xs:element name="doccacheretrieve">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentCacheRetrieve"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="DocumentCacheRetrieveConfig"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DocumentCacheRetrieveConfig">
+        <xs:sequence>
+            <xs:element name="cacheKeyValues" type="CacheKeyValues"/>
+        </xs:sequence>
+        <xs:attribute name="docCache" type="xs:string"/>
+        <xs:attribute name="docCacheIndex" type="xs:int"/>
+        <xs:attribute name="loadAllDoc" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+
+     <xs:element name="documentcacheparameter">
+          <xs:annotation>
+            <xs:appinfo>
+                <jxb:class name="DocumentCacheParameter"/>
+            </xs:appinfo>
+        </xs:annotation>
+          <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="DocumentCacheRetrieveOutputConfig"/>
+            </xs:complexContent>
+    </xs:complexType>
+     </xs:element>
+
+
+    <xs:complexType name="DocumentCacheRetrieveOutputConfig">
+        <xs:complexContent>
+            <xs:extension base="DocumentCacheRetrieveConfig">
+                <xs:attribute name="elementId" type="xs:string"/>
+                <xs:attribute name="elementName" type="xs:string"/>
+                <xs:attribute name="tagListKey" type="xs:string"/>
+                <xs:attribute name="tagListValueLabel" type="xs:string"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="CacheKeyValues">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="keyValues"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="cacheKeyValue" type="CacheKeyValue"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CacheKeyValue">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="parametervalue" type="Parameter"/>
+        </xs:sequence>
+        <xs:attribute name="cacheKeyId" type="xs:int"/>
+
+    </xs:complexType>
+
+</xs:schema>

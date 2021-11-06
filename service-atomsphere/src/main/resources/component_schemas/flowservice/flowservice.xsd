@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+    <xs:element name="FlowService">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="flowActions" type="FlowAction" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="configurationValues" type="ConfigurationValue" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="flowFileResources" type="FlowFileResource" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="flowDatabase" type="FlowDatabase" minOccurs="0" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="basePath" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="FlowAction">
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="path" type="xs:string"/>
+        <xs:attribute name="processId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="FlowFileResource">
+        <xs:attribute name="resourcePath" type="xs:string"/>
+        <xs:attribute name="saveProcessId" type="xs:string"/>
+        <xs:attribute name="retrieveProcessId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="FlowDatabase">
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="saveProcessId" type="xs:string"/>
+        <xs:attribute name="loadProcessId" type="xs:string"/>
+        <xs:attribute name="loadProcessByKeyId" type="xs:string"/>
+        <xs:attribute name="deleteProcessId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ConfigurationValue">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="ConfigurationValueType"/>
+        <xs:attribute name="required" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:simpleType name="ConfigurationValueType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="datetime"/>
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="password"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

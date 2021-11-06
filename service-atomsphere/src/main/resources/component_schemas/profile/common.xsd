@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2008
+   Boomi, Inc.
+   Dennis McCarty
+   Oct 6, 2008
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+
+    <xs:element name="QualifierList">
+    <xs:complexType>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="qualifiers"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Qualifier" type="Qualifier"/>
+        </xs:sequence>
+        <xs:attribute name="codeList" type="xs:string"/>
+    </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="Qualifier">
+        <xs:attribute name="qualifierValue" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="type" default="Custom">
+            <xs:simpleType>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumClass name="Type"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:restriction base="xs:string">
+                    <xs:enumeration value="Standard"/>
+                    <xs:enumeration value="Custom"/>
+                </xs:restriction>
+            </xs:simpleType>
+        </xs:attribute>
+        <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="IdentifierList">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="identifiers"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Identifier" type="Identifier"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Identifier">
+        <xs:attribute name="identifierKey" type="xs:int"/>
+        <xs:attribute name="identifierType" type="IdentifierTypeValue"/>
+        <xs:attribute name="identifierName" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="IdentifierTypeValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="value"/>
+            <xs:enumeration value="occurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:element name="tagLists">
+    <xs:complexType >
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="tagLists"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="TagList" type="TagList"/>
+        </xs:sequence>
+    </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="TagList">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="GroupingExpression" minOccurs="1" maxOccurs="1" type="ProfileGroupingExpression"/>
+        </xs:sequence>
+        <xs:attribute name="listKey" type="xs:int"/>
+        <xs:attribute name="parentListKey" type="xs:int" default="-1"/>
+        <xs:attribute name="elementKey" type="xs:int"/>
+        <xs:attribute name="refListKey" type="xs:int" default="-1"/>
+    </xs:complexType>
+
+    <xs:group name="Expression">
+        <xs:choice>
+            <xs:element name="TagExpression" maxOccurs="unbounded" type="TagExpression"/>
+            <xs:element name="GroupingExpression" maxOccurs="unbounded" type="ProfileGroupingExpression"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="TagExpression">
+        <xs:sequence>
+            <xs:element name="identifierValue" type="xs:string" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="values">
+                            <jxb:javadoc>
+                                The arguments for this simple expression. These values will be uninterpreted
+                                Strings.&lt;p&gt;
+                            </jxb:javadoc>
+                        </jxb:property>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="identifierType" type="IdentifierTypeValue"/>
+        <xs:attribute name="operator" type="xs:normalizedString" use="required"/>
+        <xs:attribute name="identifierKey" type="xs:int" use="required"/>
+        <xs:attribute name="identifierName" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="ProfileGroupingExpression">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="expressionNodes"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:group ref="Expression" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="operator" type="ProfileGroupingOperator" use="required">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property>
+                        <jxb:javadoc>
+                            The logical operator which will be used to join all the nested expressions.
+                        </jxb:javadoc>
+                    </jxb:property>
+                </xs:appinfo>
+            </xs:annotation>
+        </xs:attribute>
+    </xs:complexType>
+
+    <xs:simpleType name="ProfileGroupingOperator">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:javadoc>
+                        Type of logical operators supported for GroupingExpressions.
+                    </jxb:javadoc>
+                    <jxb:typesafeEnumMember name="AND" value="and">
+                        <jxb:javadoc>
+                            The logical "AND" operator (Java "&amp;&amp;").
+                        </jxb:javadoc>
+                    </jxb:typesafeEnumMember>
+                    <jxb:typesafeEnumMember name="OR" value="or">
+                        <jxb:javadoc>
+                            The logical "OR" operator (Java "||").
+                        </jxb:javadoc>
+                    </jxb:typesafeEnumMember>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="and"/>
+            <xs:enumeration value="or"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ResultCode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="generalError"/>
+            <xs:enumeration value="validationError"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:element name="ProfileGeneratorErrorResponse">
+        <xs:complexType>
+            <xs:attribute name="resultCode" type="ResultCode" />
+            <xs:attribute name="message" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

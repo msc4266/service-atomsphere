@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2008
+   Boomi, Inc.
+   Dennis McCarty
+   Jul 21, 2009
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+
+    <xs:element name="Tracking">
+        <xs:complexType>
+            <xs:sequence minOccurs="0">
+                <xs:element minOccurs="1" maxOccurs="1" name="TrackedFields" type="TrackedFields"/>
+            </xs:sequence>
+            <xs:attribute name="staticProfileId" type="xs:string"/>
+            <xs:attribute name="staticProfileType" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+       <xs:complexType name="TrackedFields">
+           <xs:sequence>
+               <xs:element minOccurs="0" maxOccurs="unbounded" ref="TrackedField">
+                   <xs:annotation>
+                       <xs:appinfo>
+                           <jxb:property name="trackedFields"/>
+                       </xs:appinfo>
+                   </xs:annotation>
+               </xs:element>
+           </xs:sequence>
+       </xs:complexType>
+
+
+    <xs:element name="TrackedField">
+        <xs:complexType>
+            <xs:sequence minOccurs="0">
+                <xs:element name="sourcevalues">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                             <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="parameterValues"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                            <xs:any/>
+                               <!-- <xs:annotation>
+                                    <xs:appinfo>
+                                        <jxb:property name="parametervalue"/>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                            </xs:any>-->
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="fieldId" type="xs:long"/>
+            <xs:attribute name="fieldName" type="xs:string"/>
+            <xs:attribute name="deleted" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+    
+   
+</xs:schema>

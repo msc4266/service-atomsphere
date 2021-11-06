@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:version="2.0"
+           jxb:extensionBindingPrefixes="ih">
+
+    <xs:element name="JSONProfile">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileDefinition</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element name="GeneratorConfig" type="GeneratorConfig"/>
+                <xs:element name="DataElements" type="JSONElements" minOccurs="1" maxOccurs="1"/>
+                <!-- <xs:element name="Namespaces" type="JSONNamespaces"/> -->
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="tagLists"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+            </xs:sequence>
+            <xs:attribute name="strict" type="xs:boolean" default="false"/>
+            <xs:attribute name="showWarning" type="xs:boolean" default="true"/>
+            <xs:attribute name="profileState" type="JSONProfileState" default="normal"/>
+            <xs:attribute name="warningInfo" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="JsonSchemaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="JSONProfile" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="jsonProfile"/>
+                            <jxb:serializable/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="hasPointer" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="JSONElements">
+        <xs:sequence>
+            <xs:element ref="JSONRootValue" minOccurs="1" maxOccurs="1">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="root"/>
+                        <jxb:serializable/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="JSONObjectEntry" type="JSONValue"/>
+
+    <xs:element name="JSONObject">
+        <xs:complexType >
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element ref="JSONObjectEntry" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="entries"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="key" type="xs:int"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+            <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="JSONArrayElement">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="JSONValue">
+                    <xs:attribute name="minOccurs" type="xs:int" default="0"/>
+                    <xs:attribute name="maxOccurs" type="xs:int" default="-1"/>
+                    <xs:attribute name="loopingOption" type="JSONLoopingOption" default="occurrence"/>
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="JSONArray">
+        <xs:complexType >
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence>
+                <xs:element ref="JSONArrayElement" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="elements"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+
+            <xs:attribute name="key" type="xs:int"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+            <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+            <xs:attribute name="elementType" type="JSONArrayElementType"/>
+
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="JSONRootValue" type="JSONValue"/>
+
+    <xs:complexType name="JSONValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="DataFormat" type="JSONDataFormat" minOccurs="0" maxOccurs="1"/>
+            <xs:choice minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="value"/>
+                        <jxb:serializable/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:element ref="JSONObject"/>
+                <xs:element ref="JSONArray"/>
+            </xs:choice>
+            <xs:element name="Qualifiers" type="Qualifiers" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+        <xs:attribute name="dataType" type="JSONDataType"/>
+        <xs:attribute name="validateData" type="xs:boolean" default="false"/>
+        <xs:attribute name="minLength" type="xs:int"/>
+        <xs:attribute name="maxLength" type="xs:int"/>
+        <xs:attribute name="required" type="xs:boolean" default="false"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="Qualifiers">
+        <xs:sequence>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="QualifierList"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="JSONDataFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileDataFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="ProfileBooleanFormat" type="JSONProfileBooleanFormat"/>
+            <xs:element name="ProfileCharacterFormat" type="JSONProfileCharacterFormat"/>
+            <xs:element name="ProfileNumberFormat" type="JSONProfileNumberFormat"/>
+            <xs:element name="ProfileDateFormat" type="JSONProfileDateFormat"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="JSONProfileBooleanFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileBooleanFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="booleanFormat" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="JSONProfileCharacterFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileCharacterFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="JSONProfileNumberFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileNumberFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="numberFormat" default="#" type="xs:string"/>
+        <xs:attribute name="impliedDecimal" default="0" type="xs:int"/>
+        <xs:attribute name="signedField" default="false" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="JSONProfileDateFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileDateFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="dateFormat" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="JSONDataType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="character"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="datetime"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="JSONLoopingOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unique"/>
+            <xs:enumeration value="occurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="JSONArrayElementType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="repeating"/>
+            <xs:enumeration value="absolute"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="JSONProfileState">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="NORMAL" value="normal"/>
+                    <jxb:typesafeEnumMember name="PARTIAL_NODES" value="partial_nodes"/>
+                    <jxb:typesafeEnumMember name="DESCRIPTION_TRUNCATED" value="description_truncated"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="normal"/>
+            <xs:enumeration value="partial_nodes"/>
+            <xs:enumeration value="description_truncated"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="GeneratorConfig">
+        <xs:attribute name="enableParseDateTime" type="xs:boolean" default="false"/>
+        <xs:attribute name="enableFieldLengthValidation" type="xs:boolean" default="false"/>
+    </xs:complexType>
+</xs:schema>

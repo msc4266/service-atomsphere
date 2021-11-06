@@ -1,0 +1,566 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:version="2.0"
+           jxb:extensionBindingPrefixes="ih">
+
+
+    <xs:element name="EdiSegment" type="EdiSegment"/>
+    <xs:element name="EdiLoop" type="EdiLoop"/>
+    <xs:element name="Transmission" type="Transmission"/>
+    <xs:element name="Composites" type="EdiComposites"/>
+
+    <xs:element name="EdiProfile">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileDefinition</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="1" maxOccurs="1">
+                <xs:element name="ProfileProperties" type="EdiProperties"/>
+                <xs:element name="DataElements" type="EdiElements"/>
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="tagLists"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+            </xs:sequence>
+            <xs:attribute name="strict" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="EdiProperties">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="EdiGeneralInfo" type="EdiGeneralInfo"/>
+            <xs:element name="EdiFileOptions" type="EdiFileOptions"/>
+            <xs:element name="EdiOptions" type="EdiOptions"/>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="EdiGeneralInfo">
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="standard" type="EdiStandard"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiFileOptions">
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="EdiDelimitedOptions" type="EdiDelimitedOptions"/>
+            <xs:element name="EdiDataOptions" type="EdiDataOptions"/>
+        </xs:choice>
+        <xs:attribute name="fileType" type="EdiFileType"/>
+        <xs:attribute name="requireFirstSegmentOfLoop" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiDataFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDataFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="ProfileBooleanFormat" type="EdiProfileBooleanFormat"/>
+            <xs:element name="ProfileCharacterFormat" type="EdiProfileCharacterFormat"/>
+            <xs:element name="ProfileNumberFormat" type="EdiProfileNumberFormat"/>
+            <xs:element name="ProfileDateFormat" type="EdiProfileDateFormat"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiProfileBooleanFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileBooleanFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="EdiProfileCharacterFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileCharacterFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="EdiProfileNumberFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNumberFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="numberFormat" type="xs:string"/>
+        <xs:attribute name="impliedDecimal" type="xs:int" default="0"/>
+        <xs:attribute name="signedField" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiProfileDateFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDateFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="dateFormat" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiOptions">
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="EdiX12Options" type="EdiX12Options"/>
+            <xs:element name="EdiEdifactOptions" type="EdiEdifactOptions"/>
+            <xs:element name="EdiHL7Options" type="EdiHL7Options"/>
+            <xs:element name="EdiTradacomsOptions" type="EdiTradacomsOptions"/>
+            <xs:element name="EdiIDOCOptions" type="EdiIDOCOptions"/>
+            <xs:element name="EdiUserDefOptions" type="EdiUserDefOptions"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="EdiElements">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="elements"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:group ref="EdiElement" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:group name="EdiElement">
+        <xs:choice>
+            <xs:element name="EdiLoop" type="EdiLoop"/>
+            <xs:element name="EdiSegment" type="EdiSegment"/>
+        </xs:choice>
+    </xs:group>
+
+    <xs:complexType name="EdiLoop">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:group ref="EdiElement" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="elements"/>
+                    </xs:appinfo>
+                </xs:annotation>
+
+            </xs:group>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="loopId" type="xs:string"/>
+        <xs:attribute name="loopRepeat" type="xs:int" default="1"/>
+        <xs:attribute name="loopingOption" type="LoopingOption" default="unique"/>
+        <xs:attribute name="isContainer" type="xs:boolean" default="false"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+        <xs:attribute name="externId" type="xs:string"/>
+
+    </xs:complexType>
+
+    <xs:complexType name="EdiSegment">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:group ref="EdiDataElementList" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="segmentName" type="xs:string"/>
+        <xs:attribute name="position" type="xs:string"/>
+        <xs:attribute name="mandatory" type="xs:boolean" default="false"/>
+        <xs:attribute name="repeatAction" type="RepeatActionOption"/>
+        <xs:attribute name="maxUse" type="xs:int" default="1"/>
+        <xs:attribute name="loopingOption" type="LoopingOption" default="unique"/>
+        <xs:attribute name="useAdditionalCriteria" type="xs:boolean" default="false"/>
+        <xs:attribute name="additionalElementKey" type="xs:int" default="-1"/>
+        <xs:attribute name="additionalElementName" type="xs:string"/>
+        <xs:attribute name="additionalElementValue" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+        <xs:attribute name="maxRepeatSets" type="xs:int" default="3"/>
+        <xs:attribute name="externId" type="xs:string"/>
+
+    </xs:complexType>
+
+    <xs:group name="EdiDataElementList">
+        <xs:sequence>
+            <xs:element name="EdiDataElement" type="EdiDataElement"/>
+        </xs:sequence>
+    </xs:group>
+
+
+    <xs:complexType name="EdiDataElement">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="DataFormat" type="EdiDataFormat"/>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="QualifierList"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+            <xs:element name="AutoGenerateOptionDetail" minOccurs="0" maxOccurs="1" type="EdiAutoGenerateOptionDetail"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="dataType" type="EdiDataType"/>
+        <xs:attribute name="mandatory" type="xs:boolean" default="false"/>
+        <xs:attribute name="validateData" type="xs:boolean" default="false"/>
+        <xs:attribute name="disableEscape" type="xs:boolean" default="false"/>
+        <xs:attribute name="writeRule" type="EdiWriteRuleOption"/>
+        <xs:attribute name="setRepeatType" type="EdiSetRepeatTypeOption"/>
+        <xs:attribute name="startColumn" type="xs:int"/>
+        <xs:attribute name="length" type="xs:int"/>
+        <xs:attribute name="fillCharacter" type="xs:string"/>
+        <xs:attribute name="justification" type="EdiJustificationOption"/>
+        <xs:attribute name="minLength" type="xs:int" default="0"/>
+        <xs:attribute name="maxLength" type="xs:int" default="999"/>
+        <xs:attribute name="composite" type="CompositeOption"/>
+        <xs:attribute name="comments" type="xs:string"/>
+        <xs:attribute name="elementPurpose" type="xs:string"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+        <xs:attribute name="autoGenOption" type="EdiAutoGenerateOption"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="compId" type="xs:string"/>
+        <xs:attribute name="externId" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiAutoGenerateOptionDetail">
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="HierarchicalLevel1Options" type="HierarchicalLevel1Options"/>
+            <xs:element name="HierarchicalLevel2Options" type="HierarchicalLevel2Options"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="HierarchicalLevel1Options">
+        <xs:attribute name="segmentElementKey" type="xs:int"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="HierarchicalLevel2Options">
+        <xs:attribute name="segmentElementKey" type="xs:int"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiDelimitedOptions">
+        <xs:attribute name="fileDelimiter" type="EdiDelimiterValue"/>
+        <xs:attribute name="fileDelimiterSpecial" type="xs:string"/>
+        <xs:attribute name="segmentchar" type="EdiSegmentChar"/>
+        <xs:attribute name="segmentcharSpecial" type="xs:string"/>
+        <xs:attribute name="compositeDelimiter" type="EdiDelimiterValue" default="colondelimited"/>
+        <xs:attribute name="compositeDelimiterSpecial" type="xs:string"/>
+        <xs:attribute name="subCompositeDelimiter" type="EdiDelimiterValue" default="ampersanddelimited"/>
+        <xs:attribute name="subCompositeDelimiterSpecial" type="xs:string"/>
+
+    </xs:complexType>
+
+    <xs:complexType name="EdiDataOptions">
+        <xs:attribute name="padcharacter" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiX12Options">
+        <xs:attribute name="stdversion" type="xs:string"/>
+        <xs:attribute name="transmission" type="xs:string"/>
+        <xs:attribute name="tranfuncid" type="xs:string"/>
+        <xs:attribute name="isacontrolversion" type="xs:string"/>
+        <xs:attribute name="isacontrolstandard" type="xs:string"/>
+        <xs:attribute name="useloop" type="xs:boolean"/>
+        <xs:attribute name="ignoreseg" type="xs:boolean"/>
+        <xs:attribute name="ignoreelem" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiEdifactOptions">
+        <xs:attribute name="messageType" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="release" type="xs:string"/>
+        <xs:attribute name="controlAgency" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiTradacomsOptions">
+        <xs:attribute name="messageType" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiIDOCOptions">
+        <xs:attribute name="idoctype" type="xs:string"/>
+        <xs:attribute name="messagetype" type="xs:string"/>
+        <xs:attribute name="basictype" type="xs:string"/>
+        <xs:attribute name="extension" type="xs:string"/>
+    </xs:complexType>
+
+     <xs:complexType name="EdiHL7Options">
+        <xs:attribute name="messageType" type="xs:string"/>
+         <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="messageCode" type="xs:string"/>
+        <xs:attribute name="eventType" type="xs:string"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="EdiUserDefOptions">
+    </xs:complexType>
+
+    <xs:complexType name="Transmission">
+        <xs:sequence>
+            <xs:element name="DataElements" minOccurs="0" maxOccurs="1" type="EdiElements"/>
+            <xs:element name="EdiComposites" minOccurs="0" maxOccurs="1" type="EdiComposites"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+        <xs:attribute name="functionalId" type="xs:string"/>
+        <xs:attribute name="messageType" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean"/>
+        <xs:attribute name="description" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="EdiComposites">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="composites"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="comp" type="EdiComposite"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EdiComposite">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:group ref="EdiDataElementList" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="EdiFileType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="delimited"/>
+            <xs:enumeration value="datapositioned"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EdiStandard">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x12"/>
+            <xs:enumeration value="edifact"/>
+            <xs:enumeration value="hl7"/>
+            <xs:enumeration value="idoc"/>
+            <xs:enumeration value="ucs"/>
+            <xs:enumeration value="vics"/>
+            <xs:enumeration value="userdef"/>
+            <xs:enumeration value="tradacoms"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EdiDelimiterValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="stardelimited"/>
+            <xs:enumeration value="commadelimited"/>
+            <xs:enumeration value="tabdelimited"/>
+            <xs:enumeration value="tickdelimited"/>
+            <xs:enumeration value="bardelimited"/>
+            <xs:enumeration value="plusdelimited"/>
+            <xs:enumeration value="colondelimited"/>
+            <xs:enumeration value="caratdelimited"/>
+            <xs:enumeration value="ampersanddelimited"/>
+            <xs:enumeration value="bytecharacter"/>
+            <xs:enumeration value="othercharacter"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="EdiSegmentChar">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="newline"/>
+            <xs:enumeration value="singlequote"/>
+            <xs:enumeration value="tilde"/>
+            <xs:enumeration value="carriagereturn"/>
+            <xs:enumeration value="bytecharacter"/>
+            <xs:enumeration value="othercharacter"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+ <xs:simpleType name="EdiDataType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="AN"/>
+            <xs:enumeration value="ID"/>
+            <xs:enumeration value="DT"/>
+            <xs:enumeration value="TM"/>
+            <xs:enumeration value="N0"/>
+            <xs:enumeration value="N1"/>
+            <xs:enumeration value="N2"/>
+            <xs:enumeration value="N4"/>
+            <xs:enumeration value="N6"/>
+            <xs:enumeration value="N"/>
+            <xs:enumeration value="R"/>
+            <xs:enumeration value="B"/>
+            <xs:enumeration value="DTM"/>
+            <xs:enumeration value="FT"/>
+            <xs:enumeration value="GTS"/>
+            <xs:enumeration value="IS"/>
+            <xs:enumeration value="NM"/>
+            <xs:enumeration value="SI"/>
+            <xs:enumeration value="SNM"/>
+            <xs:enumeration value="ST"/>
+            <xs:enumeration value="TX"/>
+            <xs:enumeration value="TS"/>
+            <xs:enumeration value="TN"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="EdiWriteRuleOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="notnull"/>
+            <xs:enumeration value="notzero"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EdiSetRepeatTypeOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="constant"/>
+            <xs:enumeration value="repeated"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EdiJustificationOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="RepeatActionOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="readconcatenate"/>
+            <xs:enumeration value="writerepeat"/>
+            <xs:enumeration value="readbreakrepeatedsets"/>
+            <xs:enumeration value="writecombinerepeatedsets"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="EdiAutoGenerateOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="hierarc1"/>
+            <xs:enumeration value="hierarc2"/>
+            <xs:enumeration value="hierarcsum"/>
+            <xs:enumeration value="hierarctl1"/>
+            <xs:enumeration value="hierarctl2"/>
+            <xs:enumeration value="hierarctl3"/>
+            <xs:enumeration value="hierarctl4"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="CompositeOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="start"/>
+            <xs:enumeration value="comp"/>
+            <xs:enumeration value="startsub"/>
+            <xs:enumeration value="startsubstart"/>
+            <xs:enumeration value="subcomp"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+
+    <xs:simpleType name="LoopingOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unique"/>
+            <xs:enumeration value="occurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>
+

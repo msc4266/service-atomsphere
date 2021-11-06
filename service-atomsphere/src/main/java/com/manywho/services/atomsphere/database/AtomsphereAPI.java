@@ -114,7 +114,8 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 		logger.info(response.toString());
         String responseString = response.toString();
         JSONObject responseObj = null;
-        if (responseString.length()==0)
+        //TODO DELETE RETURNS {true}, not a nice json object so flow throws error: Expected a ':' after a key at 6 [character 7 line 1]
+        if (responseString.length()==0 || "DELETE".contentEquals(method))
         {	
         	responseObj = new JSONObject();
         	responseObj.put("statusCode", responseCode);

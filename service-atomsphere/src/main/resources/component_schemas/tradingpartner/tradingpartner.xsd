@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+    <xs:element name="TradingPartner">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ContactInfo" type="ContactInfo" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="PartnerInfo" type="PartnerInfo" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="PartnerCommunication" type="PartnerCommunication" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="DocumentTypes" type="PartnerDocumentTypes" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="Archiving" type="PartnerArchiving" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="classification" type="PartnerClassification"/>
+            <xs:attribute name="standard" type="PartnerDocumentStandard"/>
+            <xs:attribute name="identifier" type="xs:string"/>
+            <xs:attribute name="organizationId" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:complexType name="ContactInfo">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="address1" type="xs:string"/>
+        <xs:attribute name="address2" type="xs:string"/>
+        <xs:attribute name="city" type="xs:string"/>
+        <xs:attribute name="state" type="xs:string"/>
+        <xs:attribute name="postalcode" type="xs:string"/>
+        <xs:attribute name="country" type="xs:string"/>
+        <xs:attribute name="contactname" type="xs:string"/>
+        <xs:attribute name="email" type="xs:string"/>
+        <xs:attribute name="phone" type="xs:string"/>
+        <xs:attribute name="fax" type="xs:string"/>
+    </xs:complexType>
+    
+
+    <xs:complexType name="PartnerArchiving">
+        <xs:attribute name="enableArchiving" type="xs:boolean" default="false"/>
+        <xs:attribute name="inboundDirectory" type="xs:string"/>
+        <xs:attribute name="outboundDirectory" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="PartnerCommunication">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="PartnerCommunicationObject"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="PartnerInfo">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="PartnerInfoObject"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+
+    </xs:complexType>
+
+
+    <xs:complexType name="PartnerDocumentTypes">
+        <xs:sequence>
+            <xs:element name="DocumentType" type="PartnerDocumentType" minOccurs="1"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+
+    </xs:complexType>
+
+    <xs:complexType name="PartnerDocumentType">
+        <xs:sequence>
+            <xs:element name="PartnerDocumentOptions" type="PartnerDocumentOptions" minOccurs="1"
+                        maxOccurs="1"/>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="Tracking"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+
+        </xs:sequence>
+        <xs:attribute name="profileId" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="displayName" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="PartnerDocumentOptions">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="Options"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+
+    </xs:complexType>
+
+
+    <xs:simpleType name="PartnerClassification">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="tradingpartner"/>
+            <xs:enumeration value="mytradingpartner"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="PartnerDocumentStandard">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x12"/>
+            <xs:enumeration value="edifact"/>
+            <xs:enumeration value="hl7"/>
+            <xs:enumeration value="edicustom"/>
+            <xs:enumeration value="edimulti"/>
+            <xs:enumeration value="rosettanet"/>
+            <xs:enumeration value="tradacoms"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

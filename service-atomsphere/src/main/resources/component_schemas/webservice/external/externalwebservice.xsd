@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           jxb:extensionBindingPrefixes="xjc"
+           jxb:version="2.0">
+
+    <xs:element name="ExternalWebservice">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="publicationInfo" type="PublicationInfo"/>
+                <xs:element name="delegateEndpoint" type="DelegateEndpoint"/>
+                <xs:element name="metaInfo" type="ExtMetaInfo" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="PublicationInfo">
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="0"/>
+            <xs:element name="swaggerFile" type="SwaggerFile" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="title" type="xs:string" use="required" />
+        <xs:attribute name="version" type="xs:string" use="required" />
+        <xs:attribute name="apiType" type="APIType" use="required"/>
+        <xs:attribute name="basePath" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="DelegateEndpoint">
+        <xs:sequence>
+            <xs:element name="header" type="DelegateAPIHeader" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="headers"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="basicAuth" type="EndpointBasicAuth" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="url" type="xs:string" use="required" />
+        <xs:attribute name="healthCheckUrl" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="APIType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="rest"/>
+            <xs:enumeration value="soap"/>
+            <xs:enumeration value="odata"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="EndpointBasicAuth">
+        <xs:attribute name="user" type="xs:string" use="required"/>
+        <xs:attribute name="password" type="xs:string" use="required"/>
+    </xs:complexType>
+
+    <xs:complexType name="DelegateAPIHeader">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="encrypted" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="SwaggerFile">
+        <xs:sequence>
+            <xs:element name="fileName" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="fileContent" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="uploadedBy" type="xs:string" minOccurs="0" maxOccurs="1"/>
+            <xs:element name="uploadedDate" type="xs:dateTime" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ExtMetaInfo">
+        <xs:sequence>
+            <xs:element name="termsOfService" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="contactName" type="xs:string" use="required" />
+        <xs:attribute name="contactUrl" type="xs:string" use="required" />
+        <xs:attribute name="contactEmail" type="xs:string" use="required" />
+        <xs:attribute name="licenseName" type="xs:string" use="required" />
+        <xs:attribute name="licenseUrl" type="xs:string" use="required" />
+        <xs:attribute name="organizationId" type="xs:string"/>
+    </xs:complexType>
+ 
+</xs:schema>

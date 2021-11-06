@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2008
+   Boomi, Inc.
+   Dennis McCarty
+   Apr 20, 2010
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+     
+      <xs:element name="PGPCertificateModel">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="Type" type="PGPType"/>
+                <xs:element name="UserInfo" type="UserInfo" minOccurs="1" maxOccurs="unbounded"/>
+                <xs:element name="Validity" type="PGPValidity"/>
+                <xs:element name="CertificateData" type="xs:string"/>
+            </xs:sequence>
+
+            <xs:attribute name="password" type="xs:string"/>
+            <xs:attribute name="version" type="xs:string"/>
+            <xs:attribute name="keyId" type="xs:string"/>
+            <xs:attribute name="algorithm" type="xs:string"/>
+            <xs:attribute name="keyLength" type="xs:string"/>
+            <xs:attribute name="fingerPrint" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="UserInfo">
+        <xs:attribute name="userId" type="xs:string"/>
+    </xs:complexType>
+    
+
+
+     <xs:element name="PGPCertificateGeneration">
+        <xs:complexType>
+            <xs:attribute name="identity" type="xs:string"/>
+            <xs:attribute name="passPhrase" type="xs:string"/>
+            <xs:attribute name="keyTypeAlg" type="xs:string"/>
+            <xs:attribute name="keyLength" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+      <xs:complexType name="PGPValidity">
+        <xs:attribute name="issueDate" type="xs:string"/>
+        <xs:attribute name="expireDate" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="PGPType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="public"/>
+            <xs:enumeration value="private"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

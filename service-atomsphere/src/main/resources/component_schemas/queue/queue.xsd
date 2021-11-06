@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<xs:schema version="1.0"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           elementFormDefault="qualified">
+    <xs:element name="QueueModel">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1"> 
+                <xs:element name="Name" type="xs:string"/>
+                <xs:element name="Type" type="QueueType"/>
+                <xs:element name="dlq" type="xs:boolean" minOccurs="0" default="false"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="QueueType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="queue"/>
+            <xs:enumeration value="topic"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

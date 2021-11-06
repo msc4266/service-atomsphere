@@ -22,6 +22,7 @@ public class Application extends Servlet3Server  {
 
         server.addModule(new ApplicationAtomsphereModule());
         server.setApplication(Application.class);
-        server.start();//server.start("/api/atomsphere/2");
+        server.start();
+        //server.start("/api/atomsphere/2",8085);
     }
 }

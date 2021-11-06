@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           jxb:extensionBindingPrefixes="xjc"
+           jxb:version="2.0">
+
+    <xs:element name="ProcessRoute">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="returnPath" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="returnPaths"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:attribute name="id" type="xs:string"/>
+                        <xs:attribute name="label" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="processEntry" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="processEntries"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="returnPathMap" minOccurs="0" maxOccurs="unbounded">
+                                <xs:annotation>
+                                    <xs:appinfo>
+                                        <jxb:property name="returnPathMaps"/>
+                                    </xs:appinfo>
+                                </xs:annotation>
+                                <xs:complexType>
+                                    <xs:attribute name="childShapeName" type="xs:string"/>
+                                    <xs:attribute name="returnLabel" type="xs:string"/>
+                                    <xs:attribute name="routePathId" type="xs:string"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="keyLabel" type="xs:string"/>
+                        <xs:attribute name="key" type="xs:string"/>
+                        <xs:attribute name="processId" type="xs:string"/>
+                        <xs:attribute name="processName" type="xs:string"/>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="startShapeType" type="StartShapeType" default="other"/>
+            <xs:attribute name="enforcePassthrough" type="xs:boolean"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="StartShapeType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="passthrough"/>
+            <xs:enumeration value="other"/>
+        </xs:restriction>
+    </xs:simpleType>
+    
+</xs:schema>

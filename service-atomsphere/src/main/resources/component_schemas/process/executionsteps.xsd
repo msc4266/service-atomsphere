@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2007
+   Boomi, Inc.
+   Mitchell Stewart
+   Apr 4, 2007
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+    <xs:element name="ExecutionSteps">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="steps"/>
+                    </xs:appinfo>
+                </xs:annotation>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Step" type="ExecutionStep"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ExecutionStep">
+        <xs:attribute name="number" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="type" type="xs:string"/>
+        <xs:attribute name="status" type="Status"/>
+        <xs:attribute name="processed" type="xs:int"/>
+        <xs:attribute name="errored" type="xs:int"/>
+        <xs:attribute name="timeElapsed" type="xs:long"/>
+        <xs:attribute name="message" type="xs:string"/>
+        <xs:attribute name="connector" type="xs:boolean"/>
+        <xs:attribute name="connectorActionType" type="xs:string"/>
+        <xs:attribute name="connectorType" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="Status">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="success"/>
+            <xs:enumeration value="fail"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

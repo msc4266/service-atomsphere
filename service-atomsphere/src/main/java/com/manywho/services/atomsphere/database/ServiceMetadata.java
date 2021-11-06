@@ -187,6 +187,12 @@ public class ServiceMetadata {
 		typeElementBindings.add(typeElementBinding);
 
 		populatePropertiesForComplexType(typeName, typeElement, typeElementPropertyBindings, xsdTopElement);
+		if ("Process".contentEquals(typeName))
+		{
+			//Add filter-only fields
+			this.addPropertyAndBinding("integrationPackInstanceId", ContentType.String, typeElement, typeElementPropertyBindings, "xs:string");
+			this.addPropertyAndBinding("integrationPackId", ContentType.String, typeElement, typeElementPropertyBindings, "xs:string");
+		}
 		typeElement.setId(UUID.randomUUID());
        	if (typeElement.getProperties().size()>0)
        	{
@@ -224,6 +230,9 @@ public class ServiceMetadata {
 	//TODO resolve extension recursively to get elements and attributes from them
     private void populatePropertiesForComplexType(String typeName, TypeElement typeElement, List<TypeElementPropertyBinding> typeElementPropertyBindings, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException {
 
+    	//TODO There are filter only fields that don't appear in root of object type. IE if typeName == PROCESS add a filterable root item named integrationPackInstanceId
+    	//TODO these fields are specified in xsd <xs:annotation><xs:appinfo><filter ignore="true" xmlns="http://www.boomi.com/connector/annotation"><field name="integrationPackOverrideName"/><field name="integrationPackName"/><field name="integrationPackId"/></filter></xs:appinfo></xs:annotation>
+    	//TODO This can be done by hacking the xsd or we could enhance to add missing fields from the <xs:annotation><xs:appinfo><filter elements
         //Find type element for Entity
 		Element complexType = findComplexType(typeName, xsdTopElement);
 		if (complexType!=null)
@@ -236,7 +245,7 @@ public class ServiceMetadata {
 					Node xsdElement = elements.item(j);
 					if (xsdElement.hasAttributes() && xsdElement.getAttributes().getNamedItem("type")!=null)
 					{
-						addPropertyAndBinding(typeName, (Node)xsdElement, typeElement, typeElementPropertyBindings, xsdTopElement);
+						addPropertyAndBindingFromXSD(typeName, (Node)xsdElement, typeElement, typeElementPropertyBindings, xsdTopElement);
 					}
 				}
 				NodeList attributes = complexType.getElementsByTagName("xs:attribute");
@@ -245,7 +254,7 @@ public class ServiceMetadata {
 					Node xsdAttribute = attributes.item(j);
 					if (xsdAttribute.hasAttributes())
 					{
-						addPropertyAndBinding(typeName, (Node)xsdAttribute, typeElement, typeElementPropertyBindings, xsdTopElement);
+						addPropertyAndBindingFromXSD(typeName, (Node)xsdAttribute, typeElement, typeElementPropertyBindings, xsdTopElement);
 					}
 				}           	
 				NodeList extensions = complexType.getElementsByTagName("xs:extension");
@@ -265,7 +274,7 @@ public class ServiceMetadata {
 		}
     }
     
-	void addPropertyAndBinding(String typeName, Node xsdElement, TypeElement typeElement, List<TypeElementPropertyBinding> typeElementPropertyBindings, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
+	void addPropertyAndBindingFromXSD(String typeName, Node xsdElement, TypeElement typeElement, List<TypeElementPropertyBinding> typeElementPropertyBindings, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
 	{
 		String xsdType = xsdElement.getAttributes().getNamedItem("type").getNodeValue();
 		String developerName = xsdElement.getAttributes().getNamedItem("name").getNodeValue();
@@ -279,28 +288,33 @@ public class ServiceMetadata {
 			contentType=ContentType.String;
 		if (contentType!=null)
 		{
-			TypeElementProperty typeElementProperty = new TypeElementProperty();
-			typeElement.getProperties().add(typeElementProperty);
-			typeElementProperty.setDeveloperName(developerName);
-			typeElementProperty.setContentType(contentType);	
-			typeElementProperty.setTypeElementId(typeElement.getId());
-			typeElementProperty.setId(UUID.randomUUID());
+			addPropertyAndBinding(developerName, contentType, typeElement, typeElementPropertyBindings, xsdType);
 			
-			TypeElementPropertyBinding typeElementPropertyBinding = new TypeElementPropertyBinding(developerName, developerName, getLocalName(xsdType));
-			typeElementPropertyBindings.add(typeElementPropertyBinding);
-			typeElementPropertyBinding.setTypeElementPropertyId(typeElementProperty.getId());
-			
-			//TODO I think we wait until the end and loop to apply binding ids at that time
-			if (contentType==ContentType.Object || contentType == ContentType.List)
-			{
-				String complexTypeName = getLocalName(xsdType);
-				typeElementProperty.setTypeElementDeveloperName(complexTypeName);
-			}			
 //		} else {
 //			logger.fine(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
 		}
 	}
 	
+	private void addPropertyAndBinding(String developerName, ContentType contentType, TypeElement typeElement,
+			List<TypeElementPropertyBinding> typeElementPropertyBindings, String xsdType) {
+		TypeElementProperty typeElementProperty = new TypeElementProperty();
+		typeElement.getProperties().add(typeElementProperty);
+		typeElementProperty.setDeveloperName(developerName);
+		typeElementProperty.setContentType(contentType);	
+		typeElementProperty.setTypeElementId(typeElement.getId());
+		typeElementProperty.setId(UUID.randomUUID());
+		
+		TypeElementPropertyBinding typeElementPropertyBinding = new TypeElementPropertyBinding(developerName, developerName, getLocalName(xsdType));
+		typeElementPropertyBindings.add(typeElementPropertyBinding);
+		typeElementPropertyBinding.setTypeElementPropertyId(typeElementProperty.getId());
+		//TODO I think we wait until the end and loop to apply binding ids at that time
+		if (contentType==ContentType.Object || contentType == ContentType.List)
+		{
+			String complexTypeName = getLocalName(xsdType);
+			typeElementProperty.setTypeElementDeveloperName(complexTypeName);
+		}			
+	}
+
 	void resolveComplexPropertyIDReferences(List<TypeElement> typeElements)
 	{
 		for (TypeElement typeElement : typeElements)
@@ -355,8 +369,7 @@ public class ServiceMetadata {
         		contentType = resolveComplexType(parentType, xsdType, xsdTopElement);
         		//TODO make this recursive to get sub types? 
         		//License, ConnectorVersion, Counter, MapExtension, AtomSecurityPoliciesType, 
-        		//Property, AuditLogProperty, CloudAtom, DocumentCountAccountGroup, ExecutionCountAccountGroup, DeployedProcess, ProcessIntegrationPackInfo...
-//TODO complexTypes        		
+        		//Property, AuditLogProperty, CloudAtom, DocumentCountAccountGroup, ExecutionCountAccountGroup, DeployedProcess, ProcessIntegrationPackInfo...     		
             	if (contentType==null)
         		{
         			//TODO Complex Types
@@ -367,8 +380,7 @@ public class ServiceMetadata {
         				else
         					contentType = ContentType.Object;
         			}
-        		}
-//TODO complexTypes        		
+        		}      		
     		}
     		break;
     	}

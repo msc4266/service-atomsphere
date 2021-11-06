@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+
+    <xs:element name="TradingPartnerCommunicationOptions">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="TradingPartnerCommunicationOptionsObject"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+                <xs:element name="SharedCommunicationPartnerArchiving" type="SharedCommunicationPartnerArchiving"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="SharedCommunicationPartnerArchiving">
+        <xs:attribute name="enableArchiving" type="xs:boolean" default="false"/>
+        <xs:attribute name="inboundDirectory" type="xs:string"/>
+        <xs:attribute name="outboundDirectory" type="xs:string"/>
+    </xs:complexType>
+ 
+</xs:schema>

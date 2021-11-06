@@ -1,0 +1,284 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:version="2.0"
+           jxb:extensionBindingPrefixes="ih">
+
+    <xs:element name="FlatFileProfile">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileDefinition</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="1" maxOccurs="1">
+                <xs:element name="ProfileProperties" type="FlatFileProperties"/>
+                <xs:element name="DataElements" type="FFDataElements"/>
+                <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="tagLists"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+            </xs:sequence>
+            <xs:attribute name="strict" type="xs:boolean" default="false"/>
+            <xs:attribute name="modelVersion" type="xs:int" />
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:complexType name="FlatFileProperties">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="GeneralInfo" type="FlatFileGeneralInfo"/>
+            <xs:element name="Options" type="FlatFileOptions"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileGeneralInfo">
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="useColumnHeaders" type="xs:boolean"/>
+        <xs:attribute name="fileType" type="FileType"/>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileOptions">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="DataOptions" type="FlatFileDataOptions"/>
+            <xs:element name="DelimitedOptions" type="FlatFileDelimitedOptions"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileDataOptions">
+        <xs:attribute name="padcharacter" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileDelimitedOptions">
+        <xs:attribute name="fileDelimiter" type="DelimiterValue"/>
+        <xs:attribute name="fileDelimiterSpecial" type="xs:string"/>
+        <xs:attribute name="textQualifier" type="TextQualifierValue"/>
+        <xs:attribute name="textQualifierEscape" type="xs:string"/>
+        <xs:attribute name="delimiterEscape" type="xs:string"/>
+        <xs:attribute name="escapeForEscape" type="xs:string"/>
+        <xs:attribute name="removeEscape" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="FFDataElements">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:group ref="FlatFileRecordList" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:group name="FlatFileRecordList">
+        <xs:sequence>
+            <xs:element name="FlatFileRecord" type="FlatFileRecord"/>
+        </xs:sequence>
+    </xs:group>
+
+    <xs:complexType name="FlatFileRecord">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="FlatFileElements" type="FlatFileElements"/>
+            <xs:group ref="FlatFileRecordList" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="detectFormat" type="DetectFormat"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileElements">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="elements"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element ref="FlatFileElement" />
+        </xs:sequence>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+    </xs:complexType>
+    
+    <xs:element name="FlatFileElement">
+
+    <xs:complexType >
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="DataFormat" type="FlatFileDataFormat"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="dataType" type="FlatFileDataType"/>
+        <xs:attribute name="mandatory" type="xs:boolean"/>
+        <xs:attribute name="justification" type="JustificationType"/>
+        <xs:attribute name="enforceUnique" type="xs:boolean"/>
+        <xs:attribute name="validateData" type="xs:boolean"/>
+        <xs:attribute name="useToIdentifyFormat" type="xs:boolean"/>
+        <xs:attribute name="identityValue" type="xs:string"/>
+        <xs:attribute name="startColumn" type="xs:int"/>
+        <xs:attribute name="length" type="xs:int"/>
+        <xs:attribute name="minLength" type="xs:int"/>
+        <xs:attribute name="maxLength" type="xs:int"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+        
+    </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="FlatFileDataFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDataFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="ProfileBooleanFormat" type="FlatFileProfileBooleanFormat"/>
+            <xs:element name="ProfileCharacterFormat" type="FlatFileProfileCharacterFormat"/>
+            <xs:element name="ProfileNumberFormat" type="FlatFileProfileNumberFormat"/>
+            <xs:element name="ProfileDateFormat" type="FlatFileProfileDateFormat"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="FlatFileProfileBooleanFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileBooleanFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileProfileCharacterFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileCharacterFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="FlatFileProfileNumberFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNumberFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="numberFormat" default="#" type="xs:string"/>
+        <xs:attribute name="impliedDecimal" default="0" type="xs:int"/>
+        <xs:attribute name="signedField" default="false" type="xs:boolean"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="FlatFileProfileDateFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDateFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="dateFormat" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="FileType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="delimited"/>
+            <xs:enumeration value="datapositioned"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="DetectFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="numberofcolumns"/>
+            <xs:enumeration value="uniquevalues"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="FlatFileDataType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="character"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="datetime"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="DelimiterValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="stardelimited"/>
+            <xs:enumeration value="commadelimited"/>
+            <xs:enumeration value="tabdelimited"/>
+            <xs:enumeration value="tickdelimited"/>
+            <xs:enumeration value="bardelimited"/>
+            <xs:enumeration value="otherdelimited"/>
+            <xs:enumeration value="bytedelimited"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="TextQualifierValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="textqualifierdouble"/>
+            <xs:enumeration value="textqualifiersingle"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="JustificationType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="left"/>
+            <xs:enumeration value="right"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+</xs:schema>

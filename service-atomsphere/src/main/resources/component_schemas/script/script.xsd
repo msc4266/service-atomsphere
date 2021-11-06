@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+    xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+    jxb:version="2.0">
+
+    <xs:element name="ProcessingScript">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="Script"/>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="MappingScript">
+        <xs:complexType>
+            <xs:complexContent>
+                <xs:extension base="Script">
+                    <xs:sequence>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="ScriptingParameter"/>
+                        <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="ScriptingParameter"/>
+                    </xs:sequence>
+                    <xs:attribute name="preserveOrder" type="xs:boolean" default="false" />
+                </xs:extension>
+            </xs:complexContent>
+        </xs:complexType>
+    </xs:element>
+      
+    <xs:complexType name="Script">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="script" type="xs:string"/>
+        </xs:sequence>
+        <xs:attribute name="language" type="ScriptingLanguage"/>
+    </xs:complexType>
+    
+    <xs:simpleType name="ScriptingLanguage">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="javascript"/>
+            <xs:enumeration value="groovy"/>
+            <xs:enumeration value="groovy2"/>
+        </xs:restriction>
+    </xs:simpleType>
+       
+    <xs:complexType name="ScriptingParameter">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="dataType" type="xs:string"/>
+    </xs:complexType>
+
+
+</xs:schema>
+

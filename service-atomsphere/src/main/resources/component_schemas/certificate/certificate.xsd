@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+    <xs:element name="CertificateModel">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="Type" type="Type"/>
+                <xs:element name="IssuedTo" type="Name"/>
+                <xs:element name="Issuer" type="Name"/>
+                <xs:element name="Validity" type="Validity"/>
+                <xs:element name="CertificateData" type="xs:string"/>
+            </xs:sequence>
+
+            <xs:attribute name="password" type="xs:string"/>
+            <xs:attribute name="pwEncrypted" type="xs:boolean" default="false" />
+            <xs:attribute name="version" type="xs:string"/>
+            <xs:attribute name="serialNumber" type="xs:string"/>
+            <xs:attribute name="signatureAlgorithm" type="xs:string"/>
+            <xs:attribute name="SHA1Fingerprint" type="xs:string"/>
+            <xs:attribute name="MD5Fingerprint" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Name">
+        <xs:attribute name="fullName" type="xs:string"/>
+        <xs:attribute name="commonName" type="xs:string"/>
+        <xs:attribute name="organization" type="xs:string"/>
+        <xs:attribute name="organizationalUnit" type="xs:string"/>
+        <xs:attribute name="locality" type="xs:string"/>
+        <xs:attribute name="state" type="xs:string"/>
+        <xs:attribute name="country" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="Validity">
+        <xs:attribute name="issueDate" type="xs:string"/>
+        <xs:attribute name="expireDate" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="Type">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="public"/>
+            <xs:enumeration value="private"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:element name="CertificateGeneration">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="Name" type="Name"/>
+            </xs:sequence>
+
+            <xs:attribute name="alias" type="xs:string"/>
+            <xs:attribute name="signatureAlgorithm" type="xs:string"/>
+            <xs:attribute name="keyLength" type="xs:int"/>
+            <xs:attribute name="validity" type="xs:int"/>
+            <xs:attribute name="passPhrase" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+</xs:schema>

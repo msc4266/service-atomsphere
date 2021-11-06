@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+   Copyright (c) 2012
+   Boomi, Inc.
+   Jason Rymal
+   Sept 17, 2012
+-->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+    <xs:element name="DefinedProcessProperties">
+        <xs:complexType>
+            <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                <xs:element name="definedProcessProperty" type="ProcessPropertyModel"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="ProcessPropertyModel">
+        <xs:sequence>
+            <xs:element name="helpText" type="xs:string"/>
+            <xs:element name="label" type="xs:string"/>
+            <xs:element name="type" type="PropertyTypeEnum"/>
+            <xs:element name="defaultValue" type="xs:string"/>
+            <xs:element name="allowedValues" type="AllowedValuesList"/>
+            <xs:element name="persisted" type="xs:boolean"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="PropertyTypeEnum">
+        <xs:annotation>
+             <xs:appinfo>
+                 <jxb:typesafeEnumClass>
+                     <jxb:typesafeEnumMember name="STRING" value="string"/>
+                     <jxb:typesafeEnumMember name="NUMBER" value="number"/>
+                     <jxb:typesafeEnumMember name="BOOLEAN" value="boolean"/>
+                     <jxb:typesafeEnumMember name="DATE" value="date"/>
+                     <jxb:typesafeEnumMember name="PASSWORD" value="password"/>
+                 </jxb:typesafeEnumClass>
+             </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="string"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="boolean"/>
+            <xs:enumeration value="date"/>
+            <xs:enumeration value="password"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="AllowedValuesList">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="allowedValueSet" type="ValuePair"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="ValuePair">
+        <xs:attribute name="key" type="xs:string"/>
+        <xs:attribute name="label" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ProcessPropertyOverridesModel">
+        <xs:sequence>
+            <xs:element name="name" type="xs:string"/>
+            <xs:element name="componentId" type="xs:string"/>
+            <xs:element ref="DefinedProcessProperties"/>
+        </xs:sequence>
+    </xs:complexType>
+</xs:schema>

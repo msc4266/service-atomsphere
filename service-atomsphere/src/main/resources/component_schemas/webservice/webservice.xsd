@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+           jxb:extensionBindingPrefixes="xjc"
+           jxb:version="2.0">
+
+    <xs:complexType name="RestHeader">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="value" type="xs:string"/>
+    </xs:complexType>
+    
+    <xs:complexType name="RestRoute">
+        <xs:sequence>
+            <xs:element name="overrides" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="header" type="RestHeader" minOccurs="0" maxOccurs="unbounded">
+                            <xs:annotation>
+                                <xs:appinfo>
+                                    <jxb:property name="headers"/>
+                                </xs:appinfo>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:sequence>
+                    <xs:attribute name="urlPath" type="xs:string"/>
+                    <xs:attribute name="objectName" type="xs:string"/>
+                    <xs:attribute name="httpMethod" type="xs:string"/>
+                    <xs:attribute name="inputType" type="xs:string"/>
+                    <xs:attribute name="inputProfileKey" type="xs:string"/>
+                    <xs:attribute name="outputType" type="xs:string"/>
+                    <xs:attribute name="outputProfileKey" type="xs:string"/>
+                    <xs:attribute name="pageSize" type="xs:int"/>
+                    <xs:attribute name="contentType" type="xs:string"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="processId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="RestApi">
+        <xs:sequence>
+            <xs:element name="route" type="RestRoute" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="routes"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="SoapEndpoint">
+        <xs:sequence>
+            <xs:element name="overrides" minOccurs="0">
+                <xs:complexType>
+                    <xs:sequence>
+                    </xs:sequence>
+                    <xs:attribute name="operationName" type="xs:string"/>
+                    <xs:attribute name="inputType" type="xs:string"/>
+                    <xs:attribute name="inputProfileKey" type="xs:string"/>
+                    <xs:attribute name="outputType" type="xs:string"/>
+                    <xs:attribute name="outputProfileKey" type="xs:string"/>
+                    <xs:attribute name="pageSize" type="xs:int"/>
+                    <xs:attribute name="returnFault" type="xs:boolean" default="false"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="processId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="SoapApi">
+        <xs:sequence>
+            <xs:element name="endpoint" type="SoapEndpoint" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="endpoints"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SOAPVersion" type="SOAPVersion" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="SOAPVersions"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="customWsdlB64Zip" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+        <xs:attribute name="singleWsdlSchema" type="xs:boolean" default="false"/>
+        <xs:attribute name="suppressWrappers" type="xs:boolean" default="false"/>
+        <xs:attribute name="wsdlNamespace" type="xs:string"/>
+        <xs:attribute name="wsdlServiceName" type="xs:string"/>
+        <xs:attribute name="fullEnvelopePassthrough" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="ProfileOverride">
+        <xs:attribute name="key" type="xs:string"/>
+        <xs:attribute name="componentId" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="ProfileOverrides">
+        <xs:sequence>
+            <xs:element name="override" type="ProfileOverride" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="overrides"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="webservice">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="restApi" type="RestApi" minOccurs="0"/>
+                <xs:element name="soapApi" type="SoapApi" minOccurs="0"/>
+                <xs:element name="odataApi" type="ODataApi" minOccurs="0"/>
+                <xs:element name="metaInfo" type="MetaInfo" minOccurs="0" maxOccurs="1"/>
+                <xs:element name="profileOverrides" type="ProfileOverrides" minOccurs="0"/>
+                <xs:element name="capturedHeaders" type="HTTPHeaders" minOccurs="0"/>
+                <xs:element name="apiRoles" type="ApiRoles" minOccurs="0"/>
+            </xs:sequence>
+            <xs:attribute name="urlPath" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="HTTPHeaders">
+        <xs:sequence>
+            <xs:element name="header" type="HTTPHeader" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="headers"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    
+    <xs:complexType name="HTTPHeader">
+        <xs:attribute name="name" type="xs:string" use="required" />
+    </xs:complexType>
+
+    <xs:complexType name="MetaInfo">
+        <xs:sequence>
+            <xs:element name="description" type="xs:string" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="termsOfService" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="title" type="xs:string" use="required" />
+        <xs:attribute name="version" type="xs:string" use="required" />
+        <xs:attribute name="contactName" type="xs:string" use="required" />
+        <xs:attribute name="contactUrl" type="xs:string" use="required" />
+        <xs:attribute name="contactEmail" type="xs:string" use="required" />
+        <xs:attribute name="licenseName" type="xs:string" use="required" />
+        <xs:attribute name="licenseUrl" type="xs:string" use="required" />
+        <xs:attribute name="organizationId" type="xs:string"/>
+    </xs:complexType>
+    
+    
+    <xs:complexType name="ODataApi">
+         <xs:sequence>
+             <xs:element name="entity" type="ODataEntity" minOccurs="0" maxOccurs="unbounded">
+                 <xs:annotation>
+                     <xs:appinfo>
+                         <jxb:property name="entities"/>
+                     </xs:appinfo>
+                 </xs:annotation>
+             </xs:element>
+         </xs:sequence>
+     </xs:complexType>
+
+
+    <xs:complexType name="ODataEntity">
+        <xs:sequence>
+            <xs:element name="overrides" minOccurs="0">
+                <xs:complexType>
+                    <xs:attribute name="profileKey" type="xs:string"/>
+                    <xs:attribute name="pageSize" type="xs:int"/>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="action" type="ODataEntityAction" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        
+                        <jxb:property name="actions"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+
+            <xs:element name="key" type="ODataEntityKey" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="keys"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="description" type="xs:string" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+        <xs:attribute name="entityName" type="xs:string"/>
+    </xs:complexType>
+    
+ 
+     
+     <xs:complexType name="ODataEntityKey">
+         <xs:attribute name="name" type="xs:string" use="required" />
+     </xs:complexType>
+    
+    <xs:complexType name="ODataEntityAction">         
+           <xs:attribute name="processId" type="xs:string"/>
+           <xs:attribute name="processName" type="xs:string"/>
+           <xs:attribute name="entityActionType" type="ODataEntityActionType"/>
+           <xs:attribute name="allowsQueryPassthrough" default="false" type="xs:boolean"/>
+       </xs:complexType>
+    
+    
+    <xs:simpleType name="ODataEntityActionType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="get_entity_by_key"/>
+            <xs:enumeration value="get_entities"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="ApiRoles">
+        <xs:sequence>
+            <xs:element name="keys" type="xs:string" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:simpleType name="SOAPVersion">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="SOAP_1_1"/>
+            <xs:enumeration value="SOAP_1_2"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

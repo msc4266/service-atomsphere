@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2008
+   Boomi, Inc.
+   Dennis McCarty
+   Feb 29, 2008
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+    <xs:element name="CrossRefTable">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ColumnHeaders">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <!-- Don't think that occurs other than 0,1,unbounded mean anything to jaxb,
+                                 but for documenting sake keeping this up to date -->
+                            <xs:element minOccurs="2" maxOccurs="20" name="columnHeader" type="xs:string"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Rows">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element minOccurs="0" maxOccurs="unbounded" name="row" type="CrossReferenceTableRow"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+            <!-- Current version is 3; default is 1 because introduced in 2 (1 does not have attribute set) -->
+            <xs:attribute name="modelVersion" type="xs:int" default="1"/>
+            <xs:attribute name="atomEnabled" type="xs:boolean"/>
+            <xs:attribute name="matchType" type="MatchType"/>
+
+            <!-- Backwards compatible for Versions 1-2 -->
+            <xs:attribute name="columns" type="xs:int" default="6"/>
+            <xs:attribute name="ref1label" type="xs:string"/>
+            <xs:attribute name="ref2label" type="xs:string"/>
+            <xs:attribute name="ref3label" type="xs:string"/>
+            <xs:attribute name="ref4label" type="xs:string"/>
+            <xs:attribute name="ref5label" type="xs:string"/>
+            <xs:attribute name="ref6label" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    <xs:simpleType name="MatchType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="exact"/>
+            <xs:enumeration value="wildcard"/>
+            <xs:enumeration value="regex"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+     <xs:complexType name="CrossReferenceTableRow">
+         <xs:sequence>
+             <xs:element name="Values">
+                 <xs:complexType>
+                     <xs:sequence>
+                         <!-- Don't think that occurs other than 0,1,unbounded mean anything to jaxb,
+                                 but for documenting sake keeping this up to date -->
+                         <xs:element minOccurs="2" maxOccurs="20" name="ref" type="RefValue"/>
+                     </xs:sequence>
+                 </xs:complexType>
+             </xs:element>
+         </xs:sequence>
+         <xs:attribute name="atom" type="xs:string" default="Default"/>
+         <xs:attribute name="atomid" type="xs:string" default="-1"/>
+         <!-- Backwards compatible for Versions 1-2 -->
+         <xs:attribute name="ref1" type="xs:string"/>
+         <xs:attribute name="ref2" type="xs:string"/>
+         <xs:attribute name="ref3" type="xs:string"/>
+         <xs:attribute name="ref4" type="xs:string"/>
+         <xs:attribute name="ref5" type="xs:string"/>
+         <xs:attribute name="ref6" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="RefValue">
+        <xs:attribute name="value" type="xs:string"/>
+        <xs:attribute name="colIdx" type="xs:int"/>
+    </xs:complexType>
+</xs:schema>

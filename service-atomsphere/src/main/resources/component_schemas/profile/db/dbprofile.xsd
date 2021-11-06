@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:version="2.0"
+           jxb:extensionBindingPrefixes="ih">
+
+    <xs:element name="DatabaseProfile">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileDefinition</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="1" maxOccurs="1">
+                <xs:element name="ProfileProperties" type="DatabaseProperties"/>
+                <xs:element name="DataElements" type="DatabaseElements"/>
+                 <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="tagLists"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+            </xs:sequence>
+            <xs:attribute name="strict" type="xs:boolean" default="false"/>
+            <xs:attribute name="version" type="xs:int" default="1" />
+        </xs:complexType>
+    </xs:element>
+        
+    <xs:complexType name="DatabaseProperties">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="DatabaseGeneralInfo" type="DatabaseGeneralInfo"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseGeneralInfo">
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="executionType" type="DBExecutionType"/>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseElements">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:group ref="DBStatementList" minOccurs="1" maxOccurs="unbounded"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="DBStatement">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="DBFields" type="DBFields" maxOccurs="unbounded" />
+            <xs:element name="DBParameters" type="DBParameters"/>
+            <xs:element name="DBConditions" type="DBConditions"/>
+            <xs:element name="sql" type="xs:string"/>
+            <xs:group ref="DBStatementList" minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="statementType" type="DBStatementType"/>
+        <xs:attribute name="dataType" type="DBDataType"/>
+        <xs:attribute name="tableName" type="xs:string"/>
+        <xs:attribute name="sqlScript" type="xs:string"/>
+        <xs:attribute name="storedProcedure" type="xs:string"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="DBFields">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="fields"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="DatabaseElement" type="DatabaseElement"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+        <xs:attribute name="type" type="DBFieldsType" default="result_set"/>
+        <xs:attribute name="referenceKey" type="xs:int" use="optional" /><!-- Should reference the DBParameters when type is PARAMETER -->
+    </xs:complexType>
+
+    <xs:simpleType name="DBFieldsType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="result_set" />
+            <xs:enumeration value="parameter" />
+        </xs:restriction>
+    </xs:simpleType>
+    
+    <xs:complexType name="DBParameters">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="parameters"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="DBParameter" type="DBParameter"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+    </xs:complexType>
+    
+    <xs:complexType name="DBConditions">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="conditions"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="DBCondition" type="DBCondition"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:group name="DBStatementList">
+        <xs:sequence>
+            <xs:element name="DBStatement" type="DBStatement"/>
+        </xs:sequence>
+    </xs:group>
+
+
+    <xs:complexType name="DatabaseDataFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDataFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="ProfileBooleanFormat" type="DatabaseProfileBooleanFormat"/>
+            <xs:element name="ProfileCharacterFormat" type="DatabaseProfileCharacterFormat"/>
+            <xs:element name="ProfileNumberFormat" type="DatabaseProfileNumberFormat"/>
+            <xs:element name="ProfileDateFormat" type="DatabaseProfileDateFormat"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="DatabaseProfileBooleanFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileBooleanFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseProfileCharacterFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileCharacterFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseProfileNumberFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNumberFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="numberFormat" default="#" type="xs:string"/>
+        <xs:attribute name="impliedDecimal" default="0" type="xs:int"/>
+        <xs:attribute name="signedField" default="false" type="xs:boolean"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="DatabaseProfileDateFormat">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileDateFormat</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:attribute name="dateFormat" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="DBNode">
+        <xs:annotation>
+			<xs:appinfo>
+				<ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+			</xs:appinfo>
+		</xs:annotation>
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="DataFormat" type="DatabaseDataFormat"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+        <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+        <xs:attribute name="dataType" default="character" type="DBDataType"/>
+    </xs:complexType>
+
+    <xs:complexType name="DatabaseElement">
+        <xs:complexContent>
+            <xs:extension base="DBNode">
+              <xs:attribute name="mandatory" type="xs:boolean" default="false"/>
+              <xs:attribute name="enforceUnique" type="xs:boolean"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:complexType name="DBParameter">
+        <xs:complexContent>
+            <xs:extension base="DBNode">
+                <xs:attribute name="mode" type="DBParameterMode" default="in" />
+                <xs:attribute name="type" type="DBParameterType" default="value" />
+                <xs:attribute name="referenceKey" type="xs:int" use="optional" /><!-- Should reference the DBFields when parameter type is OUT or IN_OUT -->
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="DBParameterMode">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="return" />
+            <xs:enumeration value="in" />
+            <xs:enumeration value="out" />
+            <xs:enumeration value="in_out" />
+            <xs:enumeration value="unknown" />
+        </xs:restriction>
+    </xs:simpleType>
+ 
+    <xs:simpleType name="DBParameterType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="value"/>
+            <xs:enumeration value="cursor"/>
+        </xs:restriction>
+    </xs:simpleType>
+ 
+    <xs:complexType name="DBCondition">
+        <xs:complexContent>
+            <xs:extension base="DBNode">
+              <xs:attribute name="conditionOperator" default="equal" type="DBConditionOperatorType"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+
+    <xs:simpleType name="DBExecutionType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="dbread"/>
+            <xs:enumeration value="dbwrite"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="DBStatementType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="select"/>
+            <xs:enumeration value="spread"/>
+            <xs:enumeration value="standardinsertupdatedelete"/>
+            <xs:enumeration value="dynamicinsert"/>
+            <xs:enumeration value="spwrite"/>
+            <xs:enumeration value="dynamicupdate"/>
+            <xs:enumeration value="dynamicdelete"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="DBConditionOperatorType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="equal"/>
+            <xs:enumeration value="notequal"/>
+            <xs:enumeration value="greaterthan"/>
+            <xs:enumeration value="greaterthanequal"/>
+            <xs:enumeration value="lessthan"/>
+            <xs:enumeration value="lessthanequal"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="DBDataType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="character"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="datetime"/>
+            <xs:enumeration value="clob"/>
+            <xs:enumeration value="blob"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+</xs:schema>

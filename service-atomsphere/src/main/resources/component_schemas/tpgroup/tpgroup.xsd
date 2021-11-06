@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+    <xs:element name="TradingPartnerGroup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="TradingPartnerEntry" type="TradingPartnerEntry" minOccurs="0" maxOccurs="unbounded"/>
+                <xs:element name="TradingPartnerRouting" type="TradingPartnerRoutes" minOccurs="0" maxOccurs="1"/>
+            </xs:sequence>
+            <xs:attribute name="standard" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="TradingPartnerEntry">
+        <xs:attribute name="partnerId" type="xs:string"/>
+        <xs:attribute name="keyIndex" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:complexType name="TradingPartnerRoutes">
+        <xs:sequence>
+            <xs:element name="TradingPartnerRouteEntry" type="TradingPartnerRouteEntry" minOccurs="0"
+                        maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="defaultProcessId" type="xs:string"/>
+        <xs:attribute name="defaultProcessName" type="xs:string"/>
+        <xs:attribute name="basis" type="RouteBasis" default="none"/>
+    </xs:complexType>
+
+    <xs:complexType name="TradingPartnerRouteEntry">
+        <xs:attribute name="partnerId" type="xs:string"/>
+        <xs:attribute name="standard" type="xs:string"/>
+        <xs:attribute name="documentType" type="xs:string"/>
+        <xs:attribute name="processId" type="xs:string"/>
+        <xs:attribute name="processName" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="RouteBasis">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass name="RouteBasis"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="NONE"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="partner">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="PARTNER"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+            <xs:enumeration value="document">
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:typesafeEnumMember name="DOCUMENT"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:enumeration>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

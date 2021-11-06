@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2007
+   Boomi, Inc.
+   Mitchell Stewart
+   Mar 26, 2007
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+
+    <xs:element name="Function">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="Inputs" type="FunctionInputs"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Outputs" type="FunctionOutputs"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Steps" type="FunctionSteps"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Mappings" type="FunctionMappings"/>
+            </xs:sequence>
+            <xs:attribute name="cacheOption" type="FunctionCacheOption" default="none"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="FunctionCacheOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none"/>
+            <xs:enumeration value="document"/>
+            <xs:enumeration value="map"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="FunctionSteps">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element ref="FunctionStep"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunctionConfiguration">
+        <xs:sequence>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="xmlData"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Base Function information -->
+    <xs:element name="FunctionStep">
+        <xs:complexType>
+
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="Inputs" type="FunctionInputs"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Outputs" type="FunctionOutputs"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Configuration" type="FunctionConfiguration"/>
+            </xs:sequence>
+
+            <xs:attribute name="key" type="xs:int"/>
+            <xs:attribute name="position" type="xs:int"/>
+            <xs:attribute name="id" type="xs:string"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="type" type="xs:string"/>
+            <xs:attribute name="x" type="xs:float"/>
+            <xs:attribute name="y" type="xs:float"/>
+            <xs:attribute name="category" type="xs:string"/>
+            <xs:attribute name="cacheOption" type="FunctionCacheOption" default="none"/>
+            <xs:attribute name="sumEnabled" type="xs:boolean" default="false"/>
+            <xs:attribute name="cacheEnabled" type="xs:boolean" default="false"/>
+            <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="FunctionInputs">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="FunctionParameter"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunctionOutputs">
+        <xs:sequence>
+            <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="FunctionParameter"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FunctionParameter">
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="default" type="xs:string"/>
+        <xs:attribute name="isReset" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:element name="StringConcat">
+        <xs:complexType>
+            <xs:attribute name="fixedLength" type="xs:int"/>
+            <xs:attribute name="delimiter" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+    
+    <xs:element name="StringSplit">
+        <xs:complexType>
+            <xs:attribute name="splitLength" type="xs:int"/>
+            <xs:attribute name="delimiter" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="SqlLookup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="SqlToExecute" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="SqlParameter"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="SqlParameter"/>
+            </xs:sequence>
+            <xs:attribute name="connection" type="xs:string"/>
+            <xs:attribute name="storedProcedureName" type="xs:string"/>
+            <xs:attribute name="executionType" type="SqlExecutionType" default="sql"/>
+            <xs:attribute name="spResultOption" type="StoredProcedureResultOption" default="resultset"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:element name="SimpleLookup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="Input" type="CrossRefParameter"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="Output" type="CrossRefParameter"/>
+                <xs:element minOccurs="1" maxOccurs="1" name="CrossRefTableObj" type="CrossRefTableObj"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="CrossRefTableObj">
+        <xs:sequence>
+            <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="CrossRefTable"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:simpleType name="SqlExecutionType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="sql"/>
+            <xs:enumeration value="storedproc"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="StoredProcedureResultOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="resultset"/>
+            <xs:enumeration value="paramoutputs"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="SqlParameter">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="dataType" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:element name="CrossRefLookup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="CrossRefParameter"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="CrossRefParameter"/>
+            </xs:sequence>
+            <xs:attribute name="crossRefTableId" type="xs:string"/>
+            <!-- for backwards compatibility BOD-2674 -->
+            <xs:attribute name="skipLookupIfNoInputs" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DocumentProperty">
+        <xs:complexType>
+            <xs:attribute name="propertyId" type="xs:string"/>
+            <xs:attribute name="propertyName" type="xs:string"/>
+            <xs:attribute name="defaultValue" type="xs:string"/>
+            <xs:attribute name="persist" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="CrossRefParameter">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="refId" type="xs:int"/>
+    </xs:complexType>
+
+    <xs:element name="Scripting">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="ScriptToExecute" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="ScriptParameter"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="ScriptParameter"/>
+            </xs:sequence>
+            <xs:attribute name="language" type="xs:string"/>
+            <xs:attribute name="componentId" type="xs:string"/>
+            <xs:attribute name="useComponent" type="xs:boolean" default="false"/>
+            <xs:attribute name="preserveOrder" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="ScriptParameter">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="dataType" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:element name="ConnectorCall">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="ConnectorParameter"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="ConnectorParameter"/>
+            </xs:sequence>
+            <xs:attribute name="connectorType" type="xs:string"/>
+            <xs:attribute name="actionType" type="xs:string"/>
+            <xs:attribute name="connectionId" type="xs:string"/>
+            <xs:attribute name="operationId" type="xs:string"/>
+            <xs:attribute name="output-profile" type="xs:string"/>
+            <xs:attribute name="parameter-profile" type="xs:string"/>
+            <xs:attribute name="enforceSingleResult" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+
+	<xs:complexType name="ConnectorParameter">
+		<xs:complexContent>
+			<xs:extension base="ProfileParameter">
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+    
+    <xs:complexType name="ProfileParameter">
+    	<xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="tagListKey" type="xs:int" default="0"/>
+    </xs:complexType>
+
+
+    <xs:element name="TradingPartnerSet">
+        <xs:complexType>
+            <xs:attribute name="standard" type="TradingPartnerStandard" default="x12"/>
+            <xs:attribute name="inputType" type="TradingPartnerInputType" default="identifier"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:simpleType name="TradingPartnerStandard">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="x12"/>
+            <xs:enumeration value="edifact"/>
+            <xs:enumeration value="hl7"/>
+            <xs:enumeration value="edicustom"/>
+            <xs:enumeration value="rosettanet"/>
+            <xs:enumeration value="tradacoms"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="TradingPartnerInputType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="identifier"/>
+            <xs:enumeration value="controlInformation"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="FunctionMappings">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Mapping" type="FunctionMapping"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:element name="DocumentCacheLookup">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Input" type="DocumentCacheKeyInput"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Output" type="ProfileParameter"/>
+            </xs:sequence>
+            <xs:attribute name="docCache" type="xs:string"/>
+            <xs:attribute name="cacheIndex" type="xs:int"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="DocumentCacheKeyInput">
+        <xs:attribute name="index" type="xs:int"/>
+        <xs:attribute name="keyId" type="xs:int"/>
+        <xs:attribute name="name" type="xs:string"/>
+    </xs:complexType>
+
+
+
+    <xs:complexType name="FunctionMapping">
+        <xs:attribute name="fromType" type="FunctionMappingType"/>
+        <xs:attribute name="fromKey" type="xs:int"/>
+        <xs:attribute name="fromTagListKey" type="xs:string"/>
+        <xs:attribute name="fromKeyPath" type="xs:string"/>
+        <xs:attribute name="fromNamePath" type="xs:string"/>
+        <xs:attribute name="fromFunction" type="xs:string"/>
+
+        <xs:attribute name="toType" type="FunctionMappingType"/>
+        <xs:attribute name="toKey" type="xs:int"/>
+        <xs:attribute name="toTagListKey" type="xs:string"/>
+        <xs:attribute name="toKeyPath" type="xs:string"/>
+        <xs:attribute name="toNamePath" type="xs:string"/>
+        <xs:attribute name="toFunction" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:simpleType name="FunctionMappingType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="floater"/>
+            <xs:enumeration value="function"/>
+            <xs:enumeration value="profile"/>
+        </xs:restriction>
+    </xs:simpleType>    
+
+    <xs:element name="SequentialValue">
+        <xs:complexType>
+        	<xs:attribute name="keyname" type="xs:string"/>
+            <xs:attribute name="keyfixtolength" type="xs:int"/>
+            <xs:attribute name="batchSize" type="xs:int" default="1"/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="DefinedProcessProperty">
+        <xs:complexType>
+            <xs:attribute name="componentName" type="xs:string"/>
+            <xs:attribute name="componentId" type="xs:string"/>
+            <xs:attribute name="propertyName" type="xs:string"/>
+            <xs:attribute name="propertyKey" type="xs:string"/>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

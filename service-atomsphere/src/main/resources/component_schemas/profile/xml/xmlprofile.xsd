@@ -1,0 +1,513 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           xmlns:ih="http://jaxb2-commons.dev.java.net/basic/inheritance"
+           jxb:version="2.0"
+           jxb:extensionBindingPrefixes="ih">
+
+    
+    
+
+    <xs:element name="XMLProfile">
+        <xs:complexType> 
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileDefinition</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="1" maxOccurs="1">
+                <xs:element name="ProfileProperties" type="XMLProperties"/>
+                <xs:element name="DataElements" type="XMLElements"/>
+                <xs:element name="Namespaces" type="XMLNamespaces"/>
+               <xs:any>
+                <xs:annotation>
+                    <xs:appinfo>
+                        <jxb:property name="tagLists"/>
+                    </xs:appinfo>
+                </xs:annotation>
+            </xs:any>
+            </xs:sequence>
+            <xs:attribute name="modelVersion" type="xs:int" default="1"/>
+            <xs:attribute name="strict" type="xs:boolean" default="false"/>
+            <xs:attribute name="showWarning" type="xs:boolean" default="true"/>
+            <xs:attribute name="flavor" type="XMLFlavorType" default="basic"/>
+            <xs:attribute name="profileState" type="XMLProfileState" default="normal"/>
+            <xs:attribute name="warningInfo" type="xs:string" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="XmlExactTargetResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element ref="XMLProfile" minOccurs="1" maxOccurs="1">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="xmlProfile"/>
+                            <jxb:serializable/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:element>
+            </xs:sequence>
+            <xs:attribute name="key" type="xs:int" />
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="XMLProperties">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="XMLGeneralInfo" type="XMLGeneralInfo"/>
+            <xs:element name="XMLOptions" type="XMLOptions"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="XMLGeneralInfo">
+        <xs:attribute name="description" type="xs:string"/>
+        <xs:attribute name="standard" type="XMLStandardType"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLOptions">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element name="XMLFlavor" type="XMLFlavor"/>
+        </xs:sequence>
+        <xs:attribute name="encoding" type="XMLEncodingType" default="utf8"/>
+        <xs:attribute name="validationOption" type="XMLValidationOption"/>
+        <xs:attribute name="validationPath" type="xs:string"/>
+        <xs:attribute name="dtdSystemId" type="xs:string"/>
+        <xs:attribute name="dtdPublicId" type="xs:string"/>
+        <xs:attribute name="respectMinOccurs" type="xs:boolean" default="false"/>
+        <xs:attribute name="respectMinOccursAlways" type="xs:boolean" default="false"/>
+        <xs:attribute name="parseRespectMaxOccurs" type="xs:boolean" default="false"/>
+        <xs:attribute name="implicitElementOrdering" type="xs:boolean" default="false"/>
+    </xs:complexType>
+
+    <xs:complexType name="XMLFlavor">
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="RosettaNetFlavor" type="RosettaNetFlavor"/>
+        </xs:choice>
+    </xs:complexType>
+
+    <xs:complexType name="RosettaNetFlavor">
+        <xs:attribute name="pipCode" type="xs:string"/>
+        <xs:attribute name="globalProcessCode" type="xs:string"/>
+        <xs:attribute name="version" type="xs:string"/>
+        <xs:attribute name="globalBusinessActionCode" type="xs:string"/>
+        <xs:attribute name="globalDocumentFunctionCode" type="xs:string"/>
+        <xs:attribute name="fromGlobalPartnerRoleClassificationCode" type="xs:string"/>
+        <xs:attribute name="toGlobalPartnerRoleClassificationCode" type="xs:string"/>
+        <xs:attribute name="fromGlobalBusinessServiceCode" type="xs:string"/>
+        <xs:attribute name="toGlobalBusinessServiceCode" type="xs:string"/>
+        <xs:attribute name="businessActivityIdentifier" type="xs:string"/>
+        <xs:attribute name="schemaType" type="xs:string"/>
+        <xs:attribute name="docTypeName" type="xs:string"/>
+        <xs:attribute name="docTypeSystemId" type="xs:string"/>
+        <xs:attribute name="docTypeNamespace" type="xs:string"/>
+    </xs:complexType>
+
+    <xs:complexType name="XMLElements">
+        <xs:sequence minOccurs="1" maxOccurs="1">
+            <xs:element ref="XMLElement"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:group name="XMLNode">
+        <xs:choice>
+            <xs:element ref="XMLElement" />
+            <xs:element ref="XMLAttribute"/>
+        </xs:choice>
+    </xs:group>
+
+
+    <xs:element name="XMLElement">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="DataFormat" type="XMLDataFormat"/>
+                <xs:element name="XMLNSDeclList" type="XMLNSDeclList"/>
+                <xs:element name="XMLConstraintList" type="XMLConstraintList"/>
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="QualifierList"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+
+                <xs:group ref="XMLNode" minOccurs="0" maxOccurs="unbounded">
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="nodes"/>
+                            <jxb:serializable/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:group>
+            </xs:sequence>
+            <xs:attribute name="key" type="xs:int"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="useNamespace" type="xs:int"/>
+            <xs:attribute name="dataType" type="XMLDataType"/>
+            <xs:attribute name="typeKey" type="xs:int" default="-1"/>
+            <xs:attribute name="typeName" type="xs:string"/>
+            <xs:attribute name="typeNamespace" type="xs:string"/>
+            <xs:attribute name="typeExpanded" type="xs:boolean" default="true"/>            
+            <xs:attribute name="minOccurs" type="xs:int"/>
+            <xs:attribute name="maxOccurs" type="xs:int"/>
+            <xs:attribute name="autoGenType" type="XMLAutoGenOption"/>
+            <xs:attribute name="autoGenElement" type="xs:int"/>
+            <xs:attribute name="comments" type="xs:string"/>
+            <xs:attribute name="isRoot" type="xs:boolean"/>
+            <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+            <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+            <xs:attribute name="validateData" type="xs:boolean" default="false"/>
+            <xs:attribute name="loopingOption" type="XMLLoopingOption" default="unique"/>
+            <xs:attribute name="minLength" type="xs:int"/>
+            <xs:attribute name="maxLength" type="xs:int"/>
+
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="XMLAttribute">
+        <xs:complexType>
+            <xs:annotation>
+                <xs:appinfo>
+                    <ih:implements>com.boomi.model.profile.common.ProfileNode</ih:implements>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:sequence minOccurs="0" maxOccurs="1">
+                <xs:element name="DataFormat" type="XMLDataFormat"/>
+                <xs:any>
+                    <xs:annotation>
+                        <xs:appinfo>
+                            <jxb:property name="QualifierList"/>
+                        </xs:appinfo>
+                    </xs:annotation>
+                </xs:any>
+            </xs:sequence>
+            <xs:attribute name="key" type="xs:int"/>
+            <xs:attribute name="name" type="xs:string"/>
+            <xs:attribute name="useNamespace" type="xs:int"/>
+            <xs:attribute name="dataType" type="XMLDataType"/>
+            <xs:attribute name="autoGenType" type="XMLAutoGenOption"/>
+            <xs:attribute name="autoGenElement" type="xs:int"/>
+            <xs:attribute name="comments" type="xs:string"/>
+            <xs:attribute name="isNode" type="xs:boolean" default="true"/>
+            <xs:attribute name="isMappable" type="xs:boolean" default="true"/>
+            <xs:attribute name="validateData" type="xs:boolean" default="false"/>
+            <xs:attribute name="minLength" type="xs:int"/>
+            <xs:attribute name="maxLength" type="xs:int"/>
+            <xs:attribute name="required" type="xs:boolean" default="false"/>
+        </xs:complexType>
+    </xs:element>
+
+
+    <xs:complexType name="XMLDataFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileDataFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="ProfileBooleanFormat" type="XMLProfileBooleanFormat"/>
+            <xs:element name="ProfileCharacterFormat" type="XMLProfileCharacterFormat"/>
+            <xs:element name="ProfileNumberFormat" type="XMLProfileNumberFormat"/>
+            <xs:element name="ProfileDateFormat" type="XMLProfileDateFormat"/>
+        </xs:choice>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLProfileBooleanFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileBooleanFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="XMLProfileCharacterFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileCharacterFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+    </xs:complexType>
+
+    <xs:complexType name="XMLProfileNumberFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileNumberFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="numberFormat" default="#" type="xs:string"/>
+        <xs:attribute name="impliedDecimal" default="0" type="xs:int"/>
+        <xs:attribute name="signedField" default="false" type="xs:boolean"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLProfileDateFormat">
+        <xs:annotation>
+            <xs:appinfo>
+                <ih:implements>com.boomi.model.profile.common.ProfileDateFormat</ih:implements>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:attribute name="dateFormat" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLNSDeclaration">
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="defaultNamespace" type="xs:boolean"/>
+        <xs:attribute name="isNode" type="xs:boolean"/>
+        <xs:attribute name="isMappable" type="xs:boolean"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLNamespaces">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="namespaces"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="XMLNamespace" type="XMLNamespace"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLNamespace">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element name="Types" type="XMLTypes"/>
+        </xs:sequence>
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="prefix" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="comments" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLTypes">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="types"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Type" type="XMLType"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLType">
+        <xs:sequence minOccurs="0" maxOccurs="1">
+            <xs:element ref="XMLElement"/>
+        </xs:sequence>
+        <xs:attribute name="typeKey" type="xs:int"/>
+        <xs:attribute name="declarationClass" type="XMLDeclarationClass"/>
+        <xs:attribute name="anonymous" type="xs:boolean" default="false"/>        
+    </xs:complexType>
+    
+ 
+    
+
+    <xs:complexType name="XMLNSDeclList">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="nsDeclarations"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="XMLNSDeclaration" type="XMLNSDeclaration"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="XMLConstraintList">
+        <xs:sequence minOccurs="1" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="constraints"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="XMLConstraintField" type="XMLConstraintField"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="XMLConstraintField">
+        <xs:attribute name="constraintKey" type="xs:int"/>
+        <xs:attribute name="constraintType" type="ConstraintTypeValue"/>
+        <xs:attribute name="constraintValue" type="xs:string"/>
+        <xs:attribute name="constraintElementName" type="xs:string"/>
+    </xs:complexType>
+
+
+    <xs:simpleType name="ConstraintTypeValue">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="value"/>
+            <xs:enumeration value="occurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="XMLDataType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="character"/>
+            <xs:enumeration value="number"/>
+            <xs:enumeration value="datetime"/>
+            <xs:enumeration value="signed"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="XMLEncodingType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="none"/>
+            <xs:enumeration value="iso88591"/>
+            <xs:enumeration value="usascii"/>
+            <xs:enumeration value="utf16"/>
+            <xs:enumeration value="utf8"/>
+            <xs:enumeration value="blank"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="XMLStandardType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="custom"/>
+            <xs:enumeration value="iconnect"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="XMLValidationOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="donotvalidate"/>
+            <xs:enumeration value="validatedtd"/>
+            <xs:enumeration value="validatepath"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="XMLRepeatTypeOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="repeatbyvalue"/>
+            <xs:enumeration value="repeatbydescendantvalue"/>
+            <xs:enumeration value="repeatbyoccurrence"/>
+            <xs:enumeration value="repeatbydescendantoccurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="XMLAutoGenOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="na"/>
+            <xs:enumeration value="sumlineitems"/>
+            <xs:enumeration value="sumtotalelement"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="XMLLoopingOption">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false">
+                </typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="unique"/>
+            <xs:enumeration value="occurrence"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:simpleType name="XMLDeclarationClass">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="COMPLEX_TYPE" value="cType"/>
+                    <jxb:typesafeEnumMember name="ELEM_REF" value="eRef"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="cType"/>
+            <xs:enumeration value="eRef"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+   <xs:simpleType name="XMLFlavorType">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="BASIC" value="basic"/>
+                    <jxb:typesafeEnumMember name="ROSETTANET" value="rosettanet"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="basic"/>
+            <xs:enumeration value="rosettanet"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="XMLProfileState">
+        <xs:annotation>
+            <xs:appinfo>
+                <jxb:typesafeEnumClass>
+                    <jxb:typesafeEnumMember name="NORMAL" value="normal"/>
+                    <jxb:typesafeEnumMember name="PARTIAL_NODES" value="partial_nodes"/>
+                    <jxb:typesafeEnumMember name="PARTIAL_TYPES" value="partial_types"/>
+                    <jxb:typesafeEnumMember name="PARTIAL_RECURSION" value="partial_recursion"/>
+                </jxb:typesafeEnumClass>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="normal"/>
+            <xs:enumeration value="partial_nodes"/>
+            <xs:enumeration value="partial_types"/>
+            <xs:enumeration value="partial_recursion"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>
+

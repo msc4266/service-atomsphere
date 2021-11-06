@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!--
+   Copyright (c) 2007
+   Boomi, Inc.
+   Mitchell Stewart
+   Mar 26, 2007
+-->
+<xs:schema version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+           jxb:version="2.0">
+
+    <xs:element name="Map">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="1" maxOccurs="1" name="Mappings" type="Mappings"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="Functions" type="Functions"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="Defaults" type="Defaults"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="DocumentCacheJoins" type="DocumentCacheJoins"/>
+            </xs:sequence>
+
+            <xs:attribute name="fromProfile" type="xs:string"/>
+            <xs:attribute name="toProfile" type="xs:string"/>
+
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="Functions">
+        <xs:sequence>
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:any minOccurs="0" maxOccurs="unbounded"/>
+        </xs:sequence>
+        <xs:attribute name="optimizeExecutionOrder" type="xs:boolean"/>
+    </xs:complexType>
+
+    <xs:complexType name="Defaults">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Default" type="Default"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="Default">
+        <xs:attribute name="toKey" type="xs:int"/>
+        <xs:attribute name="toTagListKey" type="xs:int" default="0"/>
+        <xs:attribute name="value"/>
+    </xs:complexType>
+
+    <xs:complexType name="Mappings">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="Mapping" type="Mapping"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="Mapping">
+        <xs:attribute name="fromType" type="MappingType"/>
+        <xs:attribute name="fromKey" type="xs:int"/>
+        <xs:attribute name="fromTagListKey" type="xs:string"/>
+        <xs:attribute name="fromKeyPath" type="xs:string"/>
+        <xs:attribute name="fromNamePath" type="xs:string"/>
+        <xs:attribute name="fromFunction" type="xs:string"/>
+        <xs:attribute name="fromCacheJoinKey" type="xs:int" default="0"/>
+
+        <xs:attribute name="toType" type="MappingType"/>
+        <xs:attribute name="toKey" type="xs:int"/>
+        <xs:attribute name="toTagListKey" type="xs:string"/>
+        <xs:attribute name="toKeyPath" type="xs:string"/>
+        <xs:attribute name="toNamePath" type="xs:string"/>
+        <xs:attribute name="toFunction" type="xs:string"/>
+        <xs:attribute name="enabled" type="xs:boolean" default="true"/>
+    </xs:complexType>
+
+    <xs:simpleType name="MappingType">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="floater"/>
+            <xs:enumeration value="function"/>
+            <xs:enumeration value="profile"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+
+    <xs:complexType name="DocumentCacheJoins">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="DocumentCacheJoin" type="DocumentCacheJoin"/>
+        </xs:sequence>
+    </xs:complexType>
+
+
+    <xs:complexType name="DocumentCacheJoin">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="srcParentKey" type="KeyReference"/>
+            <xs:element minOccurs="0" maxOccurs="1" name="CacheKeyJoinValues" type="CacheKeyJoinValues"/>
+
+        </xs:sequence>
+        <xs:attribute name="docCacheJoinId" type="xs:int"/>
+        <xs:attribute name="docCache" type="xs:string"/>
+        <xs:attribute name="cacheIndex" type="xs:int"/>
+
+    </xs:complexType>
+
+    <xs:complexType name="KeyReference">
+        <xs:attribute name="key" type="xs:int"/>
+        <xs:attribute name="tagListKey" type="xs:int" default="0"/>
+    </xs:complexType>
+
+    <xs:complexType name="CacheKeyJoinValues">
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:annotation>
+                <xs:appinfo>
+                    <jxb:property name="list"/>
+                </xs:appinfo>
+            </xs:annotation>
+            <xs:element name="CacheKeyJoinValue" type="CacheKeyJoinValue"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="CacheKeyJoinValue">
+        <xs:sequence>
+            <xs:element minOccurs="1" maxOccurs="1" name="srcLinkKey" type="KeyReference"/>
+        </xs:sequence>
+        <xs:attribute name="cacheKeyId" type="xs:int"/>
+        <xs:attribute name="cacheKeyName" type="xs:string"/>
+    </xs:complexType>
+
+</xs:schema>

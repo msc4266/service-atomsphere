@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="2.0">
+    <xs:element name="CustomLibrary">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element minOccurs="0" maxOccurs="1" name="Type" type="LibraryDeploymentType"/>
+                <xs:element minOccurs="0" maxOccurs="1" name="connectorType" type="xs:string"/>
+                <xs:element minOccurs="0" maxOccurs="unbounded" name="Files" type="CustomJar"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="CustomJar">
+        <xs:attribute name="guid" type="xs:string"/>
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="size" type="xs:long"/>
+        <xs:attribute name="md5" type="xs:string"/>
+        <xs:attribute name="checksum" type="xs:string"/>
+        <xs:attribute name="checksumType" type="ChecksumAlgorithm"/>
+    </xs:complexType>
+
+    <xs:simpleType name="LibraryDeploymentType">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="general"/>
+            <xs:enumeration value="scripting"/>
+            <xs:enumeration value="connector"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="ChecksumAlgorithm">
+        <xs:annotation>
+            <xs:appinfo>
+                <typesafeEnumClass map="false"/>
+            </xs:appinfo>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="MD5"/>
+            <xs:enumeration value="SHA-256"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

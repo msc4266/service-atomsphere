@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:jxb="http://java.sun.com/xml/ns/jaxb" jxb:version="1.0">
+    <xs:element name="TradingPartnerOrganization">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="OrganizationContactInfo" type="OrganizationContactInfo" minOccurs="1" maxOccurs="1"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="OrganizationContactInfo">
+        <xs:attribute name="name" type="xs:string"/>
+        <xs:attribute name="address1" type="xs:string"/>
+        <xs:attribute name="address2" type="xs:string"/>
+        <xs:attribute name="city" type="xs:string"/>
+        <xs:attribute name="state" type="xs:string"/>
+        <xs:attribute name="postalcode" type="xs:string"/>
+        <xs:attribute name="country" type="xs:string"/>
+        <xs:attribute name="contactname" type="xs:string"/>
+        <xs:attribute name="email" type="xs:string"/>
+        <xs:attribute name="phone" type="xs:string"/>
+        <xs:attribute name="fax" type="xs:string"/>
+        <xs:attribute name="url" type="xs:string"/>
+    </xs:complexType>
+</xs:schema>
