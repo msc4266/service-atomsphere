@@ -85,46 +85,6 @@ public class ServiceMetadata {
 		return false;
 	}
 
-	public boolean supportsCreate(String entityName)
-	{
-		JSONObject entry = getObjectListEntry(entityName);
-		if (entry==null)
-			return false;
-		return entry.getBoolean("supportsCreate");
-	}
-	
-	public boolean supportsUpdate(String entityName)
-	{
-		JSONObject entry = getObjectListEntry(entityName);
-		if (entry==null)
-			return false;
-		return entry.getBoolean("supportsUpdate");
-	}
-	
-	public boolean supportsDelete(String entityName)
-	{
-		JSONObject entry = getObjectListEntry(entityName);
-		if (entry==null)
-			return false;
-		return entry.getBoolean("supportsDelete");
-	}
-	
-	public boolean supportsQuery(String entityName)
-	{
-		JSONObject entry = getObjectListEntry(entityName);
-		if (entry==null)
-			return false;
-		return entry.getBoolean("supportsQuery");
-	}
-	
-	public boolean supportsGet(String entityName)
-	{
-		JSONObject entry = getObjectListEntry(entityName);
-		if (entry==null)
-			return false;
-		return entry.getBoolean("supportsGet");
-	}
-	
 	public String getPrimaryKey(String entityName)
 	{
 		JSONObject entry = getObjectListEntry(entityName);

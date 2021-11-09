@@ -31,7 +31,6 @@ import java.util.logging.Logger;
 
 public class Database implements RawDatabase<ServiceConfiguration> {
     private ServiceMetadata serviceMetadata;
-    private boolean doWhitelistOperationSupportedCheck=true;
     private Logger logger;
     private AuthenticatedWho user;
 
@@ -44,8 +43,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 
     @Override
     public MObject create(ServiceConfiguration configuration, MObject object) {
-    	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsCreate(object.getDeveloperName()))
-            throw new RuntimeException("Create not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
  		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", "", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
 		return jsonToMObject(response);
@@ -59,8 +56,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     @Override
     public MObject find(ServiceConfiguration configuration, ObjectDataType objectDataType, String id) {
     	//https://api.boomi.com/api/rest/v1/boomi_davehock-T9DOG4/Process/095b2e9f-71ab-43aa-ae4b-9d521b61e0f4
-    	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsGet(objectDataType.getDeveloperName()))
-            throw new RuntimeException("Get not supported for " + objectDataType.getDeveloperName());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "GET", id, null, serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
 		return jsonToMObject(response);
     }
@@ -69,8 +64,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     public List<MObject> findAll(ServiceConfiguration configuration, ObjectDataType objectDataType, ListFilter filter) {
     	//https://api.boomi.com/api/rest/v1/boomi_davehock-T9DOG4/Process/query
     	//TODO how can we maintain the queryToken for QueryMore to go beyond 100 items in first page?
-    	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsQuery(objectDataType.getDeveloperName()))
-            throw new RuntimeException("Query not supported for " + objectDataType.getDeveloperName());
 		List<MObject> mObjects = Lists.newArrayList();
 		
 		JSONObject queryBody = new JSONObject();
@@ -266,8 +259,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 
     @Override
     public MObject update(ServiceConfiguration configuration, MObject object) {
-    	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsUpdate(object.getDeveloperName()))
-            throw new RuntimeException("Update not supported for " + object.getDeveloperName());
     	JSONObject body = mObjectToJson(object, object.getDeveloperName());
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
 		return jsonToMObject(response);
@@ -280,8 +271,6 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     
     @Override
     public void delete(ServiceConfiguration configuration, MObject object) {
-    	if (this.doWhitelistOperationSupportedCheck && !this.serviceMetadata.supportsDelete(object.getDeveloperName()))
-            throw new RuntimeException("Delete not supported for " + object.getDeveloperName());
     	AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "DELETE", object.getExternalId(), null, serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
     }
 
@@ -495,13 +484,5 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 			}			
 		}
 		return arguments;
-	}
-
-	public boolean isDoWhitelistOperationSupportedCheck() {
-		return doWhitelistOperationSupportedCheck;
-	}
-
-	public void setDoWhitelistOperationSupportedCheck(boolean doWhitelistOperationSupportedCheck) {
-		this.doWhitelistOperationSupportedCheck = doWhitelistOperationSupportedCheck;
 	}
 }

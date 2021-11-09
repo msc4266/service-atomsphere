@@ -39,7 +39,6 @@ public class DatabaseTest {
 		init();
 		ServiceMetadata serviceMetadata = new ServiceMetadata();
 		Database database = new Database(user);
-		database.setDoWhitelistOperationSupportedCheck(true); //if false we will let all operations be attempted irregardless of the whitelist supportsXXX entries in order to test whitelists
 		List<TypeElement> typeElements=serviceMetadata.getAllTypeElements();
 		for (TypeElement typeElement:typeElements)
 		{
@@ -47,7 +46,6 @@ public class DatabaseTest {
 			objectDataType.setDeveloperName(typeElement.getDeveloperName());
 			
 			//CREATE
-			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsCreate(typeElement.getDeveloperName()))
 			{
 				boolean success=true;
 				try {
@@ -60,8 +58,6 @@ public class DatabaseTest {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for create"))
 					{
-						if(serviceMetadata.supportsCreate(typeElement.getDeveloperName()))
-							System.out.println("********"+"Documentation incorrect - " + typeElement.getDeveloperName() + " does not support CREATE");
 					}
 					else System.out.println("****CREATE - "+typeElement.getDeveloperName() + " - " + e.getMessage());
 				}
@@ -73,7 +69,6 @@ public class DatabaseTest {
 				xxxx=1;
 
 			//QUERY
-			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsQuery(typeElement.getDeveloperName()))
 			{
 				ListFilter filter = new ListFilter();
 				filter.setOffset(0);
@@ -93,15 +88,12 @@ public class DatabaseTest {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for query"))
 					{
-						if(serviceMetadata.supportsQuery(typeElement.getDeveloperName()))
-							System.out.println("********"+"Documentation incorrect - " + typeElement.getDeveloperName() + " does not support QUERY");
 					}
 					else System.out.println("****QUERY - "+typeElement.getDeveloperName() + " - " + e.getMessage());
 				}
 			}
 			
 			//GET
-			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsGet(typeElement.getDeveloperName()))
 			{
 				try {
 					MObject object = database.find(configuration, objectDataType, "FAKEID");
@@ -109,15 +101,12 @@ public class DatabaseTest {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for query"))
 					{
-						if(serviceMetadata.supportsGet(typeElement.getDeveloperName()))
-							System.out.println("********"+"Documentation incorrect - " + typeElement.getDeveloperName() + " does not support GET");
 					}
 					else System.out.println("****GET - "+typeElement.getDeveloperName() + " - " + e.getMessage());
 				}
 			}
 
 			//UPDATE
-			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsUpdate(typeElement.getDeveloperName()))
 			{
 				try {
 					MObject updateObject = new MObject();
@@ -128,8 +117,6 @@ public class DatabaseTest {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for update"))
 					{
-						if(serviceMetadata.supportsUpdate(typeElement.getDeveloperName()))
-							System.out.println("********"+"Documentation incorrect - " + typeElement.getDeveloperName() + " does not support UPDATE");
 					}
 					else 
 						System.out.println("****UPDATE - "+typeElement.getDeveloperName() + " - " + e.getMessage());
@@ -137,7 +124,6 @@ public class DatabaseTest {
 			}
 
 			//DELETE
-			if (!database.isDoWhitelistOperationSupportedCheck() || serviceMetadata.supportsDelete(typeElement.getDeveloperName()))
 			{
 				try {
 					MObject deleteObject = new MObject();
@@ -148,8 +134,6 @@ public class DatabaseTest {
 					//Ignore unsupported operation errors but report documentation errors 
 					if (e.toString().contains("Unknown objectType for delete"))
 					{
-						if(serviceMetadata.supportsDelete(typeElement.getDeveloperName()))
-							System.out.println("********"+"Documentation incorrect - " + typeElement.getDeveloperName() + " does not support DELETE");
 					}
 					else System.out.println("****DELETE - "+typeElement.getDeveloperName() + " - " + e.getMessage());
 //						assertEquals(e.getMessage(),"Error code: 400 Bad Request {\"@type\":\"Error\",\"message\":\"The component (FAKEID) is not found.\"}");
