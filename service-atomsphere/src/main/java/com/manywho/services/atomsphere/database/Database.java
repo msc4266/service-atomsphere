@@ -42,8 +42,9 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     }
 
     @Override
-    public MObject create(ServiceConfiguration configuration, MObject object) {
-    	JSONObject body = mObjectToJson(object, object.getDeveloperName());
+    public MObject create(ServiceConfiguration configuration, MObject object) {    	
+    	JSONObject body = new JSONObject();
+    	mObjectToJson(body, object);
  		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", "", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
 		return jsonToMObject(response);
     }
@@ -52,11 +53,34 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     public List<MObject> create(ServiceConfiguration configuration, List<MObject> objects) {
         throw new RuntimeException("Bulk Create Not Supported");
     }
+    @Override
+    public MObject update(ServiceConfiguration configuration, MObject object) {
+    	JSONObject body = new JSONObject();
+    	mObjectToJson(body, object);
+		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
+		return jsonToMObject(response);
+    }
+
+    @Override
+    public List<MObject> update(ServiceConfiguration configuration, List<MObject> objects) {
+        throw new RuntimeException("Bulk Update Not Supported");
+    }
+    
+    @Override
+    public void delete(ServiceConfiguration configuration, MObject object) {
+    	AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "DELETE", object.getExternalId(), null, serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
+    }
+
+    @Override
+    public void delete(ServiceConfiguration configuration, List<MObject> objects) {
+        throw new RuntimeException("Bulk Delete Not Supported");
+    }
 
     @Override
     public MObject find(ServiceConfiguration configuration, ObjectDataType objectDataType, String id) {
     	//https://api.boomi.com/api/rest/v1/boomi_davehock-T9DOG4/Process/095b2e9f-71ab-43aa-ae4b-9d521b61e0f4
 		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), objectDataType.getDeveloperName(), "GET", id, null, serviceMetadata.isAPIManagerEntity(objectDataType.getDeveloperName()));
+		logger.info("FIND: " + response.toString());
 		return jsonToMObject(response);
     }
 
@@ -257,45 +281,58 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     	return null;
     }
 
-    @Override
-    public MObject update(ServiceConfiguration configuration, MObject object) {
-    	JSONObject body = mObjectToJson(object, object.getDeveloperName());
-		JSONObject response = AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "POST", object.getExternalId()+"/update", body.toString(), serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
-		return jsonToMObject(response);
-    }
-
-    @Override
-    public List<MObject> update(ServiceConfiguration configuration, List<MObject> objects) {
-        throw new RuntimeException("Bulk Update Not Supported");
+    //Build request body
+    //TODO this need to be recursive!
+    void mObjectToJson(JSONObject body, MObject mObject)
+    {
+    	if (mObject!=null && mObject.getProperties()!=null)
+    	{
+        	for (Property property : mObject.getProperties())
+        	{
+        		switch (property.getContentType())
+        		{
+        		case Boolean:
+        			if (property.getContentValue()!=null && property.getContentValue().length()>0)
+        				body.put(property.getDeveloperName(), Boolean.parseBoolean(property.getContentValue()));
+        			break;
+        		case List:
+        			List<MObject> items = property.getObjectData();
+    				JSONArray array = new JSONArray();
+        			body.put(property.getDeveloperName(), array);
+        			for (MObject item:items)
+        			{
+        				JSONObject child = new JSONObject();
+        				array.put(child);
+            			this.mObjectToJson(child, item);	
+        			}
+        			break;
+        		case Object:
+        			JSONObject child = new JSONObject();
+        			body.put(property.getDeveloperName(), child);
+        			MObject item = null;
+        			if (property.getObjectData().size()>0)
+        				item=property.getObjectData().get(0);
+        			this.mObjectToJson(child, item);
+        			break;
+        		default:
+            		//TODO Datatypes getContentValue only returns String so convert
+            		if (property.getContentValue()!=null && property.getContentValue().length()>0)
+            			body.put(property.getDeveloperName(), property.getContentValue());    			
+        		}
+        	}
+    	}
     }
     
-    @Override
-    public void delete(ServiceConfiguration configuration, MObject object) {
-    	AtomsphereAPI.executeAPI(configuration, user.getToken(), object.getDeveloperName(), "DELETE", object.getExternalId(), null, serviceMetadata.isAPIManagerEntity(object.getDeveloperName()));
-    }
-
-    @Override
-    public void delete(ServiceConfiguration configuration, List<MObject> objects) {
-        throw new RuntimeException("Bulk Delete Not Supported");
-    }
-
-    //Build request body
-    JSONObject mObjectToJson(MObject mObject, String entityName)
+    private void addNonNullMObject(List<MObject> mObjects, MObject mObject)
     {
-    	JSONObject body = new JSONObject();
-//    	body.put("@type", entityName);
-    	for (Property property : mObject.getProperties())
-    	{
-    		//TODO Datatypes getContentValue only returns String so convert
-    		if (property.getContentValue()!=null && property.getContentValue().length()>0)
-    			body.put(property.getDeveloperName(), property.getContentValue());
-    	}
-    	return body;
+    	if (mObject!=null && mObject.getProperties()!=null && mObject.getProperties().size()>0)
+    		mObjects.add(mObject);
     }
     
     void addMObjectProperties(MObject mObject, JSONObject body)
     {
     	List<Property> properties = mObject.getProperties();
+    	
        	for (String key:body.keySet())
        	{
        		if (!"@type".contentEquals(key))
@@ -312,14 +349,19 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            			TypeElement typeElement = serviceMetadata.findTypeElement(type);
            			if (typeElement!=null) //TODO Account.licensing has @type "" but has for objects inside that must be iterated
            			{
+           				logger.info("addMObjectProperties - typeElement NOT NULL");
                			property.setContentType(ContentType.Object);
                        	property.setTypeElementPropertyId(typeElement.getId());
                			MObject childMObject = jsonToMObject((JSONObject)propObject);
-               			List<MObject> list = new ArrayList<MObject>();
-               			list.add(childMObject);
-               			property.setObjectData(list);          			
-                       	properties.add(property);           			
+               			if (childMObject.getProperties().size()>0)
+               			{
+                   			List<MObject> mObjects = new ArrayList<MObject>();
+                   			mObjects.add(childMObject);
+                   			property.setObjectData(mObjects);          			
+                           	properties.add(property);           			
+               			}
            			} else {
+           				logger.info("addMObjectProperties - typeElement NULL");
            				//iterate objects and add each as a property
            				this.addMObjectProperties(mObject, propertyObject);
            			}
@@ -327,16 +369,20 @@ public class Database implements RawDatabase<ServiceConfiguration> {
            		else if (propObject instanceof JSONArray && !isNumber(value))
            		{
            			JSONArray array = (JSONArray) propObject;
-           			List<MObject> list = new ArrayList<MObject>();
+           			List<MObject> mObjects = new ArrayList<MObject>();
            			property.setContentType(ContentType.List);
            			
-           			for (int i=0; i<array.length(); i++)
+           			//TODO Value cannot be null. (Parameter 'ObjectAPI.Properties') DOES FLOW ALLOW ZERO LENGTH ARRAYS?
+           			if (array.length()>0)
            			{
-           				MObject item = jsonToMObject(array.getJSONObject(i));
-           				list.add(item);
+               			for (int i=0; i<array.length(); i++)
+               			{
+               				MObject item = jsonToMObject(array.getJSONObject(i));
+               				mObjects.add(item);
+               			}
+               			property.setObjectData(mObjects);
+                       	properties.add(property);
            			}
-           			property.setObjectData(list);
-                   	properties.add(property);
            		}
            		else
            		{
@@ -359,10 +405,10 @@ public class Database implements RawDatabase<ServiceConfiguration> {
                    	
                   	property.setContentValue(value);
                   	property.setContentType(contentType);
-//                   	logger.fine(String.format("Property key: %s value %s type: %s", key, value, contentType));
+//                       	logger.fine(String.format("Property key: %s value %s type: %s", key, value, contentType));
                    	properties.add(property);
            		}
-       		}
+           	}
        	}
     }
     

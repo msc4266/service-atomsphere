@@ -69,7 +69,7 @@ Thread.sleep(300); //Boomi Default Rate Limit is 1 call per 200ms
 	    	{
 		        conn.setDoInput(true);
 	    		String body = payload;
-//		        logger.info(body);
+		        logger.info(body);
 		        byte[] input = body.getBytes();
 		 		conn.setRequestProperty("Content-Length", ""+input.length);
 		        OutputStream os = conn.getOutputStream();
