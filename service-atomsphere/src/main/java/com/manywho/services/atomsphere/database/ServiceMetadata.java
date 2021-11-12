@@ -37,12 +37,18 @@ public class ServiceMetadata {
 	static final String atomsphereXSDFile = "atomsphere.xsd";
 	static final String atomsphereObjectListFile = "atomsphereObjectList.json";
 	static final String apimXSDFile = "apim.xsd"; //https://api.boomi.com/apim/api/soap/v1/boomi_davehock-T9DOG4?xsd=3
+	//TODO can we get the object list from the top level elements of the xsd? Still need a way to designate the odd primary key/id though
 	static final String apimObjectListFile = "apimObjectList.json";
-
+	String _componentType = null;
+	String _fullComponentName = null;
+	Element componentTopElement = null;
+	DocumentBuilderFactory factory;
+	DocumentBuilder builder;
+	
 	public ServiceMetadata () throws SAXException, IOException, ParserConfigurationException
 	{
-		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder = factory.newDocumentBuilder();
+		factory = DocumentBuilderFactory.newInstance();
+		builder = factory.newDocumentBuilder();
 		Document doc = builder.parse(this.getClass().getClassLoader().getResourceAsStream(atomsphereXSDFile));
 		atomsphereXSDTopElement = doc.getDocumentElement();
 		doc = builder.parse(this.getClass().getClassLoader().getResourceAsStream(apimXSDFile));
@@ -52,7 +58,7 @@ public class ServiceMetadata {
 		is=this.getClass().getClassLoader().getResourceAsStream(apimObjectListFile);
 		apimObjectList = (new JSONObject(new JSONTokener(is)).getJSONArray("objectlist"));
         logger = Logger.getLogger(this.getClass().getName());
-        logger.fine("ServiceMetadata");
+        logger.info("ServiceMetadata TODO can we cache this?");
         initAllTypeElements();
 	}
 
@@ -85,6 +91,7 @@ public class ServiceMetadata {
 		return false;
 	}
 
+	//TODO FUGLY but needed by Database to now which to use for the mObject.externalId
 	public String getPrimaryKey(String entityName)
 	{
 		JSONObject entry = getObjectListEntry(entityName);
@@ -117,6 +124,12 @@ public class ServiceMetadata {
 			JSONObject entity = (JSONObject)obj;
 			String name = entity.getString("name");			
 			this.getTypeElementsForObject(null, name, this.atomsphereXSDTopElement, "Atomsphere");
+			if ("Component".contentEquals(name))
+			{
+				//TODO repeat this for every component type
+				//TODO process shapes have "configuration" which needs expanding for every shape type...yuck
+				injectComponentType("process");
+			}
  		}    
 		for (Object obj : apimObjectList)
 		{
@@ -127,15 +140,34 @@ public class ServiceMetadata {
 		resolveComplexPropertyIDReferences(_typeElements);
 	}
 	
+	private void injectComponentType(String string) throws SAXException, IOException, ParserConfigurationException {
+		_fullComponentName=null;
+		_componentType="process";
+		Document doc = builder.parse(this.getClass().getClassLoader().getResourceAsStream("component_schemas/" + _componentType + "/" + _componentType + ".xsd"));
+		componentTopElement = doc.getDocumentElement();	
+		this.getTypeElementsForObject(null, _componentType, componentTopElement, "Component");
+		
+		//now we need to create another component where the "object" has "process" as a child reference
+		_fullComponentName = "Component___" + _componentType;
+		this.getTypeElementsForObject(null, "Component", atomsphereXSDTopElement, _fullComponentName);
+	}
+
 	public boolean getTypeElementsForObject(String parentType, String typeName, Element xsdTopElement, String developerSummary) throws SAXException, IOException, ParserConfigurationException
 	{
 		boolean success=false;
 		TypeElement typeElement = new TypeElement();
-		typeElement.setDeveloperName(typeName);
-		if (parentType!=null)
-			typeElement.setDeveloperSummary("Parent type: " + parentType);
-		else
+		String developerName = typeName;
+		if (parentType!=null) {
+			typeElement.setDeveloperSummary("Parent type: " + parentType);			
+		} else {
 			typeElement.setDeveloperSummary(developerSummary);
+			if (_fullComponentName!=null)
+			{
+				developerName = this._fullComponentName;
+			}
+		}
+		typeElement.setDeveloperName(developerName);
+
     	List<TypeElementProperty> typeElementProperties = Lists.newArrayList();
     	typeElement.setProperties(typeElementProperties);
     	
@@ -147,6 +179,8 @@ public class ServiceMetadata {
 		typeElementBindings.add(typeElementBinding);
 
 		populatePropertiesForComplexType(typeName, typeElement, typeElementPropertyBindings, xsdTopElement);
+		
+		//TODO FUGLY way to add this oddball query filter only property for Process
 		if ("Process".contentEquals(typeName))
 		{
 			//Add filter-only fields
@@ -156,10 +190,10 @@ public class ServiceMetadata {
 		typeElement.setId(UUID.randomUUID());
        	if (typeElement.getProperties().size()>0)
        	{
-       		if (findTypeElement(typeName)==null) //No dupes
+       		if (findTypeElement(developerName)==null) //No duplicates
        			_typeElements.add(typeElement);
        		else
-       			logger.finest("Type used multiple times: " + typeName + " " + parentType);
+       			logger.info("Type used multiple times: " + typeName + " " + parentType);
        		success = true;
        	}
        	else
@@ -195,6 +229,28 @@ public class ServiceMetadata {
     	//TODO This can be done by hacking the xsd or we could enhance to add missing fields from the <xs:annotation><xs:appinfo><filter elements
         //Find type element for Entity
 		Element complexType = findComplexType(typeName, xsdTopElement);
+		if (complexType==null)
+		{
+			NodeList elements = xsdTopElement.getElementsByTagName("xs:element");
+			for (int j=0; j<elements.getLength(); j++)
+			{
+				Node xsdElement = elements.item(j);
+				if (xsdElement.hasAttributes())
+				{
+					Node nameElement = xsdElement.getAttributes().getNamedItem("name");
+					if (nameElement!=null && typeName.contentEquals(nameElement.getTextContent()))
+					{
+						NodeList complexTypes = ((Element)xsdElement).getElementsByTagName("xs:complexType");
+						complexType = (Element) complexTypes.item(0);
+						logger.info(complexType.toString());
+						break;
+					}
+				}
+				{
+//					addPropertyAndBindingFromXSD(typeName, (Node)xsdElement, typeElement, typeElementPropertyBindings, xsdTopElement);
+				}
+			}
+		}
 		if (complexType!=null)
 		{
 				NodeList elements = complexType.getElementsByTagName("xs:element");
@@ -236,23 +292,37 @@ public class ServiceMetadata {
     
 	void addPropertyAndBindingFromXSD(String typeName, Node xsdElement, TypeElement typeElement, List<TypeElementPropertyBinding> typeElementPropertyBindings, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException
 	{
-		String xsdType = xsdElement.getAttributes().getNamedItem("type").getNodeValue();
 		String developerName = xsdElement.getAttributes().getNamedItem("name").getNodeValue();
+		if (xsdElement.getAttributes().getNamedItem("type")==null)
+		{
+			logger.warning("addPropertyAndBindingFromXSD" + typeName + " " + developerName );
+			return;
+		}
+		String xsdType = xsdElement.getAttributes().getNamedItem("type").getNodeValue();
+		
 		boolean isList=false;
 		Node maxOccursAttribute = xsdElement.getAttributes().getNamedItem("maxOccurs");
 		if (maxOccursAttribute!=null && maxOccursAttribute.getNodeValue().contentEquals("unbounded"))
 			isList=true;
 
-		ContentType contentType = contentTypeFromXSDType(typeName, xsdType, isList, xsdTopElement);
-		if (contentType==null) //if no type we default to String
-			contentType=ContentType.String;
-		if (contentType!=null)
+		ContentType contentType;
+		if ("object".contentEquals(developerName) && this._fullComponentName!=null)
 		{
-			addPropertyAndBinding(developerName, contentType, typeElement, typeElementPropertyBindings, xsdType);
-			
-//		} else {
-//			logger.fine(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
+			logger.info("object found");
+			//TODO we set the type of object to componentType
+			//TODO at runtime we need to remove the child element of object because it will have an extra level
+			// for example object/process/shape becomes object/shape
+			contentType=ContentType.Object;
+			xsdType=_componentType;
+		} else 
+		
+			contentType = contentTypeFromXSDType(typeName, xsdType, isList, xsdTopElement);
+		
+		if (contentType==null) { //if no type we default to String
+			contentType=ContentType.String;
+			logger.fine(String.format("%s has unsupported Type: %s referenced by %s.%s", typeElement.getDeveloperName(), getLocalName(xsdType), typeName, developerName));
 		}
+		addPropertyAndBinding(developerName, contentType, typeElement, typeElementPropertyBindings, xsdType);				
 	}
 	
 	private void addPropertyAndBinding(String developerName, ContentType contentType, TypeElement typeElement,
@@ -327,12 +397,11 @@ public class ServiceMetadata {
     		if (xsdType!=null)
     		{
         		contentType = resolveComplexType(parentType, xsdType, xsdTopElement);
-        		//TODO make this recursive to get sub types? 
+        		//recursive to get sub types 
         		//License, ConnectorVersion, Counter, MapExtension, AtomSecurityPoliciesType, 
         		//Property, AuditLogProperty, CloudAtom, DocumentCountAccountGroup, ExecutionCountAccountGroup, DeployedProcess, ProcessIntegrationPackInfo...     		
             	if (contentType==null)
         		{
-        			//TODO Complex Types
         			if(getTypeElementsForObject(parentType, xsdType, xsdTopElement, ""))
         			{
         				if (isList)
@@ -349,10 +418,13 @@ public class ServiceMetadata {
 	
 	String getLocalName(String name)
 	{
+		String local;
 		String localName[] = name.split(":");
 		if (localName.length==2)
-			return localName[1];
-		return null;
+			local = localName[1];
+		else
+			local = localName[0];
+		return local;
 	}
 	
 	ContentType resolveComplexType(String parentType, String xsdType, Element xsdTopElement) throws SAXException, IOException, ParserConfigurationException

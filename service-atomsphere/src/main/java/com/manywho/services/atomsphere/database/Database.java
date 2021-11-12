@@ -38,6 +38,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
     public Database(AuthenticatedWho user) throws SAXException, IOException, ParserConfigurationException {
         serviceMetadata = new ServiceMetadata();
         logger = Logger.getLogger(this.getClass().getName());
+        logger.info("Database constructor");
         this.user=user;
     }
 
@@ -445,7 +446,7 @@ public class Database implements RawDatabase<ServiceConfiguration> {
 	//	IS_NOT_NULL	Is Not Null	0
 	//	BETWEEN	Between	2
 
-	String convertCriteriaType(CriteriaType type)
+	static String convertCriteriaType(CriteriaType type)
 	{
 		String operator = null;
 		switch (type)

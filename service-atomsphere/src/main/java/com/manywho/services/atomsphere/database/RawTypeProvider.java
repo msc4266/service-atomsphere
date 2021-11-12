@@ -8,13 +8,17 @@ import com.manywho.services.atomsphere.ServiceConfiguration;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RawTypeProvider implements TypeProvider<ServiceConfiguration> {
 
     private ServiceMetadata serviceMetadata;
+    Logger logger;
 
     @Inject
     public RawTypeProvider(ServiceMetadata serviceMetadata) {
+    	logger = Logger.getLogger(this.getClass().getName());
+    	logger.info("RawTypeProvider inits serviceMetadata TODO cache this for Database operations");
         this.serviceMetadata = serviceMetadata;
     }
 
