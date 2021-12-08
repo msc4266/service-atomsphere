@@ -4,8 +4,8 @@ This native Boomi Flowservice provides direct access to the Boomi Atomsphere and
 
 Direct access to over 80 Data objects and Actions is provided. For more information on Boomi APIs please refer to here:
 
-Boomi Atomsphere API: https://help.boomi.com/bundle/integration/page/r-atm-AtomSphere_API.html
-Boomi API Manager API: https://help.boomi.com/bundle/api_management/page/r-api-API_Management_APIs.html
+Boomi Atomsphere API: https://help.boomi.com/bundle/developer_apis/page/r-atm-AtomSphere_API.html
+Boomi API Manager API: https://help.boomi.com/bundle/developer_apis/page/r-api-API_Management_APIs.html
 
 The Boomi Atomsphere API Flow Service enables direct access to the Boomi Integration and Boomi API Manager API. 
 Overview
